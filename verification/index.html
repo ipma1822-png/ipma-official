@@ -1,15 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>조회/검색 | IPMA</title>
-
-  <!-- =========================================
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>조회/검색 | IPMA</title>
+<!-- =========================================
    🔴🔴🔴 CHANGE ZONE (여기만 자주 수정) 🔴🔴🔴
    ✅ Ctrl+F 로 "CHANGE ZONE" 또는 "🔴" 검색
    ========================================= -->
-  <script>
+<script>
     const CONFIG = {
       BRAND: {
         TITLE: "IPMA",
@@ -47,9 +47,8 @@
       ]
     };
   </script>
-  <!-- 🔴🔴🔴 CHANGE ZONE END 🔴🔴🔴 -->
-
-  <style>
+<!-- 🔴🔴🔴 CHANGE ZONE END 🔴🔴🔴 -->
+<style>
     :root{
       --bg:#070a10;
       --panel:rgba(16,24,38,.78);
@@ -294,57 +293,47 @@
       border-top:1px solid rgba(255,255,255,.10);
     }
   </style>
-</head>
-
-<body>
-  <div class="stage">
-    <main class="card" aria-label="IPMA 조회/검색">
-
-      <!-- 상단바 -->
-      <div class="topbar">
-        <div class="brand">
-          <div class="logo">IP</div>
-          <div class="brandText">
-            <div class="brandTitle" id="brandTitle">IPMA</div>
-          </div>
-        </div>
-        <div class="pill">조회</div>
-      </div>
-
-      <!-- 메뉴 (JS로 생성) -->
-      <nav class="menu" id="menu" aria-label="IPMA menu"></nav>
-
-      <section class="body">
-        <h1>공식 지정도장 / 지부 / 임원 / 자격·인증</h1>
-        <p class="sub" id="brandSubtitle">STRUCTURE >> 교차원리 · 교차원리 기반 무도</p>
-
-        <div class="searchWrap">
-          <input class="input" id="q" type="text" autocomplete="off" />
-          <div class="row">
-            <button class="btn primary" id="btnSearch" type="button">조회하기</button>
-            <a class="btn" id="btnHome" href="#" target="_self" rel="noopener">홈으로</a>
-          </div>
-
-          <div class="tip" id="tipText"></div>
-
-          <div class="results" id="results"></div>
-          <div class="empty" id="emptyBox" style="display:none;"></div>
-        </div>
-      </section>
-
-      <div class="footer">© 2026 IPMA. All rights reserved.</div>
-    </main>
-  </div>
-
-  <!-- ✅✅✅ (가장 중요) 데이터 먼저 로드 -->
-  <script>
+<link href="../assets/css/ipma-upgrade.css?v=2.0" rel="stylesheet"/></head>
+<body class="ipma-upgraded"><header class="ipma-mega-header"><div class="ipma-mega-inner"><a class="ipma-mega-brand" href="../"><img alt="IPMA 로고" src="https://static.wixstatic.com/media/abf917_77f3c11d34c64c9eb18c4da00cfad109~mv2.jpg"/><div><strong>국제경찰무도연합회</strong><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></div></a><button aria-label="메뉴" class="ipma-menu-toggle">☰</button><nav class="ipma-mega-nav"><div class="ipma-nav-item"><a class="ipma-nav-main" href="../about/">연합회</a><div class="ipma-dropdown"><b>연합회 안내</b><a href="../about/">연합회 소개</a><a href="../leadership/">임원소개</a><a href="../branches/">국내·해외 지부</a><a href="../partners/">산하·협력기관</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../programs/">교육·프로그램</a><div class="ipma-dropdown"><b>교육 및 활동</b><a href="../programs/">교육 프로그램</a><a href="../events/">행사·세미나</a><a href="../certification/">인증 안내</a><a href="../verification/">공식 조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../branches/">조직·네트워크</a><div class="ipma-dropdown"><b>조직과 협력</b><a href="../leadership/">임원·지도자</a><a href="../branches/">지부 네트워크</a><a href="../partners/">협력기관</a><a href="../contact/">신청·문의</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../resources/">자료실</a><div class="ipma-dropdown"><b>공식 자료</b><a href="../resources/">자료실</a><a href="../documents/">공식 문서</a><a href="../media/">영상자료</a><a href="../verification/">인증·조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../media/">미디어</a><div class="ipma-dropdown"><b>활동과 영상</b><a href="../media/">영상교육관</a><a href="../media/">활동 미디어</a><a href="../events/">행사 안내</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../verification/">조회·인증</a><div class="ipma-dropdown"><b>공식 확인</b><a href="../verification/">자격·인증 조회</a><a href="../certification/">인증 안내</a><a href="../programs/">프로그램</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../contact/">참여·문의</a><div class="ipma-dropdown"><b>참여 안내</b><a href="../contact/">가입·제휴 문의</a><a href="../branches/">지부 안내</a><a href="../partners/">협력기관</a><a href="../events/">행사·세미나</a></div></div></nav></div></header>
+<div class="stage">
+<main aria-label="IPMA 조회/검색" class="card">
+<!-- 상단바 -->
+<div class="topbar">
+<div class="brand">
+<div class="logo">IP</div>
+<div class="brandText">
+<div class="brandTitle" id="brandTitle">IPMA</div>
+</div>
+</div>
+<div class="pill">조회</div>
+</div>
+<!-- 메뉴 (JS로 생성) -->
+<nav aria-label="IPMA menu" class="menu" id="menu"></nav>
+<section class="body">
+<h1>공식 지정도장 / 지부 / 임원 / 자격·인증</h1>
+<p class="sub" id="brandSubtitle">STRUCTURE &gt;&gt; 교차원리 · 교차원리 기반 무도</p>
+<div class="searchWrap">
+<input autocomplete="off" class="input" id="q" type="text"/>
+<div class="row">
+<button class="btn primary" id="btnSearch" type="button">조회하기</button>
+<a class="btn" href="#" id="btnHome" rel="noopener" target="_self">홈으로</a>
+</div>
+<div class="tip" id="tipText"></div>
+<div class="results" id="results"></div>
+<div class="empty" id="emptyBox" style="display:none;"></div>
+</div>
+</section>
+<div class="footer">© 2026 IPMA. All rights reserved.</div>
+</main>
+</div>
+<!-- ✅✅✅ (가장 중요) 데이터 먼저 로드 -->
+<script>
     const s = document.createElement("script");
     s.src = "./data.js?v=" + encodeURIComponent(CONFIG.DATA.VERSION);
     document.body.appendChild(s);
   </script>
-
-  <!-- ✅ 검색 로직 (data.js 로드 후 실행 보장) -->
-  <script>
+<!-- ✅ 검색 로직 (data.js 로드 후 실행 보장) -->
+<script>
     // UI 텍스트 적용
     document.getElementById("brandTitle").textContent = CONFIG.BRAND.TITLE;
     document.getElementById("brandSubtitle").textContent = CONFIG.BRAND.SUBTITLE;
@@ -528,5 +517,5 @@
       }
     }, 50);
   </script>
-</body>
+<div aria-modal="true" class="ipma-modal" role="dialog"><div class="ipma-modal-box"><button aria-label="닫기" class="ipma-modal-close">×</button><div class="ipma-modal-frame"></div></div></div><script src="../assets/js/ipma-upgrade.js?v=2.0"></script></body>
 </html>
