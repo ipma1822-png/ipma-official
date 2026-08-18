@@ -1,0 +1,32 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IPMA 통합회원 로그인 | 국제경찰무도연합회</title>
+<style>
+:root{--bg:#071426;--panel:#0d1d33;--line:rgba(255,255,255,.12);--gold:#d8b15a;--text:#eef4ff;--muted:#aebbd1;--ok:#68dc9a;--bad:#ff8b8b;--work:#f0cc74}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:linear-gradient(180deg,#061221,#0a1930);color:var(--text)}
+.wrap{width:min(760px,calc(100% - 30px));margin:auto;padding:34px 0 70px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+.brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}.mark{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(216,177,90,.45);background:rgba(216,177,90,.10);color:var(--gold);font-weight:900}
+.brand b{display:block}.brand small{display:block;color:var(--muted);margin-top:2px}.home{color:#fff;text-decoration:none;border:1px solid var(--line);padding:9px 12px;border-radius:10px}
+.card{background:rgba(13,29,51,.96);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 22px 60px rgba(0,0,0,.28)}
+.eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.08em}h1{margin:7px 0 8px;font-size:30px}.lead{margin:0 0 22px;color:var(--muted);line-height:1.65}
+.field{display:grid;gap:7px;margin:13px 0}.field label{font-weight:800}.field input{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:#08162a;color:#fff;font:inherit}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}.btn{border:0;border-radius:11px;padding:13px 18px;background:linear-gradient(135deg,#d8b15a,#987328);color:#fff;font-weight:900;font-size:15px;cursor:pointer;text-decoration:none}
+.btn.secondary{background:#172942;border:1px solid var(--line)}.status{font-weight:800;min-height:22px}.ok{color:var(--ok)}.bad{color:var(--bad)}.work{color:var(--work)}
+.note{margin-top:18px;padding:13px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);color:var(--muted);font-size:13px;line-height:1.65}
+</style></head><body>
+<div class="wrap"><div class="top"><a class="brand" href="../"><span class="mark">IPMA</span><span><b>국제경찰무도연합회</b><small>International Police Martial Arts Alliance</small></span></a><a class="home" href="../">IPMA 홈</a></div>
+<section class="card"><div class="eyebrow">MEMBER LOGIN · 멤버 로그 인</div><h1>IPMA 통합회원 로그인</h1>
+<p class="lead">ACTS 통합회원센터에서 만든 동일한 이메일·비밀번호를 사용합니다. 이곳에서 로그인하면 IPMA 교육영상의 시청시간과 학습 진행률을 회원별로 기록할 수 있습니다.</p>
+<form id="loginForm"><div class="field"><label>이메일</label><input name="email" type="email" required autocomplete="email"></div>
+<div class="field"><label>비밀번호</label><input name="password" type="password" required autocomplete="current-password"></div>
+<div class="row"><button class="btn" id="loginBtn" type="submit">IPMA 로그인</button><a class="btn secondary" href="https://acts.pe.kr/member-center/signup.html">처음 통합회원 가입</a><span id="status" class="status"></span></div></form>
+<div class="note">로그인 성공 후 자동으로 <b>IPMA 미디어·교육영상 페이지</b>로 이동합니다.</div></section></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const db=supabase.createClient('https://ojxarsfaewehwjidwgac.supabase.co','sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0');
+const form=document.getElementById('loginForm'),btn=document.getElementById('loginBtn'),st=document.getElementById('status');
+const setStatus=(m,c='')=>{st.textContent=m;st.className='status '+c};
+(async()=>{const {data}=await db.auth.getSession();if(data.session){setStatus('이미 로그인되어 있습니다. 교육영상으로 이동합니다.','ok');setTimeout(()=>location.href='../media/',500)}})();
+form.addEventListener('submit',async e=>{e.preventDefault();btn.disabled=true;setStatus('로그인 중...','work');const fd=new FormData(form);
+const {error}=await db.auth.signInWithPassword({email:String(fd.get('email')||'').trim(),password:String(fd.get('password')||'')});
+if(error){setStatus(error.message,'bad');btn.disabled=false;return}setStatus('로그인 성공! 교육영상으로 이동합니다.','ok');setTimeout(()=>location.href='../media/',500);});
+</script></body></html>
