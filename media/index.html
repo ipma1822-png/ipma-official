@@ -315,7 +315,7 @@
 <main><section class="ipma-public-banner"><strong>IPMA 미디어 · 영상자료실</strong><p>국제경찰무도연합회의 활동과 교육, 협력 무도 프로그램의 영상을 분야별로 모았습니다. 교육자료는 지도자와 수련생, 일반 방문자 누구나 편리하게 살펴볼 수 있습니다.</p></section>
 <section class="ipma-learning-test" id="ipma-sd-001-learning">
  <div class="ipma-learning-head">
-  <div><h2>IPMA-SD-001 · 시청기록 테스트</h2><p>로그인 회원의 실제 재생시간과 진행률을 Supabase에 기록하는 첫 번째 테스트 영상입니다.</p></div>
+  <div><h2>IPMA-SD-001 · 시청기록 테스트</h2><p>로그인 회원의 실제 재생시간과 진행률을 Supabase에 기록합니다. 다시 들어오면 가장 멀리 학습한 위치부터 자동으로 이어봅니다.</p></div>
   <div class="ipma-learning-badge">LEARNING TRACKING TEST</div>
  </div>
  <div class="ipma-learning-grid">
@@ -339,10 +339,26 @@ const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const VIDEO_ID='NFkuyVWWoiE', CONTENT_CODE='IPMA-SD-001', CONTENT_TITLE='IPMA 호신술 교육 01';
-let member=null, player=null, playing=false, tick=null, sessionSeconds=0, savedSessionSeconds=0, existing=null, lastSave=0;
+let member=null, player=null, playing=false, tick=null, sessionSeconds=0, savedSessionSeconds=0, existing=null, lastSave=0, playerReady=false, resumeApplied=false;
 const $=id=>document.getElementById(id);
 const fmt=s=>`${Math.floor((s||0)/60)}분 ${Math.floor((s||0)%60)}초`;
 function status(msg){$('learnStatus').textContent=msg}
+function getResumePosition(){
+ const dur=player&&player.getDuration?Number(player.getDuration()||0):0;
+ const savedLast=Number(existing?.last_position_seconds||0);
+ const pct=Number(existing?.progress_percent||0);
+ const pctPos=dur>0&&pct>0?Math.floor(dur*(pct/100)):0;
+ return Math.max(savedLast,pctPos);
+}
+function applyResume(){
+ if(resumeApplied||!playerReady||!existing||!player||!player.seekTo)return;
+ const pos=getResumePosition();
+ if(pos>3){
+   player.seekTo(pos,true);
+   resumeApplied=true;
+   status(`${member?.name||'회원'}님, 이전 학습 위치 ${fmt(pos)}부터 이어봅니다.`);
+ }
+}
 async function boot(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){status('비로그인 상태입니다. 영상은 볼 수 있지만 시청기록은 저장되지 않습니다.');$('learnLogin').style.display='inline-block';return}
@@ -350,7 +366,7 @@ async function boot(){
  if(error||!data){status('통합회원 프로필을 찾지 못했습니다.');return}
  member=data;
  const r=await db.from('learning_progress').select('*').eq('member_id',member.id).eq('organization_code','IPMA').eq('content_type','video').eq('content_code',CONTENT_CODE).maybeSingle();
- if(!r.error && r.data){existing=r.data; renderProgress()}
+ if(!r.error && r.data){existing=r.data; renderProgress(); applyResume()}
  status(`${member.name||'회원'}님으로 로그인되었습니다. 재생한 시간만 기록됩니다.`);
 }
 function renderProgress(){
@@ -370,7 +386,8 @@ async function saveProgress(eventType='progress'){
  const base=existing?.watched_seconds||0, watched=base+delta;
  const pct=dur?Math.min(100,Math.max(existing?.progress_percent||0,(posi/dur)*100)):0;
  const completed=(existing?.completed||pct>=90);
- const payload={member_id:member.id,organization_code:'IPMA',content_type:'video',content_code:CONTENT_CODE,content_title:CONTENT_TITLE,watched_seconds:watched,recognized_seconds:watched,progress_percent:pct,completed,last_position_seconds:posi,first_started_at:existing?.first_started_at||new Date().toISOString(),last_activity_at:new Date().toISOString(),completed_at:completed?(existing?.completed_at||new Date().toISOString()):null};
+ const furthest=Math.max(Number(existing?.last_position_seconds||0),posi,Math.floor(dur*(Number(existing?.progress_percent||0)/100)));
+ const payload={member_id:member.id,organization_code:'IPMA',content_type:'video',content_code:CONTENT_CODE,content_title:CONTENT_TITLE,watched_seconds:watched,recognized_seconds:watched,progress_percent:pct,completed,last_position_seconds:furthest,first_started_at:existing?.first_started_at||new Date().toISOString(),last_activity_at:new Date().toISOString(),completed_at:completed?(existing?.completed_at||new Date().toISOString()):null};
  let r;
  if(existing) r=await db.from('learning_progress').update(payload).eq('id',existing.id).select().single();
  else r=await db.from('learning_progress').insert(payload).select().single();
@@ -379,7 +396,7 @@ async function saveProgress(eventType='progress'){
  renderProgress();
 }
 window.onYouTubeIframeAPIReady=function(){
- player=new YT.Player('ipmaLearningPlayer',{videoId:VIDEO_ID,playerVars:{rel:0,modestbranding:1},events:{onReady:function(){renderProgress()},onStateChange:function(e){
+ player=new YT.Player('ipmaLearningPlayer',{videoId:VIDEO_ID,playerVars:{rel:0,modestbranding:1},events:{onReady:function(){playerReady=true;renderProgress();applyResume()},onStateChange:function(e){
   if(e.data===YT.PlayerState.PLAYING){playing=true;if(!tick)tick=setInterval(()=>{if(playing){sessionSeconds++;renderProgress();if(sessionSeconds%15===0)saveProgress('progress')}},1000);if(member)saveProgress('play')}
   else if(e.data===YT.PlayerState.PAUSED){playing=false;saveProgress('pause')}
   else if(e.data===YT.PlayerState.ENDED){playing=false;saveProgress('ended')}
