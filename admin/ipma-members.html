@@ -1,0 +1,23 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IPMA 회원관리</title>
+<style>body{font-family:system-ui,"Noto Sans KR",sans-serif;margin:0;background:#f4f6f9;color:#172033}.wrap{width:min(1200px,calc(100% - 30px));margin:30px auto}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}.card{background:#fff;border:1px solid #dfe4ea;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 8px 25px #0000000b}input,select,button{padding:10px;border:1px solid #ccd3dc;border-radius:9px;font:inherit}button{cursor:pointer;background:#172b4d;color:#fff}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px;border-bottom:1px solid #e7ebef;text-align:left;vertical-align:top}th{background:#f8fafc}img{width:54px;height:66px;object-fit:cover;border-radius:7px}.scroll{overflow:auto}.muted{color:#687386}.stats{font-size:28px;font-weight:900}@media(max-width:700px){table{min-width:950px}}</style></head>
+<body><div class="wrap"><div class="top"><div><h1>IPMA 회원가입 신청 관리</h1><div class="muted">국제경찰무도연합회 관리자 전용</div></div><a href="../">홈으로</a></div>
+<div id="login" class="card"><h2>관리자 로그인</h2><input id="email" type="email" placeholder="이메일"><input id="password" type="password" placeholder="비밀번호"><button id="loginBtn">로그인</button><span id="loginMsg"></span></div>
+<div id="app" hidden><div class="card"><span class="muted">전체 신청자</span><div class="stats" id="count">0</div><button id="refresh">새로고침</button> <button id="logout">로그아웃</button></div>
+<div class="card scroll"><table><thead><tr><th>사진</th><th>이름</th><th>지역</th><th>연락처</th><th>소속/무도</th><th>회원구분</th><th>경력/자격</th><th>추천인</th><th>상태</th><th>회원번호</th></tr></thead><tbody id="rows"></tbody></table></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const db=supabase.createClient('https://ojxarsfaewehwjidwgac.supabase.co','sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0');
+const login=document.getElementById('login'),app=document.getElementById('app'),rows=document.getElementById('rows');
+async function load(){
+ const {data,error}=await db.from('ipma_member_applications').select('*').order('created_at',{ascending:false}); if(error){alert(error.message);return}
+ document.getElementById('count').textContent=data.length; rows.innerHTML='';
+ for(const r of data){
+  let img=''; if(r.photo_url){const {data:s}=await db.storage.from('ipma-member-photos').createSignedUrl(r.photo_url,3600);if(s?.signedUrl)img=`<img src="${s.signedUrl}" alt="">`}
+  const tr=document.createElement('tr');tr.innerHTML=`<td>${img}</td><td><b>${r.name||''}</b><br><span class="muted">${r.email||''}</span></td><td>${r.region||''}</td><td>${r.phone||''}</td><td>${r.organization||''}<br>${r.primary_martial_art||''}</td><td>${r.member_type||''}</td><td>${r.martial_experience||''}<br>${r.rank_certificate||''}<br>${r.security_experience||''}</td><td>${r.referrer||''}</td><td><select data-id="${r.id}" class="st"><option value="pending">심사중</option><option value="approved">승인</option><option value="hold">보류</option><option value="rejected">반려</option></select></td><td><input class="num" data-id="${r.id}" value="${r.member_number||''}" placeholder="승인 시 자동발급"></td>`; rows.appendChild(tr);tr.querySelector('.st').value=r.status||'pending';
+ }
+ document.querySelectorAll('.st').forEach(x=>x.onchange=async()=>{let num=x.closest('tr').querySelector('.num');if(x.value==='approved'&&!num.value)num.value='IPMA-'+new Date().getFullYear()+'-'+String(x.dataset.id).padStart(5,'0');const {error}=await db.from('ipma_member_applications').update({status:x.value,member_number:num.value||null}).eq('id',x.dataset.id);if(error)alert(error.message)});
+ document.querySelectorAll('.num').forEach(x=>x.onchange=async()=>{const {error}=await db.from('ipma_member_applications').update({member_number:x.value||null}).eq('id',x.dataset.id);if(error)alert(error.message)});
+}
+async function authUI(){const {data}=await db.auth.getSession();const ok=!!data.session;login.hidden=ok;app.hidden=!ok;if(ok)load()}
+document.getElementById('loginBtn').onclick=async()=>{const {error}=await db.auth.signInWithPassword({email:email.value,password:password.value});document.getElementById('loginMsg').textContent=error?error.message:'';if(!error)authUI()};
+document.getElementById('logout').onclick=async()=>{await db.auth.signOut();authUI()};document.getElementById('refresh').onclick=load;authUI();
+</script></body></html>
