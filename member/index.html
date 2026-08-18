@@ -10,10 +10,10 @@
 a{color:inherit;text-decoration:none}.wrap{width:min(1040px,calc(100% - 32px));margin:auto;padding:24px 0 70px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 0}.brand b{display:block;font-size:18px}.brand span{font-size:12px;color:var(--muted)}.home{border:1px solid var(--line);padding:9px 13px;border-radius:12px}
 .hero,.box{background:rgba(17,27,47,.92);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.25)}.hero{padding:28px;margin:10px 0 20px}.hero small{color:var(--gold);font-weight:800}.hero h1{margin:6px 0 8px}.hero p{margin:0;color:var(--muted)}
-form{display:grid;gap:18px}.box{padding:24px}.box h2{margin:0 0 16px;font-size:19px;color:var(--gold)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:grid;gap:7px;font-weight:700}label.full{grid-column:1/-1}input,select,textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#0d1729;color:#fff;font:inherit}textarea{min-height:105px;resize:vertical}option{color:#111}.note{font-size:12px;color:var(--muted);font-weight:400}.consent{display:flex;gap:10px;align-items:flex-start;font-weight:500}.consent input{width:auto;margin-top:6px}button{border:0;border-radius:12px;padding:14px 22px;background:linear-gradient(135deg,#d8b15a,#9b7426);color:#fff;font-weight:900;font-size:16px;cursor:pointer}button:disabled{opacity:.55}#status{font-weight:800;margin-left:12px}.ok{color:#63d394}.err{color:#ff8080}.work{color:#e5c46f}@media(max-width:720px){.grid{grid-template-columns:1fr}label.full{grid-column:auto}}
+form{display:grid;gap:18px}.box{padding:24px}.box h2{margin:0 0 16px;font-size:19px;color:var(--gold)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}label{display:grid;gap:7px;font-weight:700}label.full{grid-column:1/-1}input,select,textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#0d1729;color:#fff;font:inherit}textarea{min-height:105px;resize:vertical}option{color:#111}.note{font-size:12px;color:var(--muted);font-weight:400}.consent{display:flex;gap:10px;align-items:flex-start;font-weight:500}.consent input{width:auto;margin-top:6px}button{border:0;border-radius:12px;padding:14px 22px;background:linear-gradient(135deg,#d8b15a,#9b7426);color:#fff;font-weight:900;font-size:16px;cursor:pointer}.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.choice{position:relative}.choice input{position:absolute;opacity:0;pointer-events:none}.choice span{display:block;padding:12px 10px;border:1px solid var(--line);border-radius:11px;background:#0d1729;color:#eef3ff;text-align:center;font-weight:800;cursor:pointer;transition:.18s}.choice input:checked+span{border-color:var(--gold);background:rgba(216,177,90,.16);color:#f1cf7b;box-shadow:0 0 0 2px rgba(216,177,90,.12)}.choice span:hover{border-color:#8fa2c7}.choice-block{display:grid;gap:8px}.choice-title{font-weight:700}.choice-note{font-size:12px;color:var(--muted);font-weight:400}button:disabled{opacity:.55}#status{font-weight:800;margin-left:12px}.ok{color:#63d394}.err{color:#ff8080}.work{color:#e5c46f}@media(max-width:720px){.grid{grid-template-columns:1fr}label.full{grid-column:auto}.choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head><body><div class="wrap">
-<div class="top"><a class="brand" href="../"><b>국제경찰무도연합회</b><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></a><a class="home" href="../">홈으로</a></div>
+<div class="top"><a class="brand" href="https://ipma.kr/"><b>국제경찰무도연합회</b><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></a><a class="home" href="https://ipma.kr/">홈으로</a></div>
 <section class="hero"><small>IPMA MEMBERSHIP</small><h1>IPMA 회원가입 신청</h1><p>무도교육과 국제교류, 안전과 봉사의 가치에 함께할 회원과 지도자를 기다립니다.</p></section>
 <form id="form">
 <section class="box"><h2>1. 기본정보</h2><div class="grid">
@@ -28,9 +28,23 @@ form{display:grid;gap:18px}.box{padding:24px}.box h2{margin:0 0 16px;font-size:1
 <label>주 수련 무도<input name="primary_martial_art" maxlength="100" placeholder="예: 태권도, 합기도, 검도"></label>
 <label class="full">무도 경력<textarea name="martial_experience" placeholder="수련 종목과 기간 등을 간단히 적어주세요."></textarea></label>
 <label>단·급 또는 자격<input name="rank_certificate" maxlength="150"></label>
-<label>회원 구분 *<select name="member_type" required><option value="">선택</option><option>일반회원</option><option>지도자</option><option>관장</option><option>임원</option><option>지부회원</option><option>기타</option></select></label>
+<div class="choice-block"><div class="choice-title">회원 구분 *</div><div class="choices">
+<label class="choice"><input type="radio" name="member_type" value="일반회원" required><span>일반회원</span></label>
+<label class="choice"><input type="radio" name="member_type" value="지도자"><span>지도자</span></label>
+<label class="choice"><input type="radio" name="member_type" value="관장"><span>관장</span></label>
+<label class="choice"><input type="radio" name="member_type" value="임원"><span>임원</span></label>
+<label class="choice"><input type="radio" name="member_type" value="지부회원"><span>지부회원</span></label>
+<label class="choice"><input type="radio" name="member_type" value="기타"><span>기타</span></label>
+</div></div>
 <label class="full">경찰·경호·보안 관련 경력<textarea name="security_experience" placeholder="관련 경력이 없으면 비워두셔도 됩니다."></textarea></label>
-<label>가입 경로<select name="join_source"><option value="">선택</option><option>SNS</option><option>인터넷 검색</option><option>지인 소개</option><option>교육·세미나</option><option>대회·행사</option><option>기타</option></select></label>
+<div class="choice-block"><div class="choice-title">가입 경로</div><div class="choices">
+<label class="choice"><input type="radio" name="join_source" value="SNS"><span>SNS</span></label>
+<label class="choice"><input type="radio" name="join_source" value="인터넷 검색"><span>인터넷 검색</span></label>
+<label class="choice"><input type="radio" name="join_source" value="지인 소개"><span>지인 소개</span></label>
+<label class="choice"><input type="radio" name="join_source" value="교육·세미나"><span>교육·세미나</span></label>
+<label class="choice"><input type="radio" name="join_source" value="대회·행사"><span>대회·행사</span></label>
+<label class="choice"><input type="radio" name="join_source" value="기타"><span>기타</span></label>
+</div><div class="choice-note">해당하는 항목을 하나 선택해 주세요.</div></div>
 <label>추천인<input name="referrer" maxlength="80" placeholder="없으면 비워두세요"></label>
 </div></section>
 <section class="box"><h2>3. 사진 및 동의</h2><div class="grid">
