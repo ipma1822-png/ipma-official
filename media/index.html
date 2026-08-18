@@ -307,21 +307,45 @@
 .ipma-stat-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:13px}.ipma-stat-row:last-of-type{border-bottom:0}.ipma-stat-row span{color:#a9b6d3}.ipma-stat-row strong{color:#fff}
 .ipma-learning-status{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05);color:#a9b6d3;font-size:12px;line-height:1.55}.ipma-learning-login{display:inline-block;margin-top:12px;padding:9px 12px;border-radius:10px;background:#d8b15a;color:#111;font-weight:900;font-size:12px}
 @media(max-width:760px){.ipma-learning-grid{grid-template-columns:1fr}}
+
+.ipma-now-code{color:#d8b15a;font-size:11px;font-weight:900;letter-spacing:.06em;margin-bottom:4px}
+.ipma-course-summary{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 8px}
+.ipma-course-summary span{padding:7px 10px;border:1px solid rgba(255,255,255,.10);border-radius:999px;background:rgba(255,255,255,.035);color:#a9b6d3;font-size:11px}
+.ipma-course-summary b{color:#fff}
+.ipma-course-series-title{margin:20px 0 10px;color:#eaf0ff;font-size:15px}.ipma-course-series-title span{color:#d8b15a;font-size:11px;margin-left:6px}
+.ipma-course-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px}
+.ipma-course-card{padding:0;text-align:left;overflow:hidden;border:1px solid rgba(255,255,255,.10);border-radius:12px;background:rgba(0,0,0,.16);color:#fff;cursor:pointer;transition:.18s transform,.18s border-color;width:100%}
+.ipma-course-card:hover{transform:translateY(-2px);border-color:rgba(216,177,90,.55)}
+.ipma-course-card.active{border-color:#d8b15a;box-shadow:0 0 0 1px rgba(216,177,90,.18)}
+.ipma-course-thumb{display:block;position:relative}.ipma-course-thumb img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#000}
+.ipma-course-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.66);border:1px solid rgba(255,255,255,.38);font-size:11px}
+.ipma-course-info{display:block;padding:7px}.ipma-course-info strong{display:block;font-size:10px;color:#d8b15a}.ipma-course-info small{display:block;color:#eaf0ff;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ipma-course-info em{display:block;margin-top:4px;font-style:normal;font-size:9px;color:#a9b6d3}
+.ipma-course-info em.done{color:#68dc9a;font-weight:900}
+@media(max-width:1050px){.ipma-course-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){.ipma-course-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body class="ipma-upgraded"><header class="ipma-mega-header"><div class="ipma-mega-inner"><a class="ipma-mega-brand" href="../"><img alt="IPMA 로고" src="https://static.wixstatic.com/media/abf917_77f3c11d34c64c9eb18c4da00cfad109~mv2.jpg"/><div><strong>국제경찰무도연합회</strong><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></div></a><button aria-label="메뉴" class="ipma-menu-toggle">☰</button><nav class="ipma-mega-nav"><div class="ipma-nav-item"><a class="ipma-nav-main" href="../about/">연합회</a><div class="ipma-dropdown"><b>연합회 안내</b><a href="../about/">연합회 소개</a><a href="../leadership/">임원소개</a><a href="../branches/">국내·해외 지부</a><a href="../partners/">산하·협력기관</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../programs/">교육·프로그램</a><div class="ipma-dropdown"><b>교육 및 활동</b><a href="../programs/">교육 프로그램</a><a href="../events/">행사·세미나</a><a href="../certification/">인증 안내</a><a href="../verification/">공식 조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../branches/">조직·네트워크</a><div class="ipma-dropdown"><b>조직과 협력</b><a href="../leadership/">임원·지도자</a><a href="../branches/">지부 네트워크</a><a href="../partners/">협력기관</a><a href="../contact/">신청·문의</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../resources/">자료실</a><div class="ipma-dropdown"><b>공식 자료</b><a href="../resources/">자료실</a><a href="../documents/">공식 문서</a><a href="../media/">영상자료</a><a href="../verification/">인증·조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../media/">미디어</a><div class="ipma-dropdown"><b>활동과 영상</b><a href="../media/">영상교육관</a><a href="../media/">활동 미디어</a><a href="../events/">행사 안내</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../verification/">조회·인증</a><div class="ipma-dropdown"><b>공식 확인</b><a href="../verification/">자격·인증 조회</a><a href="../certification/">인증 안내</a><a href="../programs/">프로그램</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../contact/">참여·문의</a><div class="ipma-dropdown"><b>참여 안내</b><a href="../contact/">가입·제휴 문의</a><a href="../branches/">지부 안내</a><a href="../partners/">협력기관</a><a href="../events/">행사·세미나</a></div></div></nav></div></header>
 
 
 <main><section class="ipma-public-banner"><strong>IPMA 미디어 · 영상자료실</strong><p>국제경찰무도연합회의 활동과 교육, 협력 무도 프로그램의 영상을 분야별로 모았습니다. 교육자료는 지도자와 수련생, 일반 방문자 누구나 편리하게 살펴볼 수 있습니다.</p></section>
-<section class="ipma-learning-test" id="ipma-sd-001-learning">
+
+<section class="ipma-learning-test" id="ipma-self-defense-learning">
  <div class="ipma-learning-head">
-  <div><h2>IPMA-SD-001 · 시청기록 테스트</h2><p>로그인 회원의 실제 재생시간과 진행률을 Supabase에 기록합니다. 다시 들어오면 가장 멀리 학습한 위치부터 자동으로 이어봅니다.</p></div>
-  <div class="ipma-learning-badge">LEARNING TRACKING TEST</div>
+  <div>
+   <h2>IPMA 호신술 온라인 학습관</h2>
+   <p>통합회원 로그인 후 영상을 학습하면 영상별 시청시간·진행률·완료여부가 자동 저장되며, 다시 들어오면 이전 학습 위치부터 이어봅니다.</p>
+  </div>
+  <div class="ipma-learning-badge">33 VIDEO LEARNING SYSTEM</div>
  </div>
+
  <div class="ipma-learning-grid">
   <div class="ipma-player"><div id="ipmaLearningPlayer"></div></div>
   <aside class="ipma-learning-side">
-   <h3>나의 학습기록</h3>
+   <div class="ipma-now-code" id="learnCode">IPMA-SD-001</div>
+   <h3 id="learnTitle">IPMA 호신술 교육 01</h3>
    <div class="ipma-stat-row"><span>누적 시청시간</span><strong id="learnWatched">0분 0초</strong></div>
    <div class="ipma-stat-row"><span>현재 진행률</span><strong id="learnProgress">0%</strong></div>
    <div class="ipma-stat-row"><span>완료 여부</span><strong id="learnComplete">미완료</strong></div>
@@ -329,6 +353,117 @@
    <a id="learnLogin" class="ipma-learning-login" href="../member-login/" style="display:none">통합회원 로그인</a>
   </aside>
  </div>
+
+ <div class="ipma-course-summary">
+   <span>총 33편</span>
+   <span>완료 <b id="summaryCompleted">0</b>편</span>
+   <span>총 시청시간 <b id="summaryTime">0분</b></span>
+ </div>
+
+ <h3 class="ipma-course-series-title">IPMA SD SERIES <span>001–011 · 11편</span></h3>
+ <div class="ipma-course-grid"><button class="ipma-course-card" type="button" data-code="IPMA-SD-001" data-title="IPMA 호신술 교육 01" data-video="NFkuyVWWoiE">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/NFkuyVWWoiE/mqdefault.jpg" alt="IPMA-SD-001 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-001</strong><small>IPMA 호신술 교육 01</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-001">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-002" data-title="IPMA 호신술 교육 02" data-video="HRAecOwzTlQ">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/HRAecOwzTlQ/mqdefault.jpg" alt="IPMA-SD-002 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-002</strong><small>IPMA 호신술 교육 02</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-002">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-003" data-title="IPMA 호신술 교육 03" data-video="oOZzQJfg6Ns">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/oOZzQJfg6Ns/mqdefault.jpg" alt="IPMA-SD-003 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-003</strong><small>IPMA 호신술 교육 03</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-003">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-004" data-title="IPMA 호신술 교육 04" data-video="U3aNe9PIZV4">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/U3aNe9PIZV4/mqdefault.jpg" alt="IPMA-SD-004 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-004</strong><small>IPMA 호신술 교육 04</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-004">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-005" data-title="IPMA 호신술 교육 05" data-video="AfPADmAl5qk">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/AfPADmAl5qk/mqdefault.jpg" alt="IPMA-SD-005 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-005</strong><small>IPMA 호신술 교육 05</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-005">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-006" data-title="IPMA 호신술 교육 06" data-video="PMRJWGdbDfk">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/PMRJWGdbDfk/mqdefault.jpg" alt="IPMA-SD-006 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-006</strong><small>IPMA 호신술 교육 06</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-006">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-007" data-title="IPMA 호신술 교육 07" data-video="lX2qlNDQaHQ">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/lX2qlNDQaHQ/mqdefault.jpg" alt="IPMA-SD-007 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-007</strong><small>IPMA 호신술 교육 07</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-007">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-008" data-title="IPMA 호신술 교육 08" data-video="Z1pTwrRgXBo">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/Z1pTwrRgXBo/mqdefault.jpg" alt="IPMA-SD-008 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-008</strong><small>IPMA 호신술 교육 08</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-008">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-009" data-title="IPMA 호신술 교육 09" data-video="xhElAVe_nts">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/xhElAVe_nts/mqdefault.jpg" alt="IPMA-SD-009 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-009</strong><small>IPMA 호신술 교육 09</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-009">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-010" data-title="IPMA 호신술 교육 10" data-video="0LsmTKXygBY">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/0LsmTKXygBY/mqdefault.jpg" alt="IPMA-SD-010 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-010</strong><small>IPMA 호신술 교육 10</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-010">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SD-011" data-title="IPMA 호신술 교육 11" data-video="KHz_D3vAJ4k">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/KHz_D3vAJ4k/mqdefault.jpg" alt="IPMA-SD-011 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SD-011</strong><small>IPMA 호신술 교육 11</small><em class="ipma-course-progress" data-progress-code="IPMA-SD-011">미시청</em></span>
+    </button></div>
+
+ <h3 class="ipma-course-series-title">IPMA SDJ SERIES <span>001–022 · 22편</span></h3>
+ <div class="ipma-course-grid"><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-001" data-title="IPMA 호신술 지도자교육 01" data-video="0hnRgcgcAQ8">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/0hnRgcgcAQ8/mqdefault.jpg" alt="IPMA-SDJ-001 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-001</strong><small>IPMA 호신술 지도자교육 01</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-001">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-002" data-title="IPMA 호신술 지도자교육 02" data-video="GnpFoBDcAuM">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/GnpFoBDcAuM/mqdefault.jpg" alt="IPMA-SDJ-002 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-002</strong><small>IPMA 호신술 지도자교육 02</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-002">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-003" data-title="IPMA 호신술 지도자교육 03" data-video="S4dxdGg4nyI">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/S4dxdGg4nyI/mqdefault.jpg" alt="IPMA-SDJ-003 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-003</strong><small>IPMA 호신술 지도자교육 03</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-003">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-004" data-title="IPMA 호신술 지도자교육 04" data-video="GuWJ5WAyWBo">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/GuWJ5WAyWBo/mqdefault.jpg" alt="IPMA-SDJ-004 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-004</strong><small>IPMA 호신술 지도자교육 04</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-004">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-005" data-title="IPMA 호신술 지도자교육 05" data-video="MCs2QjpTO4Q">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/MCs2QjpTO4Q/mqdefault.jpg" alt="IPMA-SDJ-005 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-005</strong><small>IPMA 호신술 지도자교육 05</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-005">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-006" data-title="IPMA 호신술 지도자교육 06" data-video="VZVfHML3aSA">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/VZVfHML3aSA/mqdefault.jpg" alt="IPMA-SDJ-006 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-006</strong><small>IPMA 호신술 지도자교육 06</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-006">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-007" data-title="IPMA 호신술 지도자교육 07" data-video="I4TiqnLLYYs">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/I4TiqnLLYYs/mqdefault.jpg" alt="IPMA-SDJ-007 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-007</strong><small>IPMA 호신술 지도자교육 07</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-007">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-008" data-title="IPMA 호신술 지도자교육 08" data-video="d3EKWGizggg">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/d3EKWGizggg/mqdefault.jpg" alt="IPMA-SDJ-008 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-008</strong><small>IPMA 호신술 지도자교육 08</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-008">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-009" data-title="IPMA 호신술 지도자교육 09" data-video="Xrv_usR6WT8">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/Xrv_usR6WT8/mqdefault.jpg" alt="IPMA-SDJ-009 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-009</strong><small>IPMA 호신술 지도자교육 09</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-009">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-010" data-title="IPMA 호신술 지도자교육 10" data-video="EogizdeMYEA">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/EogizdeMYEA/mqdefault.jpg" alt="IPMA-SDJ-010 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-010</strong><small>IPMA 호신술 지도자교육 10</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-010">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-011" data-title="IPMA 호신술 지도자교육 11" data-video="j8u3hBSTAeE">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/j8u3hBSTAeE/mqdefault.jpg" alt="IPMA-SDJ-011 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-011</strong><small>IPMA 호신술 지도자교육 11</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-011">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-012" data-title="IPMA 호신술 지도자교육 12" data-video="QynDMR6jX0A">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/QynDMR6jX0A/mqdefault.jpg" alt="IPMA-SDJ-012 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-012</strong><small>IPMA 호신술 지도자교육 12</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-012">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-013" data-title="IPMA 호신술 지도자교육 13" data-video="AJAakCTQMIQ">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/AJAakCTQMIQ/mqdefault.jpg" alt="IPMA-SDJ-013 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-013</strong><small>IPMA 호신술 지도자교육 13</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-013">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-014" data-title="IPMA 호신술 지도자교육 14" data-video="AKlzZ1VlKj4">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/AKlzZ1VlKj4/mqdefault.jpg" alt="IPMA-SDJ-014 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-014</strong><small>IPMA 호신술 지도자교육 14</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-014">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-015" data-title="IPMA 호신술 지도자교육 15" data-video="IE9InwFAT6E">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/IE9InwFAT6E/mqdefault.jpg" alt="IPMA-SDJ-015 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-015</strong><small>IPMA 호신술 지도자교육 15</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-015">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-016" data-title="IPMA 호신술 지도자교육 16" data-video="PiXPjKPi9aY">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/PiXPjKPi9aY/mqdefault.jpg" alt="IPMA-SDJ-016 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-016</strong><small>IPMA 호신술 지도자교육 16</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-016">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-017" data-title="IPMA 호신술 지도자교육 17" data-video="jecoUhjuR1s">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/jecoUhjuR1s/mqdefault.jpg" alt="IPMA-SDJ-017 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-017</strong><small>IPMA 호신술 지도자교육 17</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-017">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-018" data-title="IPMA 호신술 지도자교육 18" data-video="L6-RZEswaqk">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/L6-RZEswaqk/mqdefault.jpg" alt="IPMA-SDJ-018 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-018</strong><small>IPMA 호신술 지도자교육 18</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-018">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-019" data-title="IPMA 호신술 지도자교육 19" data-video="8sgCjkG2TRU">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/8sgCjkG2TRU/mqdefault.jpg" alt="IPMA-SDJ-019 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-019</strong><small>IPMA 호신술 지도자교육 19</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-019">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-020" data-title="IPMA 호신술 지도자교육 20" data-video="rTYYB3xkSfY">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/rTYYB3xkSfY/mqdefault.jpg" alt="IPMA-SDJ-020 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-020</strong><small>IPMA 호신술 지도자교육 20</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-020">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-021" data-title="IPMA 호신술 지도자교육 21" data-video="rTZg8Lz02lE">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/rTZg8Lz02lE/mqdefault.jpg" alt="IPMA-SDJ-021 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-021</strong><small>IPMA 호신술 지도자교육 21</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-021">미시청</em></span>
+    </button><button class="ipma-course-card" type="button" data-code="IPMA-SDJ-022" data-title="IPMA 호신술 지도자교육 22" data-video="DomHuQVNfls">
+      <span class="ipma-course-thumb"><img loading="lazy" src="https://i.ytimg.com/vi/DomHuQVNfls/mqdefault.jpg" alt="IPMA-SDJ-022 썸네일"><span class="ipma-course-play">▶</span></span>
+      <span class="ipma-course-info"><strong>IPMA-SDJ-022</strong><small>IPMA 호신술 지도자교육 22</small><em class="ipma-course-progress" data-progress-code="IPMA-SDJ-022">미시청</em></span>
+    </button></div>
 </section>
 <section class="ipma-video-section"><div class="ipma-video-head"><h2>전체 영상자료</h2><p>IPMA 활동 영상과 태권검도 교육·시범 영상을 한 곳에서 만나보세요. 썸네일을 선택하면 큰 화면으로 재생됩니다.</p></div><div class="ipma-video-grid"><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="zuwIu8hx6bM" data-video-title="IPMA 공식 영상 01" type="button"><img alt="IPMA 공식 영상 01 썸네일" loading="lazy" src="https://i.ytimg.com/vi/zuwIu8hx6bM/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>IPMA</small><h3>IPMA 공식 영상 01</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="h5OwDySbrLE" data-video-title="IPMA 공식 영상 02" type="button"><img alt="IPMA 공식 영상 02 썸네일" loading="lazy" src="https://i.ytimg.com/vi/h5OwDySbrLE/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>IPMA</small><h3>IPMA 공식 영상 02</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="x4HFiyPCQC0" data-video-title="태검 1장" type="button"><img alt="태검 1장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/x4HFiyPCQC0/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 1장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="Z3vDrZIpXsY" data-video-title="태검 2장" type="button"><img alt="태검 2장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/Z3vDrZIpXsY/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 2장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="NcLEyQ0zpu4" data-video-title="태검 3장" type="button"><img alt="태검 3장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/NcLEyQ0zpu4/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 3장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="c9CPQIBeK1U" data-video-title="태검 4장" type="button"><img alt="태검 4장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/c9CPQIBeK1U/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 4장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="SCoR1uKhvHk" data-video-title="태검 5장" type="button"><img alt="태검 5장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/SCoR1uKhvHk/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 5장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="TqVP3j-iBng" data-video-title="태검 6장" type="button"><img alt="태검 6장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/TqVP3j-iBng/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 6장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="gO0ORHqdNJQ" data-video-title="태검 7장" type="button"><img alt="태검 7장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/gO0ORHqdNJQ/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 7장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="65UpGpJtHA0" data-video-title="태검 8장" type="button"><img alt="태검 8장 썸네일" loading="lazy" src="https://i.ytimg.com/vi/65UpGpJtHA0/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>태권검도 교육</small><h3>태검 8장</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="tN6h02S7Sn0" data-video-title="태권검도 기본동작" type="button"><img alt="태권검도 기본동작 썸네일" loading="lazy" src="https://i.ytimg.com/vi/tN6h02S7Sn0/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>기본기술</small><h3>태권검도 기본동작</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="ap5uPE3pM-c" data-video-title="태권검도 기본베기" type="button"><img alt="태권검도 기본베기 썸네일" loading="lazy" src="https://i.ytimg.com/vi/ap5uPE3pM-c/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>기본기술</small><h3>태권검도 기본베기</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="iCBm4JnXEr4" data-video-title="태권검도 광자베기" type="button"><img alt="태권검도 광자베기 썸네일" loading="lazy" src="https://i.ytimg.com/vi/iCBm4JnXEr4/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>기본기술</small><h3>태권검도 광자베기</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="QBvuzeC33FQ" data-video-title="태권검도 검집돌리기" type="button"><img alt="태권검도 검집돌리기 썸네일" loading="lazy" src="https://i.ytimg.com/vi/QBvuzeC33FQ/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>기본기술</small><h3>태권검도 검집돌리기</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="cd0B2up4qHE" data-video-title="국가대표 시범단 01" type="button"><img alt="국가대표 시범단 01 썸네일" loading="lazy" src="https://i.ytimg.com/vi/cd0B2up4qHE/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>시범</small><h3>국가대표 시범단 01</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="Zjl1arXrH-Q" data-video-title="국가대표 시범단 02" type="button"><img alt="국가대표 시범단 02 썸네일" loading="lazy" src="https://i.ytimg.com/vi/Zjl1arXrH-Q/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>시범</small><h3>국가대표 시범단 02</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="Fzn53lJ9Zxk" data-video-title="국가대표 시범단 03" type="button"><img alt="국가대표 시범단 03 썸네일" loading="lazy" src="https://i.ytimg.com/vi/Fzn53lJ9Zxk/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>시범</small><h3>국가대표 시범단 03</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="4Tmt7BjQy_g" data-video-title="국가대표 시범단 04" type="button"><img alt="국가대표 시범단 04 썸네일" loading="lazy" src="https://i.ytimg.com/vi/4Tmt7BjQy_g/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>시범</small><h3>국가대표 시범단 04</h3></div></article><article class="ipma-video-card"><button class="ipma-video-thumb" data-video-id="1YvyqVqrFqw" data-video-title="국가대표 시범단 05" type="button"><img alt="국가대표 시범단 05 썸네일" loading="lazy" src="https://i.ytimg.com/vi/1YvyqVqrFqw/hqdefault.jpg"/><span class="ipma-play"><span>▶</span></span></button><div class="ipma-video-info"><small>시범</small><h3>국가대표 시범단 05</h3></div></article></div></section><section class="ipma-public-banner"><strong>미디어 및 자료 문의</strong><p>행사·교육·보도·영상자료와 관련한 문의는 신청·문의 페이지를 이용해 주세요.</p><p><a href="../contact/" style="color:#d8b15a;font-weight:800">신청·문의 바로가기 →</a></p></section></main><div aria-modal="true" class="ipma-modal" role="dialog"><div class="ipma-modal-box"><button aria-label="닫기" class="ipma-modal-close">×</button><div class="ipma-modal-frame"></div></div></div><script src="../assets/js/ipma-upgrade.js?v=2.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -338,11 +473,20 @@
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const VIDEO_ID='NFkuyVWWoiE', CONTENT_CODE='IPMA-SD-001', CONTENT_TITLE='IPMA 호신술 교육 01';
-let member=null, player=null, playing=false, tick=null, sessionSeconds=0, savedSessionSeconds=0, existing=null, lastSave=0, playerReady=false, resumeApplied=false;
+const COURSES=[{"code": "IPMA-SD-001", "title": "IPMA 호신술 교육 01", "videoId": "NFkuyVWWoiE"}, {"code": "IPMA-SD-002", "title": "IPMA 호신술 교육 02", "videoId": "HRAecOwzTlQ"}, {"code": "IPMA-SD-003", "title": "IPMA 호신술 교육 03", "videoId": "oOZzQJfg6Ns"}, {"code": "IPMA-SD-004", "title": "IPMA 호신술 교육 04", "videoId": "U3aNe9PIZV4"}, {"code": "IPMA-SD-005", "title": "IPMA 호신술 교육 05", "videoId": "AfPADmAl5qk"}, {"code": "IPMA-SD-006", "title": "IPMA 호신술 교육 06", "videoId": "PMRJWGdbDfk"}, {"code": "IPMA-SD-007", "title": "IPMA 호신술 교육 07", "videoId": "lX2qlNDQaHQ"}, {"code": "IPMA-SD-008", "title": "IPMA 호신술 교육 08", "videoId": "Z1pTwrRgXBo"}, {"code": "IPMA-SD-009", "title": "IPMA 호신술 교육 09", "videoId": "xhElAVe_nts"}, {"code": "IPMA-SD-010", "title": "IPMA 호신술 교육 10", "videoId": "0LsmTKXygBY"}, {"code": "IPMA-SD-011", "title": "IPMA 호신술 교육 11", "videoId": "KHz_D3vAJ4k"}, {"code": "IPMA-SDJ-001", "title": "IPMA 호신술 지도자교육 01", "videoId": "0hnRgcgcAQ8"}, {"code": "IPMA-SDJ-002", "title": "IPMA 호신술 지도자교육 02", "videoId": "GnpFoBDcAuM"}, {"code": "IPMA-SDJ-003", "title": "IPMA 호신술 지도자교육 03", "videoId": "S4dxdGg4nyI"}, {"code": "IPMA-SDJ-004", "title": "IPMA 호신술 지도자교육 04", "videoId": "GuWJ5WAyWBo"}, {"code": "IPMA-SDJ-005", "title": "IPMA 호신술 지도자교육 05", "videoId": "MCs2QjpTO4Q"}, {"code": "IPMA-SDJ-006", "title": "IPMA 호신술 지도자교육 06", "videoId": "VZVfHML3aSA"}, {"code": "IPMA-SDJ-007", "title": "IPMA 호신술 지도자교육 07", "videoId": "I4TiqnLLYYs"}, {"code": "IPMA-SDJ-008", "title": "IPMA 호신술 지도자교육 08", "videoId": "d3EKWGizggg"}, {"code": "IPMA-SDJ-009", "title": "IPMA 호신술 지도자교육 09", "videoId": "Xrv_usR6WT8"}, {"code": "IPMA-SDJ-010", "title": "IPMA 호신술 지도자교육 10", "videoId": "EogizdeMYEA"}, {"code": "IPMA-SDJ-011", "title": "IPMA 호신술 지도자교육 11", "videoId": "j8u3hBSTAeE"}, {"code": "IPMA-SDJ-012", "title": "IPMA 호신술 지도자교육 12", "videoId": "QynDMR6jX0A"}, {"code": "IPMA-SDJ-013", "title": "IPMA 호신술 지도자교육 13", "videoId": "AJAakCTQMIQ"}, {"code": "IPMA-SDJ-014", "title": "IPMA 호신술 지도자교육 14", "videoId": "AKlzZ1VlKj4"}, {"code": "IPMA-SDJ-015", "title": "IPMA 호신술 지도자교육 15", "videoId": "IE9InwFAT6E"}, {"code": "IPMA-SDJ-016", "title": "IPMA 호신술 지도자교육 16", "videoId": "PiXPjKPi9aY"}, {"code": "IPMA-SDJ-017", "title": "IPMA 호신술 지도자교육 17", "videoId": "jecoUhjuR1s"}, {"code": "IPMA-SDJ-018", "title": "IPMA 호신술 지도자교육 18", "videoId": "L6-RZEswaqk"}, {"code": "IPMA-SDJ-019", "title": "IPMA 호신술 지도자교육 19", "videoId": "8sgCjkG2TRU"}, {"code": "IPMA-SDJ-020", "title": "IPMA 호신술 지도자교육 20", "videoId": "rTYYB3xkSfY"}, {"code": "IPMA-SDJ-021", "title": "IPMA 호신술 지도자교육 21", "videoId": "rTZg8Lz02lE"}, {"code": "IPMA-SDJ-022", "title": "IPMA 호신술 지도자교육 22", "videoId": "DomHuQVNfls"}];
+let member=null,player=null,playing=false,tick=null,lastSave=0;
+let active=COURSES[0],existing=null,sessionSeconds=0,savedSessionSeconds=0,playerReady=false,resumeApplied=false;
+let allProgress={};
+
 const $=id=>document.getElementById(id);
 const fmt=s=>`${Math.floor((s||0)/60)}분 ${Math.floor((s||0)%60)}초`;
 function status(msg){$('learnStatus').textContent=msg}
+function progressKey(){return active.code}
+function setActiveUI(){
+ $('learnCode').textContent=active.code;
+ $('learnTitle').textContent=active.title;
+ document.querySelectorAll('.ipma-course-card').forEach(b=>b.classList.toggle('active',b.dataset.code===active.code));
+}
 function getResumePosition(){
  const dur=player&&player.getDuration?Number(player.getDuration()||0):0;
  const savedLast=Number(existing?.last_position_seconds||0);
@@ -354,53 +498,125 @@ function applyResume(){
  if(resumeApplied||!playerReady||!existing||!player||!player.seekTo)return;
  const pos=getResumePosition();
  if(pos>3){
-   player.seekTo(pos,true);
-   resumeApplied=true;
-   status(`${member?.name||'회원'}님, 이전 학습 위치 ${fmt(pos)}부터 이어봅니다.`);
+   player.seekTo(pos,true);resumeApplied=true;
+   status(`${member?.name||'회원'}님, ${fmt(pos)}부터 이어봅니다.`);
  }
-}
-async function boot(){
- const {data:{session}}=await db.auth.getSession();
- if(!session){status('비로그인 상태입니다. 영상은 볼 수 있지만 시청기록은 저장되지 않습니다.');$('learnLogin').style.display='inline-block';return}
- const {data,error}=await db.from('members').select('id,name').eq('auth_user_id',session.user.id).single();
- if(error||!data){status('통합회원 프로필을 찾지 못했습니다.');return}
- member=data;
- const r=await db.from('learning_progress').select('*').eq('member_id',member.id).eq('organization_code','IPMA').eq('content_type','video').eq('content_code',CONTENT_CODE).maybeSingle();
- if(!r.error && r.data){existing=r.data; renderProgress(); applyResume()}
- status(`${member.name||'회원'}님으로 로그인되었습니다. 재생한 시간만 기록됩니다.`);
 }
 function renderProgress(){
  const total=(existing?.watched_seconds||0)+Math.max(0,sessionSeconds-savedSessionSeconds);
  $('learnWatched').textContent=fmt(total);
  const dur=player&&player.getDuration?player.getDuration():0;
- const posi=player&&player.getCurrentTime?player.getCurrentTime():(existing?.last_position_seconds||0);
- const pct=dur?Math.min(100,(posi/dur)*100):(existing?.progress_percent||0);
+ const pos=player&&player.getCurrentTime?player.getCurrentTime():(existing?.last_position_seconds||0);
+ const pct=dur?Math.min(100,Math.max(Number(existing?.progress_percent||0),(pos/dur)*100)):Number(existing?.progress_percent||0);
  $('learnProgress').textContent=`${pct.toFixed(1)}%`;
  $('learnComplete').textContent=(existing?.completed||pct>=90)?'완료':'미완료';
 }
+function renderCards(){
+ COURSES.forEach(c=>{
+   const p=allProgress[c.code];
+   const el=document.querySelector(`[data-progress-code="${c.code}"]`);
+   if(!el)return;
+   if(!p){el.textContent='미시청';el.classList.remove('done');return}
+   if(p.completed){el.textContent='완료';el.classList.add('done')}
+   else{el.textContent=`${Number(p.progress_percent||0).toFixed(0)}% · ${fmt(p.watched_seconds||0)}`;el.classList.remove('done')}
+ });
+ const vals=Object.values(allProgress);
+ $('summaryCompleted').textContent=vals.filter(x=>x.completed).length;
+ const total=vals.reduce((a,x)=>a+Number(x.watched_seconds||0),0);
+ $('summaryTime').textContent=fmt(total);
+}
+async function loadAllProgress(){
+ if(!member)return;
+ const {data,error}=await db.from('learning_progress').select('*')
+   .eq('member_id',member.id).eq('organization_code','IPMA').eq('content_type','video');
+ if(!error){
+   allProgress=Object.fromEntries((data||[]).map(x=>[x.content_code,x]));
+   renderCards();
+ }
+}
+async function loadActiveProgress(){
+ existing=allProgress[active.code]||null;
+ sessionSeconds=0;savedSessionSeconds=0;resumeApplied=false;lastSave=0;
+ setActiveUI();renderProgress();
+ if(existing)applyResume();
+}
+async function boot(){
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){
+   status('비로그인 상태입니다. 영상은 볼 수 있지만 시청기록은 저장되지 않습니다.');
+   $('learnLogin').style.display='inline-block';return;
+ }
+ const {data,error}=await db.from('members').select('id,name').eq('auth_user_id',session.user.id).single();
+ if(error||!data){status('통합회원 프로필을 찾지 못했습니다.');return}
+ member=data;
+ await loadAllProgress();
+ await loadActiveProgress();
+ status(`${member.name||'회원'}님으로 로그인되었습니다. 영상을 선택하여 학습하세요.`);
+}
 async function saveProgress(eventType='progress'){
  if(!member||!player||!player.getDuration)return;
- const now=Date.now(); if(eventType==='progress' && now-lastSave<12000)return; lastSave=now;
- const dur=Math.floor(player.getDuration()||0), posi=Math.floor(player.getCurrentTime()||0);
+ const now=Date.now();if(eventType==='progress'&&now-lastSave<12000)return;lastSave=now;
+ const dur=Math.floor(player.getDuration()||0),pos=Math.floor(player.getCurrentTime()||0);
  const delta=Math.max(0,sessionSeconds-savedSessionSeconds);
- const base=existing?.watched_seconds||0, watched=base+delta;
- const pct=dur?Math.min(100,Math.max(existing?.progress_percent||0,(posi/dur)*100)):0;
- const completed=(existing?.completed||pct>=90);
- const furthest=Math.max(Number(existing?.last_position_seconds||0),posi,Math.floor(dur*(Number(existing?.progress_percent||0)/100)));
- const payload={member_id:member.id,organization_code:'IPMA',content_type:'video',content_code:CONTENT_CODE,content_title:CONTENT_TITLE,watched_seconds:watched,recognized_seconds:watched,progress_percent:pct,completed,last_position_seconds:furthest,first_started_at:existing?.first_started_at||new Date().toISOString(),last_activity_at:new Date().toISOString(),completed_at:completed?(existing?.completed_at||new Date().toISOString()):null};
+ const base=Number(existing?.watched_seconds||0),watched=base+delta;
+ const pct=dur?Math.min(100,Math.max(Number(existing?.progress_percent||0),(pos/dur)*100)):0;
+ const completed=Boolean(existing?.completed||pct>=90);
+ const furthest=Math.max(Number(existing?.last_position_seconds||0),pos,Math.floor(dur*(Number(existing?.progress_percent||0)/100)));
+ const payload={
+   member_id:member.id,organization_code:'IPMA',content_type:'video',
+   content_code:active.code,content_title:active.title,
+   watched_seconds:watched,recognized_seconds:watched,progress_percent:pct,completed,
+   last_position_seconds:furthest,
+   first_started_at:existing?.first_started_at||new Date().toISOString(),
+   last_activity_at:new Date().toISOString(),
+   completed_at:completed?(existing?.completed_at||new Date().toISOString()):null
+ };
  let r;
- if(existing) r=await db.from('learning_progress').update(payload).eq('id',existing.id).select().single();
+ if(existing)r=await db.from('learning_progress').update(payload).eq('id',existing.id).select().single();
  else r=await db.from('learning_progress').insert(payload).select().single();
- if(!r.error&&r.data){existing=r.data;savedSessionSeconds=sessionSeconds}
- await db.from('activity_events').insert({member_id:member.id,organization_code:'IPMA',activity_type:'video',content_code:CONTENT_CODE,content_title:CONTENT_TITLE,duration_seconds:delta,progress_percent:pct,event_type:eventType,event_data:{video_id:VIDEO_ID,position_seconds:posi}});
+ if(!r.error&&r.data){
+   existing=r.data;allProgress[active.code]=r.data;savedSessionSeconds=sessionSeconds;renderCards();
+ }
+ await db.from('activity_events').insert({
+   member_id:member.id,organization_code:'IPMA',activity_type:'video',
+   content_code:active.code,content_title:active.title,duration_seconds:delta,
+   progress_percent:pct,event_type:eventType,
+   event_data:{video_id:active.videoId,position_seconds:pos}
+ });
  renderProgress();
 }
+async function switchCourse(course){
+ if(active.code===course.code)return;
+ if(member&&player)await saveProgress('switch');
+ playing=false;
+ active=course;existing=allProgress[active.code]||null;
+ sessionSeconds=0;savedSessionSeconds=0;resumeApplied=false;lastSave=0;
+ setActiveUI();
+ if(player&&player.loadVideoById)player.loadVideoById(active.videoId);
+ renderProgress();
+ status(`${active.code} 학습을 시작합니다.`);
+}
+document.querySelectorAll('.ipma-course-card').forEach(btn=>{
+ btn.addEventListener('click',()=>{
+   const c=COURSES.find(x=>x.code===btn.dataset.code);if(c)switchCourse(c);
+   document.getElementById('ipma-self-defense-learning').scrollIntoView({behavior:'smooth',block:'start'});
+ });
+});
 window.onYouTubeIframeAPIReady=function(){
- player=new YT.Player('ipmaLearningPlayer',{videoId:VIDEO_ID,playerVars:{rel:0,modestbranding:1},events:{onReady:function(){playerReady=true;renderProgress();applyResume()},onStateChange:function(e){
-  if(e.data===YT.PlayerState.PLAYING){playing=true;if(!tick)tick=setInterval(()=>{if(playing){sessionSeconds++;renderProgress();if(sessionSeconds%15===0)saveProgress('progress')}},1000);if(member)saveProgress('play')}
-  else if(e.data===YT.PlayerState.PAUSED){playing=false;saveProgress('pause')}
-  else if(e.data===YT.PlayerState.ENDED){playing=false;saveProgress('ended')}
- }}});
+ player=new YT.Player('ipmaLearningPlayer',{
+   videoId:active.videoId,playerVars:{rel:0,modestbranding:1},
+   events:{
+     onReady:function(){playerReady=true;setActiveUI();renderProgress();applyResume()},
+     onStateChange:function(e){
+       if(e.data===YT.PlayerState.PLAYING){
+         playing=true;applyResume();
+         if(!tick)tick=setInterval(()=>{if(playing){sessionSeconds++;renderProgress();if(sessionSeconds%15===0)saveProgress('progress')}},1000);
+         if(member)saveProgress('play');
+       }else if(e.data===YT.PlayerState.PAUSED){playing=false;saveProgress('pause')}
+       else if(e.data===YT.PlayerState.ENDED){playing=false;saveProgress('ended')}
+     }
+   }
+ });
 };
 window.addEventListener('beforeunload',()=>{if(member&&player)saveProgress('leave')});
 boot();
