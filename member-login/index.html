@@ -40,4 +40,5 @@ form.addEventListener('submit',async e=>{e.preventDefault();btn.disabled=true;se
 const {error}=await db.auth.signInWithPassword({email:String(fd.get('email')||'').trim(),password:String(fd.get('password')||'')});
 if(error){setStatus('이메일 또는 비밀번호를 확인해 주세요.','bad');btn.disabled=false;return}
 setStatus('로그인 성공! 이동합니다.','ok');setTimeout(()=>location.href='../media/',650);});
-</script></body></html>
+</script><script src="../assets/js/cross-site-network.js"></script>
+</body></html>
