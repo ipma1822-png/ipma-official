@@ -56,6 +56,7 @@ create table if not exists public.ipma_service_applications (
   current_rank text,
   requested_rank text,
   instructor_name text,
+  depositor_name text,
   certificate_number text,
   shipping_address text,
   notes text,
