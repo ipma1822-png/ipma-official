@@ -3,6 +3,43 @@
 
 create extension if not exists pgcrypto;
 
+-- IPMA 공식 입금계좌 및 결제 안내 설정
+create table if not exists public.ipma_payment_settings (
+  setting_key text primary key,
+  bank_name text not null,
+  account_number text not null,
+  account_holder text not null,
+  payment_notice text,
+  is_active boolean not null default true,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.ipma_payment_settings
+  (setting_key, bank_name, account_number, account_holder, payment_notice, is_active)
+values
+  ('ipma_main', '농협', '301-0141-2075-31', '국제경찰무도연합회',
+   '신청자 이름과 입금자 이름을 동일하게 입력해 주세요. 본부 확인 후 결제완료로 변경됩니다.', true)
+on conflict (setting_key) do update set
+  bank_name = excluded.bank_name,
+  account_number = excluded.account_number,
+  account_holder = excluded.account_holder,
+  payment_notice = excluded.payment_notice,
+  is_active = excluded.is_active,
+  updated_at = now();
+
+alter table public.ipma_payment_settings enable row level security;
+
+drop policy if exists "ipma public read payment settings" on public.ipma_payment_settings;
+create policy "ipma public read payment settings"
+on public.ipma_payment_settings for select to anon, authenticated
+using (is_active = true);
+
+drop policy if exists "ipma admin update payment settings" on public.ipma_payment_settings;
+create policy "ipma admin update payment settings"
+on public.ipma_payment_settings for update to authenticated
+using ((auth.jwt() ->> 'email') = 'jeonseongkweon@gmail.com')
+with check ((auth.jwt() ->> 'email') = 'jeonseongkweon@gmail.com');
+
 create table if not exists public.ipma_service_applications (
   id uuid primary key default gen_random_uuid(),
   applicant_user_id uuid not null references auth.users(id) on delete cascade,
@@ -79,3 +116,8 @@ from public.ipma_service_applications
 where certificate_number is not null
   and issuance_status in ('issued','shipped','completed');
 
+-- API 사용 권한. 실제 행 접근은 위 RLS 정책이 다시 제한합니다.
+grant select on public.ipma_payment_settings to anon, authenticated;
+grant select, insert, update on public.ipma_service_applications to authenticated;
+revoke delete on public.ipma_service_applications from anon, authenticated;
+grant select on public.ipma_public_issuances to anon, authenticated;

@@ -21,24 +21,25 @@
 <section class="card">
 <div class="eyebrow">ONE ACCOUNT · 원 어카운트</div>
 <h1>통합회원 로그인</h1>
-<p class="lead">ACTS 통합회원센터에서 만든 <b>같은 이메일·같은 비밀번호</b>를 사용합니다.</p>
-<div class="rule"><b>기억할 것은 하나뿐입니다.</b><br>통합회원 계정은 하나이며, IPMA에서는 교육·활동기록을 위해 이 사이트에서 한 번 로그인합니다.</div>
+<p class="lead">등록된 이메일로 일회용 로그인 링크를 받아 <b>비밀번호 없이</b> 안전하게 로그인합니다.</p>
+<div class="rule"><b>비밀번호를 기억하지 않아도 됩니다.</b><br>이메일로 도착한 로그인 링크를 누르면 원래 이용하려던 IPMA 페이지로 자동 이동합니다.</div>
 <form id="loginForm">
 <div class="field"><label>이메일</label><input name="email" type="email" required autocomplete="email"></div>
-<div class="field"><label>비밀번호</label><input name="password" type="password" required autocomplete="current-password"></div>
-<div class="row"><button class="btn" id="loginBtn" type="submit">통합회원 로그인</button><a class="btn secondary" href="https://acts.pe.kr/member-center/signup.html">처음 회원가입</a><span id="status" class="status"></span></div>
+<div class="row"><button class="btn" id="loginBtn" type="submit">이메일 로그인 링크 받기</button><a class="btn secondary" href="https://acts.pe.kr/member-center/signup.html">처음 회원가입</a><span id="status" class="status"></span></div>
 </form>
-<div class="note">로그인 성공 후 자동으로 IPMA 페이지로 이동합니다. 회원정보 전체 확인은 ACTS <a href="https://acts.pe.kr/member-center/mypage.html" style="color:var(--gold)">MY PAGE</a>에서 할 수 있습니다.</div>
+<div class="note">메일이 보이지 않으면 스팸함도 확인해 주세요. 링크는 일회용이며 등록된 회원에게만 발송됩니다. 회원정보 전체 확인은 ACTS <a href="https://acts.pe.kr/member-center/mypage.html" style="color:var(--gold)">MY PAGE</a>에서 할 수 있습니다.</div>
 </section></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const db=supabase.createClient('https://ojxarsfaewehwjidwgac.supabase.co','sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0');
 const form=document.getElementById('loginForm'),btn=document.getElementById('loginBtn'),st=document.getElementById('status');
 const setStatus=(m,c='')=>{st.textContent=m;st.className='status '+c};
-(async()=>{const {data}=await db.auth.getSession();if(data.session){setStatus('이미 로그인되어 있습니다.','ok');setTimeout(()=>location.href='../media/',650)}})();
-form.addEventListener('submit',async e=>{e.preventDefault();btn.disabled=true;setStatus('로그인 중...','work');const fd=new FormData(form);
-const {error}=await db.auth.signInWithPassword({email:String(fd.get('email')||'').trim(),password:String(fd.get('password')||'')});
-if(error){setStatus('이메일 또는 비밀번호를 확인해 주세요.','bad');btn.disabled=false;return}
-setStatus('로그인 성공! 이동합니다.','ok');setTimeout(()=>location.href='../media/',650);});
+const requestedNext=new URLSearchParams(location.search).get('next')||'../media/';
+const safeNext=requestedNext.startsWith('../')&&!requestedNext.includes('://')?requestedNext:'../media/';
+(async()=>{const {data}=await db.auth.getSession();if(data.session){setStatus('이미 로그인되어 있습니다.','ok');setTimeout(()=>location.href=safeNext,350)}})();
+form.addEventListener('submit',async e=>{e.preventDefault();btn.disabled=true;setStatus('로그인 링크를 보내는 중...','work');const fd=new FormData(form);const email=String(fd.get('email')||'').trim();const redirectTarget=new URL(safeNext,location.href).href;
+const {error}=await db.auth.signInWithOtp({email,options:{emailRedirectTo:redirectTarget,shouldCreateUser:false}});
+if(error){setStatus('로그인 링크를 보내지 못했습니다. 이메일을 확인해 주세요.','bad');btn.disabled=false;return}
+setStatus('이메일을 확인해 주세요. 로그인 링크를 보냈습니다.','ok');setTimeout(()=>{btn.disabled=false},60000);});
 </script><script src="../assets/js/cross-site-network.js"></script>
 </body></html>
