@@ -2,6 +2,7 @@
 (function(){
   if (document.getElementById('martial-network-dock')) return;
   const sites = [
+    ['GTC 통합교육센터','https://ipma1822-png.github.io/global-training-center/'],
     ['태권검도 WTKF','https://ipma1822-png.github.io/taekwonkumdo/'],
     ['경찰무도 IPMA','https://ipma.kr/'],
     ['드론순찰대 IDP','https://idp.ai.kr/']
@@ -28,7 +29,7 @@
   document.head.appendChild(style);
   const dock=document.createElement('div'); dock.id='martial-network-dock';
   const links=sites.map(([label,url])=>`<a href="${url}" ${label===current?'class="current"':''}>${label}${label===current?' · 현재':''}</a>`).join('');
-  dock.innerHTML=`<button class="mn-toggle" type="button">무도 네트워크 ☰</button><div class="mn-panel"><div class="mn-title">MARTIAL & PUBLIC SAFETY NETWORK</div>${links}<div class="mn-sep"></div><a class="mn-acts" href="https://acts.pe.kr/" target="_blank" rel="noopener">ACTS 선교연합 ↗ 새창</a></div>`;
+  dock.innerHTML=`<button class="mn-toggle" type="button">교육·무도 네트워크 ☰</button><div class="mn-panel"><div class="mn-title">TRAINING & MARTIAL NETWORK</div>${links}<div class="mn-sep"></div><a class="mn-acts" href="https://acts.pe.kr/" target="_blank" rel="noopener">ACTS 선교연합 ↗ 새창</a></div>`;
   document.body.appendChild(dock);
   dock.querySelector('.mn-toggle').onclick=()=>dock.classList.toggle('open');
   document.addEventListener('click',e=>{if(!dock.contains(e.target))dock.classList.remove('open')});
