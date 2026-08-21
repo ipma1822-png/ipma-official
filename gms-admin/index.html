@@ -68,6 +68,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="brand" data-page="dashboard"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
    <div id="adminEmailTop" class="adminpill"></div>
+   <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
    <button id="menuBtn" class="menuBtn">☰</button>
   </div>
@@ -77,7 +78,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <nav id="appNav" class="navbar hidden">
  <div class="navin">
   <div class="navitem"><a class="navtop" data-page="dashboard">운영본부</a>
-   <div class="mega"><a class="wide" data-page="dashboard">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a data-page="roadmap">개발 로드맵</a><a data-page="settings">운영 설정</a></div>
+   <div class="mega"><a class="wide" data-page="dashboard">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a data-page="roadmap">개발 로드맵</a><a data-page="settings">운영 설정</a></div>
   </div>
   <div class="navitem"><a class="navtop" data-page="members">회원관리</a>
    <div class="mega"><a class="wide" data-page="members">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a data-page="members">전체회원</a><a data-page="members">신규회원</a><a data-page="members">무료회원</a><a data-page="membership-plan">유료회원 / PLAN</a><a data-page="levels">9단계 회원등급</a><a data-page="member-card">디지털 회원카드</a></div>
@@ -122,6 +123,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <a class="qcard" data-page="learning"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
      <a class="qcard" data-page="certificates"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
      <a class="qcard" data-page="organization"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
+     <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
    <div class="panel"><div class="panelhead"><b>현재 구축상태</b><span class="badge live">운영 중</span></div><div class="panelbody">
@@ -396,11 +398,13 @@ render = function(){
 const oldShowApp=showApp;
 showApp=async function(session){
  document.getElementById('appNav').classList.remove('hidden');
+ const hub=document.getElementById('adminHubTop'); if(hub)hub.classList.remove('hidden');
  await oldShowApp(session);
 };
 const oldShowLogin=showLogin;
 showLogin=async function(message=''){
  document.getElementById('appNav').classList.add('hidden');
+ const hub=document.getElementById('adminHubTop'); if(hub)hub.classList.add('hidden');
  await oldShowLogin(message);
 };
 </script>
