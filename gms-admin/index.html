@@ -39,7 +39,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <main>
 <section id="login" class="login">
 <h1>통합 운영본부</h1>
-<p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p>
+<p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p><p style="font-size:12px;color:#6d7888;margin-top:-4px">기본 관리자: jeonseongkweon@gmail.com</p>
 <a id="googleLoginBtn" class="btn googlebtn" href="#"><span class="gmark">G</span>Google 계정으로 로그인</a>
 <div id="msg" class="msg"></div>
 <div id="authstate" class="authstate">로그인 상태 확인 중…</div>
@@ -65,7 +65,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <script>
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
-const REDIRECT_URL='https://ipma.kr/gms-admin/';
+const REDIRECT_URL='https://ipma.kr/gms-admin/callback.html';
 const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];
 
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
@@ -73,7 +73,7 @@ const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
     persistSession:true,
     autoRefreshToken:true,
     detectSessionInUrl:true,
-    flowType:'implicit'
+    flowType:'pkce'
   }
 });
 const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
@@ -86,9 +86,9 @@ LEVELS.forEach(([n,c])=>{
 
 function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
 function cleanOAuthUrl(){
- if(location.hash && (location.hash.includes('access_token=') || location.hash.includes('error='))){
-   history.replaceState({},document.title,location.pathname);
- }
+  if(location.search || location.hash){
+    history.replaceState({},document.title,location.pathname);
+  }
 }
 async function showLogin(message=''){
  $('login').classList.remove('hidden');$('app').classList.add('hidden');$('logout').classList.add('hidden');
@@ -113,7 +113,7 @@ async function verifySession(source='verify'){
      session=retry.data.session;
    }
    if(!session){
-     $('authstate').textContent='현재 로그인된 Google 세션이 없습니다.';
+     $('authstate').textContent='현재 로그인 세션이 없습니다. Google 계정으로 로그인해 주세요.';
      await showLogin();
      return false;
    }

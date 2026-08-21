@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>GMS 로그인 처리</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:#f3f6fa;color:#142033;display:grid;place-items:center;min-height:100vh}
+.box{width:min(520px,calc(100% - 28px));background:#fff;border:1px solid #dce3eb;border-radius:18px;padding:28px;box-shadow:0 16px 45px #0b203514}
+h1{margin:0 0 12px;font-size:24px}.msg{line-height:1.7;color:#5f6b7a}.err{color:#a12632;white-space:pre-line}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>GMS 로그인 처리 중</h1>
+<div id="msg" class="msg">Google 인증정보를 확인하고 있습니다…</div>
+</div>
+<script>
+const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
+const HOME='https://ipma.kr/gms-admin/';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  auth:{
+    persistSession:true,
+    autoRefreshToken:true,
+    detectSessionInUrl:true,
+    flowType:'pkce'
+  }
+});
+const msg=document.getElementById('msg');
+
+(async()=>{
+  try{
+    const params=new URLSearchParams(location.search);
+    const oauthError=params.get('error_description')||params.get('error');
+    if(oauthError) throw new Error(oauthError);
+
+    const code=params.get('code');
+    if(code){
+      msg.textContent='Google 인증 완료. GMS 세션을 생성하고 있습니다…';
+      const {data,error}=await db.auth.exchangeCodeForSession(code);
+      if(error) throw error;
+      if(!data?.session) throw new Error('세션 생성 결과를 확인할 수 없습니다.');
+    }
+
+    let {data:{session},error:sErr}=await db.auth.getSession();
+    if(sErr) throw sErr;
+
+    if(!session){
+      await new Promise(r=>setTimeout(r,500));
+      const retry=await db.auth.getSession();
+      session=retry.data.session;
+    }
+    if(!session) throw new Error('Google 인증 후 Supabase 세션이 생성되지 않았습니다.');
+
+    msg.textContent='로그인 성공. 통합 운영본부로 이동합니다…';
+    history.replaceState({},document.title,location.pathname);
+    setTimeout(()=>location.replace(HOME),350);
+  }catch(e){
+    msg.className='msg err';
+    msg.textContent='로그인 처리 중 오류가 발생했습니다.\n'+(e?.message||e)+'\n\n잠시 후 GMS 로그인 화면으로 돌아갑니다.';
+    setTimeout(()=>location.replace(HOME),4000);
+  }
+})();
+</script>
+</body>
+</html>
