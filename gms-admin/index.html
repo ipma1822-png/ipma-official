@@ -35,7 +35,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <main>
 <section id="login" class="login">
 <h1>통합 운영본부</h1><p>등록된 총괄 관리자는 Google 계정으로 간편하게 로그인합니다.</p>
-<button id="googleLoginBtn" class="btn googlebtn"><span class="gmark">G</span> Google 계정으로 로그인</button><div id="msg" class="msg" style="margin-top:12px"></div>
+<a id="googleLoginBtn" aria-label="Google 계정으로 GMS 관리자 로그인" class="btn googlebtn" href="https://ojxarsfaewehwjidwgac.supabase.co/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Fipma.kr%2Fgms-admin%2F" style="text-decoration:none"><span class="gmark">G</span> Google 계정으로 로그인</a><div id="msg" class="msg" style="margin-top:12px"></div>
 </section>
 <section id="app" class="hidden">
 <div class="hero"><h1>통합 회원관리</h1><p>회원의 현재 LEVEL을 확인하고 변경사유와 함께 승급·조정할 수 있습니다.</p></div>
@@ -68,12 +68,12 @@ async function verify(){
  if(session&&!ok){await db.auth.signOut();$('msg').textContent='허용되지 않은 계정입니다.'}
  if(ok) load();
 }
-$('googleLoginBtn').onclick=async()=>{
- $('msg').textContent='Google 로그인 화면으로 이동합니다…';
- const redirect=location.origin+location.pathname;
- const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:redirect}});
- if(error)$('msg').textContent='Google 로그인 시작 실패: '+error.message;
-};
+const googleLink=$('googleLoginBtn');
+if(googleLink){
+ googleLink.addEventListener('click',()=>{
+   $('msg').textContent='Google 로그인 화면으로 이동합니다…';
+ });
+}
 $('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
 async function load(){
  const {data:ms,error}=await db.from('members').select('id,name,email,status,created_at').order('created_at');
