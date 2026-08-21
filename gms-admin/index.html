@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v1.5.0 | Global Membership System</title>
+<title>GMS v1.6.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -67,7 +67,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.5.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.6.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -82,7 +82,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
    <div class="mega"><a class="wide" data-page="dashboard">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a data-page="roadmap">개발 로드맵</a><a data-page="settings">운영 설정</a></div>
   </div>
   <div class="navitem"><a class="navtop" data-page="members">회원관리</a>
-   <div class="mega"><a class="wide" data-page="members">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a data-page="members">전체회원</a><a data-page="members">신규회원</a><a data-page="members">무료회원</a><a data-page="membership-plan">유료회원 / PLAN</a><a data-page="levels">9단계 회원등급</a><a data-page="member-card">디지털 회원카드</a></div>
+   <div class="mega"><a class="wide" data-page="members">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a data-page="members">전체회원</a><a data-page="members">신규회원</a><a data-page="members">무료회원</a><a data-page="membership-plan">유료회원 / PLAN</a><a data-page="plan-admin">PLAN 관리</a><a data-page="levels">9단계 회원등급</a><a data-page="member-card">디지털 회원카드</a></div>
   </div>
   <div class="navitem"><a class="navtop" data-page="finance">회비·수익</a>
    <div class="mega"><a class="wide" data-page="finance">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a data-page="finance">입금대기</a><a data-page="finance">입금완료</a><a data-page="finance">만료예정</a><a data-page="finance">연회비 설정</a><a data-page="finance">서비스 상품</a></div>
@@ -97,7 +97,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
    <div class="mega"><a class="wide" data-page="organization">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a data-page="organization">임원위촉</a><a data-page="organization">지부장</a><a data-page="organization">지부관리</a><a data-page="organization">조직도</a></div>
   </div>
   <div class="navitem"><a class="navtop" data-page="statistics">통계·설정</a>
-   <div class="mega"><a class="wide" data-page="statistics">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a data-page="statistics">회원통계</a><a data-page="statistics">수익통계</a><a data-page="statistics">활동통계</a><a data-page="settings">관리자 설정</a><a data-page="settings">운영 메모</a></div>
+   <div class="mega"><a class="wide" data-page="statistics">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a data-page="statistics">회원통계</a><a data-page="statistics">수익통계</a><a data-page="statistics">활동통계</a><a data-page="content-access">콘텐츠 권한정책</a><a data-page="settings">관리자 설정</a><a data-page="settings">운영 메모</a></div>
   </div>
  </div>
 </nav>
@@ -155,7 +155,58 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="phase"><span class="badge next">NEXT</span><h3>TAEKWONKUMDO PRO</h3><p>태권검도 전문교육·영상·지도자과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>POLICE MARTIAL ARTS PRO</h3><p>경찰무도·호신술·경호·안전 전문과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>DRONE PATROL PRO / ALL PASS</h3><p>드론교육 및 향후 3개 조직 통합상품 확장.</p></div>
  </div></div>
 
- <div id="page-finance" class="page hidden">
+ 
+<div id="page-plan-admin" class="page hidden">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">MEMBER PLAN CONTROL</div>
+      <h1>회원 PLAN 관리</h1>
+      <p>WTKF · IPMA · IDP의 FREE / PRO 상태와 시작일·만료일을 관리합니다.</p>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span>전체 PLAN</span><b id="planTotal">0</b></div>
+    <div class="stat"><span>활성 PRO</span><b id="planPro">0</b></div>
+    <div class="stat"><span>만료예정 30일</span><b id="planSoon">0</b></div>
+    <div class="stat"><span>HOLD</span><b id="planHold">0</b></div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <div class="panelhead">
+      <b>회원별 조직 PLAN</b>
+      <input id="planSearch" class="search" placeholder="이름 또는 이메일 검색">
+    </div>
+    <div class="scroll"><table>
+      <thead><tr><th>회원</th><th>조직</th><th>PLAN</th><th>상태</th><th>시작일</th><th>만료일</th><th>남은기간</th><th>관리</th></tr></thead>
+      <tbody id="planRows"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="planModal" class="drawer hidden"><div class="drawerbox">
+  <div class="drawerhead">
+    <div><small>PLAN CONTROL</small><h2 id="planMemberName" style="margin:5px 0"></h2><div id="planMemberEmail" style="color:#6d7888"></div></div>
+    <button id="planClose" class="x">✕</button>
+  </div>
+  <div class="card">
+    <div id="planCurrent" style="font-size:23px;font-weight:900"></div>
+    <div id="planDates" style="margin-top:8px;color:#6d7888;font-size:13px;line-height:1.7"></div>
+  </div>
+  <div class="card">
+    <div class="field"><label>상태 변경</label>
+      <select id="planAction">
+        <option value="extend">PRO 1년 연장</option>
+        <option value="hold">HOLD 전환</option>
+        <option value="activate">ACTIVE 복구</option>
+        <option value="free">FREE 전환</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:10px"><label>변경 사유</label><textarea id="planReason" placeholder="예: 연회비 재납부 / 관리자 승인 / 휴면 처리"></textarea></div>
+    <button id="planApply" class="btn gold" style="width:100%;margin-top:12px">PLAN 변경 적용</button>
+    <div id="planMsg" class="msg"></div>
+  </div>
+</div>
+
+<div id="page-finance" class="page hidden">
   <div class="pagehead"><div><div class="eyebrow">PAYMENT & REVENUE</div><h1>회비·입금관리</h1><p>계좌입금 → 관리자 확인 → PRO 1년 활성화 흐름을 관리합니다.</p></div><button class="btn gold" id="newPaymentBtn">+ 입금신청 등록</button></div>
   <div class="stats"><div class="stat"><span>입금대기</span><b id="payPending">0</b></div><div class="stat"><span>납부완료</span><b id="payPaid">0</b></div><div class="stat"><span>활성 PRO</span><b id="payPro">0</b></div><div class="stat"><span>만료예정 30일</span><b id="payExpiring">0</b></div></div>
   <div class="panel" style="margin-top:16px">
@@ -199,7 +250,21 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
  <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · WTKF/IPMA/IDP PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
 
- <div id="page-settings" class="page hidden"><div class="pagehead"><div><div class="eyebrow">SYSTEM SETTINGS</div><h1>운영 설정</h1><p>관리자 권한, 등급정책, 포인트정책, 상품정책을 관리할 영역입니다.</p></div></div><div class="notice">현재는 최고관리자 Google 로그인과 RLS 권한을 사용합니다. 향후 역할별 ADMIN / FINANCE / EDUCATION 권한으로 세분화할 수 있습니다.</div></div>
+ 
+<div id="page-content-access" class="page hidden">
+  <div class="pagehead"><div><div class="eyebrow">CONTENT ACCESS POLICY</div><h1>콘텐츠 접근권한</h1><p>각 홈페이지의 영상·자료·시뮬레이터를 FREE / PRO / LEVEL 조건과 연결하기 위한 정책영역입니다.</p></div></div>
+  <div class="phasegrid">
+    <div class="phase"><span class="badge live">PUBLIC</span><h3>공개 콘텐츠</h3><p>로그인 없이 누구나 이용.</p></div>
+    <div class="phase"><span class="badge">FREE MEMBER</span><h3>무료회원 콘텐츠</h3><p>로그인 회원에게만 공개.</p></div>
+    <div class="phase"><span class="badge next">PRO</span><h3>PRO 콘텐츠</h3><p>조직별 활성 PRO만 이용.</p></div>
+    <div class="phase"><span class="badge next">LEVEL</span><h3>등급 제한</h3><p>예: GOLD 이상, 지도자 전용.</p></div>
+    <div class="phase"><span class="badge next">LEADER</span><h3>지도자·임원</h3><p>appointment / certificate 조건과 연동 예정.</p></div>
+    <div class="phase"><span class="badge next">LOCKED</span><h3>잠긴 콘텐츠 UX</h3><p>정회원 신청·회원혜택 버튼으로 자연스럽게 전환.</p></div>
+  </div>
+  <div class="notice" style="margin-top:16px">다음 패치에서 태권검도·경찰무도·드론순찰대의 실제 콘텐츠 페이지에 이 정책을 연결합니다.</div>
+</div>
+
+<div id="page-settings" class="page hidden"><div class="pagehead"><div><div class="eyebrow">SYSTEM SETTINGS</div><h1>운영 설정</h1><p>관리자 권한, 등급정책, 포인트정책, 상품정책을 관리할 영역입니다.</p></div></div><div class="notice">현재는 최고관리자 Google 로그인과 RLS 권한을 사용합니다. 향후 역할별 ADMIN / FINANCE / EDUCATION 권한으로 세분화할 수 있습니다.</div></div>
 
  <div id="page-roadmap" class="page hidden"><div class="pagehead"><div><div class="eyebrow">GMS ROADMAP</div><h1>개발 로드맵</h1><p>기존 시스템을 보존하면서 단계적으로 확장합니다.</p></div></div><div class="phasegrid">
   <div class="phase"><span class="badge live">완료</span><h3>1~4단계 기반</h3><ul><li>통합회원 구조 점검</li><li>9단계 LEVEL</li><li>관리자 Google 로그인</li><li>등급조정·이력</li></ul></div>
@@ -208,7 +273,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.5.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.6.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -400,6 +465,7 @@ async function loadFinance(){
   if(mpe){ console.warn('member_plans:',mpe.message); return; }
   payments=p||[]; memberPlans=mp||[];
   renderFinance();
+  renderPlanAdmin();
 }
 
 function money(v){ return Number(v||0).toLocaleString('ko-KR')+'원'; }
@@ -501,6 +567,86 @@ if($('savePaymentBtn'))$('savePaymentBtn').onclick=async()=>{
   await loadFinance();
 };
 
+
+
+let selectedPlan=null;
+
+function daysLeft(dateStr){
+  if(!dateStr) return '-';
+  const diff=Math.ceil((new Date(dateStr).getTime()-Date.now())/86400000);
+  if(diff<0) return `만료 ${Math.abs(diff)}일 경과`;
+  return `${diff}일`;
+}
+function renderPlanAdmin(){
+  const body=$('planRows'); if(!body)return;
+  const q=($('planSearch')?.value||'').trim().toLowerCase();
+  const memberMap=new Map(members.map(m=>[m.id,m]));
+  const rows=(memberPlans||[]).filter(p=>{
+    const m=memberMap.get(p.member_id)||{};
+    return !q || `${m.name||''} ${m.email||''}`.toLowerCase().includes(q);
+  });
+  $('planTotal').textContent=(memberPlans||[]).length;
+  $('planPro').textContent=(memberPlans||[]).filter(p=>p.plan_code==='PRO'&&p.status==='active').length;
+  const now=Date.now(), soon=now+30*86400000;
+  $('planSoon').textContent=(memberPlans||[]).filter(p=>p.plan_code==='PRO'&&p.status==='active'&&p.expires_at&&new Date(p.expires_at).getTime()>=now&&new Date(p.expires_at).getTime()<=soon).length;
+  $('planHold').textContent=(memberPlans||[]).filter(p=>p.status==='hold').length;
+  body.innerHTML=rows.map(p=>{
+    const m=memberMap.get(p.member_id)||{};
+    return `<tr>
+      <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
+      <td>${esc(p.organization_code)}</td>
+      <td><b>${esc(p.plan_code)}</b></td>
+      <td>${esc(p.status)}</td>
+      <td>${fmtDate(p.starts_at)}</td>
+      <td>${fmtDate(p.expires_at)}</td>
+      <td>${daysLeft(p.expires_at)}</td>
+      <td><button class="memberbtn planManage" data-id="${p.id}">관리</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="8" class="empty">PLAN 데이터가 없습니다.</td></tr>';
+  document.querySelectorAll('.planManage').forEach(b=>b.onclick=()=>openPlan(Number(b.dataset.id)));
+}
+function openPlan(id){
+  selectedPlan=(memberPlans||[]).find(p=>Number(p.id)===Number(id)); if(!selectedPlan)return;
+  const m=members.find(x=>x.id===selectedPlan.member_id)||{};
+  $('planMemberName').textContent=m.name||'이름 없음';
+  $('planMemberEmail').textContent=m.email||'';
+  $('planCurrent').textContent=`${selectedPlan.organization_code} · ${selectedPlan.plan_code} · ${selectedPlan.status}`;
+  $('planDates').innerHTML=`시작일: ${fmtDate(selectedPlan.starts_at)}<br>만료일: ${fmtDate(selectedPlan.expires_at)}<br>남은기간: ${daysLeft(selectedPlan.expires_at)}`;
+  $('planReason').value=''; $('planMsg').textContent='';
+  $('planModal').classList.remove('hidden');
+}
+if($('planClose')) $('planClose').onclick=()=>{$('planModal').classList.add('hidden');selectedPlan=null};
+if($('planSearch')) $('planSearch').oninput=renderPlanAdmin;
+
+if($('planApply')) $('planApply').onclick=async()=>{
+  if(!selectedPlan)return;
+  const action=$('planAction').value, reason=$('planReason').value.trim();
+  if(!reason){$('planMsg').textContent='변경 사유를 입력해주세요.';return}
+  const {data:{user}}=await db.auth.getUser();
+  let patch={changed_reason:reason,changed_by:user?.id||null};
+  const now=new Date();
+
+  if(action==='extend'){
+    let base=selectedPlan.expires_at ? new Date(selectedPlan.expires_at) : now;
+    if(base.getTime()<now.getTime()) base=now;
+    const end=new Date(base); end.setFullYear(end.getFullYear()+1);
+    patch={...patch,plan_code:'PRO',status:'active',starts_at:selectedPlan.starts_at||now.toISOString(),expires_at:end.toISOString()};
+  }else if(action==='hold'){
+    patch={...patch,status:'hold'};
+  }else if(action==='activate'){
+    patch={...patch,status:'active'};
+  }else if(action==='free'){
+    patch={...patch,plan_code:'FREE',status:'active',starts_at:null,expires_at:null,source_payment_id:null};
+  }
+
+  const {error}=await db.from('member_plans').update(patch).eq('id',selectedPlan.id);
+  if(error){$('planMsg').textContent='PLAN 변경 실패: '+error.message;return}
+  $('planMsg').textContent='PLAN 변경 완료';
+  await loadFinance();
+  renderPlanAdmin();
+  selectedPlan=(memberPlans||[]).find(p=>Number(p.id)===Number(selectedPlan.id));
+  openPlan(selectedPlan.id);
+};
 
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
