@@ -7,61 +7,191 @@
 <title>GMS | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--navy:#07172b;--navy2:#123b63;--gold:#d7ad50;--bg:#f3f6fa;--line:#dce3eb;--text:#142033;--muted:#6d7888}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text)}
-.hidden{display:none!important}.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-bottom:3px solid var(--gold)}
-.topin{width:min(1320px,calc(100% - 28px));margin:auto;padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:15px}
-.brand b{font-size:21px}.brand span{display:block;color:#c5d0dd;font-size:11px;letter-spacing:.12em;margin-top:4px}
-button,input,select,textarea{font:inherit}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:9px}
+:root{
+ --navy:#07172b;--navy2:#123b63;--navy3:#0d2b4a;--gold:#d7ad50;--gold2:#b98b34;
+ --bg:#f3f6fa;--line:#dce3eb;--text:#142033;--muted:#6d7888;--white:#fff;
+ --green:#16794f;--red:#a6333d;--shadow:0 14px 34px #0b203510
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text)}
+.hidden{display:none!important}button,input,select,textarea{font:inherit}a{color:inherit}
+.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100}
+.topin{width:min(1450px,calc(100% - 28px));margin:auto;min-height:74px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.brand{cursor:pointer}.brand b{font-size:22px;letter-spacing:.02em}.brand span{display:block;color:#c5d0dd;font-size:10px;letter-spacing:.14em;margin-top:5px}
+.topright{display:flex;gap:10px;align-items:center}.adminpill{font-size:11px;color:#dbe5ef;border:1px solid #ffffff28;padding:8px 10px;border-radius:99px}
+.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
 .btn.gold{background:linear-gradient(135deg,#d8b257,#a87a28)}.btn.ghost{background:transparent;border:1px solid #ffffff55}
-.googlebtn{width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5df;margin-top:16px;padding:13px}
-.gmark{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#4285f4;border:1px solid #e1e6ec}
-main{width:min(1320px,calc(100% - 28px));margin:auto;padding:28px 0 50px}
-.login{max-width:620px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 16px 45px #0b203514}
-.login p{color:#5f6b7a;line-height:1.65}.msg{min-height:22px;color:#9a2c36;font-size:13px;margin-top:10px;white-space:pre-line}
-.authstate{font-size:12px;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:10px;margin-top:12px;color:#566173}
-.hero h1{margin:5px 0;font-size:36px}.hero p{color:var(--muted);margin:0 0 20px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:29px;margin-top:5px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;margin-top:16px;overflow:hidden}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
-.search{padding:10px 12px;border:1px solid #cbd5df;border-radius:9px;width:min(350px,100%)}.scroll{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}th{background:#f8fafc}
-.level{font-weight:900}.memberbtn{border:0;background:none;color:#123b63;font-weight:900;cursor:pointer;text-decoration:underline}
-.drawer{position:fixed;inset:0;background:#07172b77;display:flex;justify-content:flex-end;z-index:50}.drawerbox{width:min(520px,100%);height:100%;overflow:auto;background:#fff;padding:22px}
-.drawerhead{display:flex;justify-content:space-between;gap:10px;align-items:start}.x{border:0;background:#edf1f5;border-radius:50%;width:38px;height:38px;cursor:pointer}
-.card{border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:5px}
-.field select,.field textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px}.field textarea{min-height:90px;resize:vertical}
-.history{font-size:12px;line-height:1.6;border-bottom:1px solid #edf0f4;padding:9px 0}.empty{color:var(--muted);padding:20px}
-@media(max-width:760px){.stats{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.hero h1{font-size:29px}.topin{align-items:flex-start}}
-</style></head>
+.googlebtn{width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5df;margin-top:16px;padding:13px}.gmark{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#4285f4;border:1px solid #e1e6ec}
+.menuBtn{display:none;background:none;border:1px solid #ffffff44;color:#fff;border-radius:9px;padding:8px 11px;font-size:20px}
+
+/* MEGA MENU */
+.navbar{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 14px #07172b08}
+.navin{width:min(1450px,calc(100% - 28px));margin:auto;display:flex;align-items:stretch}
+.navitem{position:relative}.navtop{display:block;padding:16px 18px;font-weight:900;font-size:14px;text-decoration:none;color:#22324a;border-bottom:3px solid transparent;white-space:nowrap}
+.navitem:hover>.navtop,.navitem.force-open>.navtop,.navtop.active{color:#0d3c68;border-bottom-color:var(--gold)}
+.mega{display:none;position:absolute;top:100%;left:0;width:470px;background:#fff;border:1px solid var(--line);border-radius:0 0 16px 16px;box-shadow:0 18px 40px #06142520;padding:18px;z-index:90}
+.navitem:hover>.mega,.navitem.force-open>.mega{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.navitem:nth-last-child(-n+2) .mega{left:auto;right:0}
+.mega a{padding:11px 12px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:800;color:#39485d;background:#f7f9fc}
+.mega a:hover,.mega a.active{background:#edf4fb;color:#0d4a7d}.mega .wide{grid-column:1/-1;background:linear-gradient(135deg,#0c2d4d,#174b78);color:#fff}
+.mega small{display:block;font-weight:500;opacity:.75;margin-top:4px;line-height:1.4}
+
+/* APP */
+main{width:min(1450px,calc(100% - 28px));margin:auto;padding:26px 0 56px}
+.login{max-width:620px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.login p{color:#5f6b7a;line-height:1.65}.msg{min-height:22px;color:#9a2c36;font-size:13px;margin-top:10px;white-space:pre-line}.authstate{font-size:12px;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:10px;margin-top:12px;color:#566173}
+.pagehead{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.pagehead h1{margin:0;font-size:34px}.pagehead p{margin:7px 0 0;color:var(--muted);line-height:1.55}
+.eyebrow{font-size:11px;color:#9a742f;font-weight:900;letter-spacing:.15em;margin-bottom:7px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 8px 18px #07172b05}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:29px;margin-top:5px}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 8px 24px #07172b06}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.panelbody{padding:18px}.search{padding:10px 12px;border:1px solid #cbd5df;border-radius:9px;width:min(350px,100%)}.scroll{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}th{background:#f8fafc}.level{font-weight:900}.memberbtn{border:0;background:none;color:#123b63;font-weight:900;cursor:pointer;text-decoration:underline}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.qcard{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;text-decoration:none;transition:.18s}.qcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.qicon{font-size:22px}.qcard b{display:block;margin:9px 0 5px}.qcard small{color:var(--muted);line-height:1.5}
+.orgcard{border:1px solid var(--line);border-radius:14px;padding:18px;background:linear-gradient(180deg,#fff,#f9fbfd)}.orgcard h3{margin:0 0 7px}.orgcard p{color:var(--muted);font-size:13px;line-height:1.6}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:900;background:#edf3f8;color:#31506d}.badge.live{background:#e9f7f0;color:var(--green)}.badge.next{background:#fff4df;color:#8d6422}
+.phasegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.phase{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;min-height:170px}.phase h3{margin:7px 0 9px}.phase p{color:var(--muted);font-size:13px;line-height:1.6}.phase ul{margin:10px 0 0;padding-left:18px;color:#4d5b6d;font-size:12px;line-height:1.8}
+.notice{border-left:4px solid var(--gold);background:#fffaf0;padding:15px 17px;border-radius:10px;color:#76571f;font-size:13px;line-height:1.6}
+.drawer{position:fixed;inset:0;background:#07172b77;display:flex;justify-content:flex-end;z-index:150}.drawerbox{width:min(520px,100%);height:100%;overflow:auto;background:#fff;padding:22px}.drawerhead{display:flex;justify-content:space-between;gap:10px;align-items:start}.x{border:0;background:#edf1f5;border-radius:50%;width:38px;height:38px;cursor:pointer}
+.card{border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:5px}.field select,.field textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px}.field textarea{min-height:90px;resize:vertical}.history{font-size:12px;line-height:1.6;border-bottom:1px solid #edf0f4;padding:9px 0}.empty{color:var(--muted);padding:20px}
+.footer{text-align:center;color:#8792a1;font-size:11px;padding:24px 0}
+
+@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.phasegrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){
+ .menuBtn{display:block}.adminpill{display:none}.navbar{display:none}.menu-open .navbar{display:block;position:fixed;left:0;right:0;top:74px;bottom:0;overflow:auto;z-index:95}
+ .navin{display:block;width:100%}.navtop{border-bottom:1px solid #edf0f4;padding:16px 20px}.mega,.navitem:hover>.mega,.navitem.force-open>.mega{position:static;width:auto;box-shadow:none;border:0;border-radius:0;padding:9px 15px 16px;display:none;grid-template-columns:1fr 1fr;background:#f7f9fc}.navitem.open>.mega{display:grid}.navitem:nth-last-child(-n+2) .mega{right:auto}
+}
+@media(max-width:650px){.stats,.grid3,.phasegrid,.quick{grid-template-columns:1fr}.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
+</style>
+</head>
 <body>
-<header class="top"><div class="topin"><div class="brand"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div><button id="logout" class="btn ghost hidden">로그아웃</button></div></header>
+<header class="top">
+ <div class="topin">
+  <div class="brand" data-page="dashboard"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
+  <div class="topright">
+   <div id="adminEmailTop" class="adminpill"></div>
+   <button id="logout" class="btn ghost hidden">로그아웃</button>
+   <button id="menuBtn" class="menuBtn">☰</button>
+  </div>
+ </div>
+</header>
+
+<nav id="appNav" class="navbar hidden">
+ <div class="navin">
+  <div class="navitem"><a class="navtop" data-page="dashboard">운영본부</a>
+   <div class="mega"><a class="wide" data-page="dashboard">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a data-page="roadmap">개발 로드맵</a><a data-page="settings">운영 설정</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="members">회원관리</a>
+   <div class="mega"><a class="wide" data-page="members">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a data-page="members">전체회원</a><a data-page="members">신규회원</a><a data-page="members">무료회원</a><a data-page="membership-plan">유료회원 / PLAN</a><a data-page="levels">9단계 회원등급</a><a data-page="member-card">디지털 회원카드</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="finance">회비·수익</a>
+   <div class="mega"><a class="wide" data-page="finance">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a data-page="finance">입금대기</a><a data-page="finance">입금완료</a><a data-page="finance">만료예정</a><a data-page="finance">연회비 설정</a><a data-page="finance">서비스 상품</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="learning">교육·활동</a>
+   <div class="mega"><a class="wide" data-page="learning">교육·활동 기록<small>영상·시뮬레이터·세미나·G-POINT 연동</small></a><a data-page="learning">교육이력</a><a data-page="learning">영상학습</a><a data-page="learning">시뮬레이터</a><a data-page="points">G-POINT</a><a data-page="learning">세미나 참가</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="certificates">자격·지도자</a>
+   <div class="mega"><a class="wide" data-page="certificates">자격·지도자 관리<small>자격증, 수료증, 지도자과정, 검정관리</small></a><a data-page="certificates">자격증 관리</a><a data-page="certificates">수료현황</a><a data-page="certificates">지도자 관리</a><a data-page="certificates">검정 신청</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="organization">임원·지부</a>
+   <div class="mega"><a class="wide" data-page="organization">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a data-page="organization">임원위촉</a><a data-page="organization">지부장</a><a data-page="organization">지부관리</a><a data-page="organization">조직도</a></div>
+  </div>
+  <div class="navitem"><a class="navtop" data-page="statistics">통계·설정</a>
+   <div class="mega"><a class="wide" data-page="statistics">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a data-page="statistics">회원통계</a><a data-page="statistics">수익통계</a><a data-page="statistics">활동통계</a><a data-page="settings">관리자 설정</a><a data-page="settings">운영 메모</a></div>
+  </div>
+ </div>
+</nav>
 
 <main>
 <section id="login" class="login">
-<h1>통합 운영본부</h1>
-<p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p><p style="font-size:12px;color:#6d7888;margin-top:-4px">기본 관리자: jeonseongkweon@gmail.com</p>
-<a id="googleLoginBtn" class="btn googlebtn" href="#"><span class="gmark">G</span>Google 계정으로 로그인</a>
-<div id="msg" class="msg"></div>
-<div id="authstate" class="authstate">로그인 상태 확인 중…</div>
+ <h1>통합 운영본부</h1>
+ <p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p>
+ <p style="font-size:12px;color:#6d7888;margin-top:-4px">기본 관리자: jeonseongkweon@gmail.com</p>
+ <a id="googleLoginBtn" class="btn googlebtn" href="#"><span class="gmark">G</span>Google 계정으로 로그인</a>
+ <div id="msg" class="msg"></div><div id="authstate" class="authstate">로그인 상태 확인 중…</div>
 </section>
 
 <section id="app" class="hidden">
-<div class="hero"><h1>통합 회원관리</h1><p id="adminInfo">관리자 로그인 완료</p></div>
-<div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div></div>
-<div class="panel"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div>
-<div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>현재등급</th><th>상태</th><th>변경사유</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+ <div id="page-dashboard" class="page">
+  <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members">회원관리 바로가기</button></div>
+  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div></div>
+  <div class="grid2">
+   <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
+    <div class="quick">
+     <a class="qcard" data-page="members"><span class="qicon">👥</span><b>통합 회원관리</b><small>회원 검색, 현재 LEVEL 확인, 승급·조정</small></a>
+     <a class="qcard" data-page="finance"><span class="qicon">₩</span><b>회비·입금관리</b><small>연회비 신청과 입금확인 시스템 구축 예정</small></a>
+     <a class="qcard" data-page="points"><span class="qicon">★</span><b>G-POINT</b><small>학습·훈련·공헌 활동점수 연동 예정</small></a>
+     <a class="qcard" data-page="learning"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
+     <a class="qcard" data-page="certificates"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
+     <a class="qcard" data-page="organization"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
+    </div>
+   </div></div>
+   <div class="panel"><div class="panelhead"><b>현재 구축상태</b><span class="badge live">운영 중</span></div><div class="panelbody">
+    <div class="notice"><b>현재 정상 작동</b><br>Google 관리자 로그인 · 회원목록 · LV.1~LV.9 · 등급변경 · 승급이력</div>
+    <p style="font-size:13px;color:#657181;line-height:1.7">다음 개발은 <b>PLAN / 회비·입금확인</b> 기능을 붙이는 것이 가장 자연스럽습니다. 이후 G-POINT와 학습기록을 연결합니다.</p>
+   </div></div>
+  </div>
+  <div class="grid3">
+   <div class="orgcard"><span class="badge live">WTKF</span><h3>태권검도</h3><p>무기술·도장교육 회원사업. 향후 FREE / PRO와 지도자과정 연결.</p></div>
+   <div class="orgcard"><span class="badge live">IPMA</span><h3>경찰무도</h3><p>호신술·경호·안전교육. 기존 수익사업 신청구조를 GMS와 연동.</p></div>
+   <div class="orgcard"><span class="badge live">IDP</span><h3>드론순찰대</h3><p>드론·순찰·안전기술. 대원·지부·시뮬레이터 기록을 통합 예정.</p></div>
+  </div>
+ </div>
+
+ <div id="page-members" class="page hidden">
+  <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT</div><h1>통합 회원관리</h1><p>회원 한 명의 현재 LEVEL과 등급변경 이력을 관리합니다.</p></div></div>
+  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total2">-</b></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
+  <div class="panel" style="margin-top:16px"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div><div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>현재등급</th><th>상태</th><th>변경사유</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+ </div>
+
+ <div id="page-levels" class="page hidden"><div class="pagehead"><div><div class="eyebrow">9 LEVEL SYSTEM</div><h1>9단계 회원등급</h1><p>LEVEL은 회원의 성장·활동·공헌을 나타내며 PLAN과 분리합니다.</p></div></div><div class="phasegrid">
+  <div class="phase"><span class="badge">LV.1~3</span><h3>WHITE · GREEN · BLUE</h3><p>무료회원과 초기 활동회원의 성장구간.</p></div>
+  <div class="phase"><span class="badge">LV.4~6</span><h3>SILVER · GOLD · PLATINUM</h3><p>교육·자격·활동실적이 축적된 전문회원 구간.</p></div>
+  <div class="phase"><span class="badge">LV.7~9</span><h3>DIAMOND · CROWN · ROYAL CROWN</h3><p>최고위 공헌·지도·조직활동 등급. CROWN 이상은 본부 특별승인 원칙.</p></div>
+ </div></div>
+
+ <div id="page-membership-plan" class="page hidden"><div class="pagehead"><div><div class="eyebrow">PLAN</div><h1>FREE / PRO 서비스</h1><p>LEVEL과 분리된 이용서비스 체계입니다.</p></div></div><div class="phasegrid">
+  <div class="phase"><span class="badge next">NEXT</span><h3>TAEKWONKUMDO PRO</h3><p>태권검도 전문교육·영상·지도자과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>POLICE MARTIAL ARTS PRO</h3><p>경찰무도·호신술·경호·안전 전문과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>DRONE PATROL PRO / ALL PASS</h3><p>드론교육 및 향후 3개 조직 통합상품 확장.</p></div>
+ </div></div>
+
+ <div id="page-finance" class="page hidden"><div class="pagehead"><div><div class="eyebrow">PAYMENT & REVENUE</div><h1>회비·입금관리</h1><p>계좌입금 + 관리자 확인 방식부터 구축합니다.</p></div></div><div class="phasegrid">
+  <div class="phase"><span class="badge next">STEP 5</span><h3>입금대기</h3><p>회원 신청 후 계좌입금 대기 목록.</p><ul><li>신청서비스</li><li>신청금액</li><li>신청일</li></ul></div>
+  <div class="phase"><span class="badge next">STEP 5</span><h3>입금확인</h3><p>관리자 확인 버튼으로 납부완료 및 서비스 활성화.</p><ul><li>확인자</li><li>시작일</li><li>만료일 +1년</li></ul></div>
+  <div class="phase"><span class="badge next">STEP 5</span><h3>만료관리</h3><p>만료예정·만료회원과 재가입 안내.</p></div>
+ </div></div>
+
+ <div id="page-learning" class="page hidden"><div class="pagehead"><div><div class="eyebrow">LEARNING & ACTIVITY</div><h1>교육·활동기록</h1><p>기존 learning_progress와 activity_events를 GMS에서 통합합니다.</p></div></div><div class="phasegrid">
+  <div class="phase"><span class="badge next">STEP 8</span><h3>영상 학습시간</h3><p>태권검도·경찰무도 교육영상 시청기록.</p></div><div class="phase"><span class="badge next">STEP 8</span><h3>시뮬레이터</h3><p>태권검도·드론 시뮬레이터 훈련시간과 미션기록.</p></div><div class="phase"><span class="badge next">STEP 7</span><h3>세미나·활동</h3><p>세미나 참가, 지부활동, 지도·봉사활동 기록.</p></div>
+ </div></div>
+
+ <div id="page-points" class="page hidden"><div class="pagehead"><div><div class="eyebrow">G-POINT</div><h1>활동 포인트</h1><p>영상·훈련·교육·자격·조직공헌을 점수화하여 LEVEL 성장과 연결합니다.</p></div></div><div class="notice">G-POINT는 돈으로 최고등급을 사는 구조가 아니라, 실제 교육과 활동의 누적을 보여주는 성장지표로 설계합니다.</div></div>
+
+ <div id="page-certificates" class="page hidden"><div class="pagehead"><div><div class="eyebrow">CERTIFICATE & LEADER</div><h1>자격·지도자 관리</h1><p>자격증·수료증·지도자과정·검정을 회원기록과 연결합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>자격증</h3><p>취득자격, 자격번호, 발급일, 상태.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지도자</h3><p>지도자과정과 지도활동 이력.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>검정·수료</h3><p>신청, 심사, 합격, 발급 상태.</p></div></div></div>
+
+ <div id="page-organization" class="page hidden"><div class="pagehead"><div><div class="eyebrow">APPOINTMENT & BRANCH</div><h1>임원·지부관리</h1><p>회원정보를 기반으로 임원위촉과 지부활동을 관리합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>임원위촉</h3><p>직책·임기·위촉일·상태·이력을 관리.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지부관리</h3><p>3개 조직의 국내외 지부정보와 지부장 연결.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>조직공헌</h3><p>지부활동·행사·교육실적을 LEVEL/G-POINT에 반영.</p></div></div></div>
+
+ <div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
+
+ <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · WTKF/IPMA/IDP PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
+
+ <div id="page-settings" class="page hidden"><div class="pagehead"><div><div class="eyebrow">SYSTEM SETTINGS</div><h1>운영 설정</h1><p>관리자 권한, 등급정책, 포인트정책, 상품정책을 관리할 영역입니다.</p></div></div><div class="notice">현재는 최고관리자 Google 로그인과 RLS 권한을 사용합니다. 향후 역할별 ADMIN / FINANCE / EDUCATION 권한으로 세분화할 수 있습니다.</div></div>
+
+ <div id="page-roadmap" class="page hidden"><div class="pagehead"><div><div class="eyebrow">GMS ROADMAP</div><h1>개발 로드맵</h1><p>기존 시스템을 보존하면서 단계적으로 확장합니다.</p></div></div><div class="phasegrid">
+  <div class="phase"><span class="badge live">완료</span><h3>1~4단계 기반</h3><ul><li>통합회원 구조 점검</li><li>9단계 LEVEL</li><li>관리자 Google 로그인</li><li>등급조정·이력</li></ul></div>
+  <div class="phase"><span class="badge next">NEXT</span><h3>5~7단계 수익·포인트</h3><ul><li>회비신청·입금확인</li><li>FREE / PRO</li><li>G-POINT</li></ul></div>
+  <div class="phase"><span class="badge next">LATER</span><h3>8~10단계 통합운영</h3><ul><li>학습·시뮬레이터</li><li>자격·임원·지부</li><li>통계·자동안내</li></ul></div>
+ </div></div>
 </section>
+
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP</div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
-<div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
-<div class="card"><b>현재 회원등급</b><div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div></div>
-<div class="card"><div class="row"><div class="field"><label>새 등급</label><select id="newLevel"></select></div><div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div></div>
-<div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: 지도자과정 수료 및 활동실적 반영"></textarea></div>
-<button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">등급 변경 및 이력 저장</button><div id="changeMsg" class="msg"></div></div>
-<div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
+ <div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
+ <div class="card"><b>현재 회원등급</b><div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div></div>
+ <div class="card"><div class="row"><div class="field"><label>새 등급</label><select id="newLevel"></select></div><div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div></div>
+ <div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: 지도자과정 수료 및 활동실적 반영"></textarea></div>
+ <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">등급 변경 및 이력 저장</button><div id="changeMsg" class="msg"></div></div>
+ <div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
 </div></div>
-
 <script>
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
@@ -97,7 +227,9 @@ async function showLogin(message=''){
 async function showApp(session){
  $('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');
  $('adminInfo').textContent=`관리자 ${session.user.email} 로그인`;
+ $('adminEmailTop').textContent=session.user.email;
  await load();
+ showPage('dashboard');
 }
 async function verifySession(source='verify'){
  $('authstate').textContent=`로그인 상태 확인 중 (${source})…`;
@@ -226,5 +358,50 @@ db.auth.onAuthStateChange(async(event,session)=>{
  }
 });
 window.addEventListener('load',()=>setTimeout(()=>verifySession('PAGE_LOAD'),150));
+
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+ const page=document.getElementById('page-'+id);
+ if(page) page.classList.remove('hidden');
+ document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));
+ document.querySelectorAll('.mega').forEach(m=>m.classList.remove('open'));
+ document.body.classList.remove('menu-open');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',(e)=>{
+ const pageEl=e.target.closest('[data-page]');
+ if(pageEl){ e.preventDefault(); showPage(pageEl.dataset.page); }
+ const topEl=e.target.closest('.navtop');
+ if(topEl && window.innerWidth<=900){ e.preventDefault(); topEl.parentElement.classList.toggle('open'); }
+});
+const menuBtn=document.getElementById('menuBtn');
+if(menuBtn) menuBtn.onclick=()=>document.body.classList.toggle('menu-open');
+document.addEventListener('click',(e)=>{
+ if(window.innerWidth>900 && !e.target.closest('.navitem')) document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('force-open'));
+});
+document.querySelectorAll('.navtop').forEach(n=>n.addEventListener('click',e=>{
+ if(window.innerWidth>900){ e.preventDefault(); n.parentElement.classList.toggle('force-open'); }
+}));
+
+</script>
+<script>
+// 메인/회원 페이지의 중복 통계 숫자를 함께 동기화
+const originalRender = render;
+render = function(){
+ originalRender();
+ [['total','total2'],['white','white2'],['greenplus','greenplus2'],['nolevel','nolevel2']].forEach(([a,b])=>{
+   const x=document.getElementById(a),y=document.getElementById(b); if(x&&y)y.textContent=x.textContent;
+ });
+};
+const oldShowApp=showApp;
+showApp=async function(session){
+ document.getElementById('appNav').classList.remove('hidden');
+ await oldShowApp(session);
+};
+const oldShowLogin=showLogin;
+showLogin=async function(message=''){
+ document.getElementById('appNav').classList.add('hidden');
+ await oldShowLogin(message);
+};
 </script>
 </body></html>
