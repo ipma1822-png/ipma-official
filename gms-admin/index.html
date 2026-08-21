@@ -12,11 +12,14 @@
 .hidden{display:none!important}.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-bottom:3px solid var(--gold)}
 .topin{width:min(1320px,calc(100% - 28px));margin:auto;padding:18px 0;display:flex;justify-content:space-between;align-items:center;gap:15px}
 .brand b{font-size:21px}.brand span{display:block;color:#c5d0dd;font-size:11px;letter-spacing:.12em;margin-top:4px}
-button,input,select,textarea{font:inherit}.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer}
+button,input,select,textarea{font:inherit}.btn{border:0;border-radius:10px;padding:11px 15px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:9px}
 .btn.gold{background:linear-gradient(135deg,#d8b257,#a87a28)}.btn.ghost{background:transparent;border:1px solid #ffffff55}
+.googlebtn{width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5df;margin-top:16px;padding:13px}
+.gmark{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#4285f4;border:1px solid #e1e6ec}
 main{width:min(1320px,calc(100% - 28px));margin:auto;padding:28px 0 50px}
 .login{max-width:620px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:0 16px 45px #0b203514}
-.login input{width:100%;padding:13px;border:1px solid #cbd5df;border-radius:9px;margin:12px 0}.googlebtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff!important;color:#1f1f1f!important;border:1px solid #cbd5df!important;box-shadow:0 1px 2px #00000012}.googlebtn:hover{background:#f8fafc!important}.gmark{font-size:20px;font-weight:900;color:#4285f4}.msg{min-height:22px;color:#9a2c36;font-size:13px}
+.login p{color:#5f6b7a;line-height:1.65}.msg{min-height:22px;color:#9a2c36;font-size:13px;margin-top:10px;white-space:pre-line}
+.authstate{font-size:12px;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:10px;margin-top:12px;color:#566173}
 .hero h1{margin:5px 0;font-size:36px}.hero p{color:var(--muted);margin:0 0 20px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:29px;margin-top:5px}
 .panel{background:#fff;border:1px solid var(--line);border-radius:17px;margin-top:16px;overflow:hidden}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
@@ -32,18 +35,24 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 </style></head>
 <body>
 <header class="top"><div class="topin"><div class="brand"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div><button id="logout" class="btn ghost hidden">로그아웃</button></div></header>
+
 <main>
 <section id="login" class="login">
-<h1>통합 운영본부</h1><p>등록된 총괄 관리자는 Google 계정으로 간편하게 로그인합니다.</p>
-<a id="googleLoginBtn" aria-label="Google 계정으로 GMS 관리자 로그인" class="btn googlebtn" href="https://ojxarsfaewehwjidwgac.supabase.co/auth/v1/authorize?provider=google&redirect_to=https%3A%2F%2Fipma.kr%2Fgms-admin%2F" style="text-decoration:none"><span class="gmark">G</span> Google 계정으로 로그인</a><div id="msg" class="msg" style="margin-top:12px"></div>
+<h1>통합 운영본부</h1>
+<p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p>
+<a id="googleLoginBtn" class="btn googlebtn" href="#"><span class="gmark">G</span>Google 계정으로 로그인</a>
+<div id="msg" class="msg"></div>
+<div id="authstate" class="authstate">로그인 상태 확인 중…</div>
 </section>
+
 <section id="app" class="hidden">
-<div class="hero"><h1>통합 회원관리</h1><p>회원의 현재 LEVEL을 확인하고 변경사유와 함께 승급·조정할 수 있습니다.</p></div>
+<div class="hero"><h1>통합 회원관리</h1><p id="adminInfo">관리자 로그인 완료</p></div>
 <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div></div>
 <div class="panel"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div>
 <div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>현재등급</th><th>상태</th><th>변경사유</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
 </section>
 </main>
+
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
 <div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
 <div class="card"><b>현재 회원등급</b><div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div></div>
@@ -52,34 +61,102 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">등급 변경 및 이력 저장</button><div id="changeMsg" class="msg"></div></div>
 <div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
 </div></div>
+
 <script>
-const URL='https://ojxarsfaewehwjidwgac.supabase.co';
-const KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
-const ADMIN='jeonseongkweon@gmail.com';
-const db=supabase.createClient(URL,KEY);
+const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
+const REDIRECT_URL='https://ipma.kr/gms-admin/';
+const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];
+
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  auth:{
+    persistSession:true,
+    autoRefreshToken:true,
+    detectSessionInUrl:true,
+    flowType:'implicit'
+  }
+});
 const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
-let members=[], selected=null;
+let members=[], selected=null, booted=false;
 const $=id=>document.getElementById(id);
-LEVELS.forEach(([n,c])=>{const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('newLevel').appendChild(o)});
-async function verify(){
- const {data:{session}}=await db.auth.getSession();
- const ok=session&&String(session.user.email||'').toLowerCase()===ADMIN;
- $('login').classList.toggle('hidden',ok);$('app').classList.toggle('hidden',!ok);$('logout').classList.toggle('hidden',!ok);
- if(session&&!ok){await db.auth.signOut();$('msg').textContent='허용되지 않은 계정입니다.'}
- if(ok) load();
+
+LEVELS.forEach(([n,c])=>{
+ const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('newLevel').appendChild(o)
+});
+
+function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
+function cleanOAuthUrl(){
+ if(location.hash && (location.hash.includes('access_token=') || location.hash.includes('error='))){
+   history.replaceState({},document.title,location.pathname);
+ }
 }
-const googleLink=$('googleLoginBtn');
-if(googleLink){
- googleLink.addEventListener('click',()=>{
-   $('msg').textContent='Google 로그인 화면으로 이동합니다…';
+async function showLogin(message=''){
+ $('login').classList.remove('hidden');$('app').classList.add('hidden');$('logout').classList.add('hidden');
+ if(message)$('msg').textContent=message;
+}
+async function showApp(session){
+ $('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');
+ $('adminInfo').textContent=`관리자 ${session.user.email} 로그인`;
+ await load();
+}
+async function verifySession(source='verify'){
+ $('authstate').textContent=`로그인 상태 확인 중 (${source})…`;
+ let session=null;
+ try{
+   const {data,error}=await db.auth.getSession();
+   if(error) throw error;
+   session=data.session;
+   if(!session){
+     // OAuth 복귀 직후 저장이 약간 늦는 브라우저를 위한 재확인
+     await new Promise(r=>setTimeout(r,500));
+     const retry=await db.auth.getSession();
+     session=retry.data.session;
+   }
+   if(!session){
+     $('authstate').textContent='현재 로그인된 Google 세션이 없습니다.';
+     await showLogin();
+     return false;
+   }
+   const email=String(session.user?.email||'').toLowerCase();
+   $('authstate').textContent=`Google 인증됨: ${email}`;
+   if(!isAdmin(email)){
+     await db.auth.signOut();
+     await showLogin(`Google 인증은 성공했지만 GMS 관리자 권한이 없는 계정입니다.\n인증 계정: ${email}`);
+     return false;
+   }
+   cleanOAuthUrl();
+   await showApp(session);
+   return true;
+ }catch(e){
+   $('authstate').textContent='세션 확인 오류';
+   await showLogin('로그인 세션 확인 실패: '+(e?.message||e));
+   return false;
+ }
+}
+
+$('googleLoginBtn').onclick=async(e)=>{
+ e.preventDefault();
+ $('msg').textContent='Google 로그인 화면으로 이동합니다…';
+ $('authstate').textContent='Google OAuth 시작 중…';
+ const {data,error}=await db.auth.signInWithOAuth({
+   provider:'google',
+   options:{redirectTo:REDIRECT_URL}
  });
-}
-$('logout').onclick=async()=>{await db.auth.signOut();location.reload()};
+ if(error){
+   $('msg').textContent='Google 로그인 시작 실패: '+error.message;
+ }
+};
+
+$('logout').onclick=async()=>{
+ await db.auth.signOut();
+ location.replace(REDIRECT_URL);
+};
+
 async function load(){
  const {data:ms,error}=await db.from('members').select('id,name,email,status,created_at').order('created_at');
- if(error){alert(error.message);return}
+ if(error){alert('회원 조회 실패: '+error.message);return}
  const {data:ls,error:le}=await db.from('member_levels').select('member_id,level_number,level_code,status,changed_reason,updated_at');
- if(le){alert(le.message);return}
+ if(le){alert('회원등급 조회 실패: '+le.message);return}
  const map=new Map((ls||[]).map(x=>[x.member_id,x]));
  members=(ms||[]).map(m=>({...m,level:map.get(m.id)||null}));
  render();
@@ -87,19 +164,28 @@ async function load(){
 function render(){
  const q=$('search').value.trim().toLowerCase();
  const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
- $('total').textContent=members.length;$('white').textContent=members.filter(m=>m.level?.level_number===1).length;
- $('greenplus').textContent=members.filter(m=>(m.level?.level_number||0)>=2).length;$('nolevel').textContent=members.filter(m=>!m.level).length;
- $('rows').innerHTML=list.map(m=>`<tr><td><b>${esc(m.name||'')}</b></td><td>${esc(m.email||'')}</td><td class="level">${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</td><td>${esc(m.level?.status||m.status||'')}</td><td>${esc(m.level?.changed_reason||'')}</td><td><button class="memberbtn" data-id="${m.id}">등급관리</button></td></tr>`).join('');
+ $('total').textContent=members.length;
+ $('white').textContent=members.filter(m=>m.level?.level_number===1).length;
+ $('greenplus').textContent=members.filter(m=>(m.level?.level_number||0)>=2).length;
+ $('nolevel').textContent=members.filter(m=>!m.level).length;
+ $('rows').innerHTML=list.map(m=>`<tr>
+ <td><b>${esc(m.name||'')}</b></td><td>${esc(m.email||'')}</td>
+ <td class="level">${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</td>
+ <td>${esc(m.level?.status||m.status||'')}</td><td>${esc(m.level?.changed_reason||'')}</td>
+ <td><button class="memberbtn" data-id="${m.id}">등급관리</button></td></tr>`).join('');
  document.querySelectorAll('.memberbtn').forEach(b=>b.onclick=()=>openMember(b.dataset.id));
 }
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 $('search').oninput=render;
+
 async function openMember(id){
- selected=members.find(m=>m.id===id); if(!selected)return;
+ selected=members.find(m=>m.id===id);if(!selected)return;
  $('dname').textContent=selected.name||'이름 없음';$('demail').textContent=selected.email||'';
  $('current').textContent=selected.level?`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`:'등급 미지정';
- $('newLevel').value=String(selected.level?.level_number||1);$('newStatus').value=selected.level?.status||'active';$('reason').value='';$('changeMsg').textContent='';
- $('drawer').classList.remove('hidden'); await loadHistory();
+ $('newLevel').value=String(selected.level?.level_number||1);
+ $('newStatus').value=selected.level?.status||'active';
+ $('reason').value='';$('changeMsg').textContent='';
+ $('drawer').classList.remove('hidden');await loadHistory();
 }
 async function loadHistory(){
  const {data,error}=await db.from('member_level_history').select('*').eq('member_id',selected.id).order('changed_at',{ascending:false});
@@ -107,12 +193,13 @@ async function loadHistory(){
  $('history').innerHTML=(data||[]).length?(data||[]).map(h=>`<div class="history"><b>${esc(h.from_level_code||'NONE')} → ${esc(h.to_level_code)}</b><br>${esc(h.reason||'사유 없음')}<br><span style="color:#6d7888">${new Date(h.changed_at).toLocaleString('ko-KR')}</span></div>`).join(''):'<div class="empty">아직 변경 이력이 없습니다.</div>';
 }
 $('close').onclick=()=>{$('drawer').classList.add('hidden');selected=null};
+
 $('changeBtn').onclick=async()=>{
  if(!selected)return;
- const n=Number($('newLevel').value), code=LEVELS.find(x=>Number(x[0])===n)[1], reason=$('reason').value.trim(), status=$('newStatus').value;
+ const n=Number($('newLevel').value),code=LEVELS.find(x=>Number(x[0])===n)[1],reason=$('reason').value.trim(),status=$('newStatus').value;
  if(!reason){$('changeMsg').textContent='변경 사유를 입력해주세요.';return}
- if(!selected.level){$('changeMsg').textContent='현재 등급 레코드가 없습니다. 먼저 기본등급을 부여해야 합니다.';return}
- if(n===selected.level.level_number && status===selected.level.status){$('changeMsg').textContent='현재 등급/상태와 동일합니다.';return}
+ if(!selected.level){$('changeMsg').textContent='현재 등급 레코드가 없습니다.';return}
+ if(n===selected.level.level_number&&status===selected.level.status){$('changeMsg').textContent='현재 등급/상태와 동일합니다.';return}
  $('changeBtn').disabled=true;$('changeMsg').textContent='처리 중…';
  const {data:{user}}=await db.auth.getUser();
  const {error:hErr}=await db.from('member_level_history').insert({
@@ -120,10 +207,24 @@ $('changeBtn').onclick=async()=>{
    to_level_number:n,to_level_code:code,reason,changed_by:user?.id||null
  });
  if(hErr){$('changeMsg').textContent='이력 저장 실패: '+hErr.message;$('changeBtn').disabled=false;return}
- const {error:uErr}=await db.from('member_levels').update({level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null}).eq('member_id',selected.id);
+ const {error:uErr}=await db.from('member_levels').update({
+   level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null
+ }).eq('member_id',selected.id);
  if(uErr){$('changeMsg').textContent='등급 변경 실패: '+uErr.message;$('changeBtn').disabled=false;return}
- $('changeMsg').textContent='등급 변경이 완료되었습니다.';await load();selected=members.find(m=>m.id===selected.id);
- $('current').textContent=`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`;await loadHistory();$('changeBtn').disabled=false;
+ $('changeMsg').textContent='등급 변경이 완료되었습니다.';
+ await load();selected=members.find(m=>m.id===selected.id);
+ $('current').textContent=`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`;
+ await loadHistory();$('changeBtn').disabled=false;
 };
-db.auth.onAuthStateChange(()=>setTimeout(verify,50));verify();
-</script></body></html>
+
+// OAuth 복귀 이벤트 + 최초 진입 모두 처리
+db.auth.onAuthStateChange(async(event,session)=>{
+ if(event==='SIGNED_IN' && session){
+   await verifySession('SIGNED_IN');
+ }else if(event==='SIGNED_OUT'){
+   await showLogin();
+ }
+});
+window.addEventListener('load',()=>setTimeout(()=>verifySession('PAGE_LOAD'),150));
+</script>
+</body></html>
