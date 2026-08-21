@@ -113,7 +113,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <section id="app" class="hidden">
  <div id="page-dashboard" class="page">
   <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members">회원관리 바로가기</button></div>
-  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div></div>
+  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
     <div class="quick">
@@ -154,11 +154,35 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="phase"><span class="badge next">NEXT</span><h3>TAEKWONKUMDO PRO</h3><p>태권검도 전문교육·영상·지도자과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>POLICE MARTIAL ARTS PRO</h3><p>경찰무도·호신술·경호·안전 전문과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>DRONE PATROL PRO / ALL PASS</h3><p>드론교육 및 향후 3개 조직 통합상품 확장.</p></div>
  </div></div>
 
- <div id="page-finance" class="page hidden"><div class="pagehead"><div><div class="eyebrow">PAYMENT & REVENUE</div><h1>회비·입금관리</h1><p>계좌입금 + 관리자 확인 방식부터 구축합니다.</p></div></div><div class="phasegrid">
-  <div class="phase"><span class="badge next">STEP 5</span><h3>입금대기</h3><p>회원 신청 후 계좌입금 대기 목록.</p><ul><li>신청서비스</li><li>신청금액</li><li>신청일</li></ul></div>
-  <div class="phase"><span class="badge next">STEP 5</span><h3>입금확인</h3><p>관리자 확인 버튼으로 납부완료 및 서비스 활성화.</p><ul><li>확인자</li><li>시작일</li><li>만료일 +1년</li></ul></div>
-  <div class="phase"><span class="badge next">STEP 5</span><h3>만료관리</h3><p>만료예정·만료회원과 재가입 안내.</p></div>
- </div></div>
+ <div id="page-finance" class="page hidden">
+  <div class="pagehead"><div><div class="eyebrow">PAYMENT & REVENUE</div><h1>회비·입금관리</h1><p>계좌입금 → 관리자 확인 → PRO 1년 활성화 흐름을 관리합니다.</p></div><button class="btn gold" id="newPaymentBtn">+ 입금신청 등록</button></div>
+  <div class="stats"><div class="stat"><span>입금대기</span><b id="payPending">0</b></div><div class="stat"><span>납부완료</span><b id="payPaid">0</b></div><div class="stat"><span>활성 PRO</span><b id="payPro">0</b></div><div class="stat"><span>만료예정 30일</span><b id="payExpiring">0</b></div></div>
+  <div class="panel" style="margin-top:16px">
+    <div class="panelhead"><b>연회비·입금내역</b><span class="badge live">BANK TRANSFER</span></div>
+    <div class="scroll"><table>
+      <thead><tr><th>회원</th><th>조직</th><th>PLAN</th><th>금액</th><th>입금자</th><th>상태</th><th>신청일</th><th>관리</th></tr></thead>
+      <tbody id="paymentRows"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<div id="paymentModal" class="drawer hidden"><div class="drawerbox">
+  <div class="drawerhead"><div><small>PAYMENT APPLICATION</small><h2 style="margin:5px 0">입금신청 등록</h2></div><button id="paymentClose" class="x">✕</button></div>
+  <div class="card">
+    <div class="field"><label>회원</label><select id="paymentMember"></select></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>조직</label><select id="paymentOrg"><option>WTKF</option><option>IPMA</option><option>IDP</option></select></div>
+      <div class="field"><label>PLAN</label><select id="paymentPlan"><option value="PRO">PRO</option></select></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>금액(원)</label><input id="paymentAmount" type="number" min="0" value="0" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
+      <div class="field"><label>입금자명</label><input id="depositorName" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
+    </div>
+    <div class="field" style="margin-top:10px"><label>관리자 메모</label><textarea id="paymentMemo"></textarea></div>
+    <button class="btn gold" id="savePaymentBtn" style="width:100%;margin-top:12px">입금대기 등록</button>
+    <div id="paymentMsg" class="msg"></div>
+  </div>
+</div>
 
  <div id="page-learning" class="page hidden"><div class="pagehead"><div><div class="eyebrow">LEARNING & ACTIVITY</div><h1>교육·활동기록</h1><p>기존 learning_progress와 activity_events를 GMS에서 통합합니다.</p></div></div><div class="phasegrid">
   <div class="phase"><span class="badge next">STEP 8</span><h3>영상 학습시간</h3><p>태권검도·경찰무도 교육영상 시청기록.</p></div><div class="phase"><span class="badge next">STEP 8</span><h3>시뮬레이터</h3><p>태권검도·드론 시뮬레이터 훈련시간과 미션기록.</p></div><div class="phase"><span class="badge next">STEP 7</span><h3>세미나·활동</h3><p>세미나 참가, 지부활동, 지도·봉사활동 기록.</p></div>
@@ -192,7 +216,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="card"><div class="row"><div class="field"><label>새 등급</label><select id="newLevel"></select></div><div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div></div>
  <div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: 지도자과정 수료 및 활동실적 반영"></textarea></div>
  <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">등급 변경 및 이력 저장</button><div id="changeMsg" class="msg"></div></div>
- <div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
+ <div class="card"><b>조직별 PLAN</b>
+      <div id="memberPlans" style="margin-top:10px"></div>
+    </div>
+    <div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
 </div></div>
 <script>
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
@@ -294,6 +321,7 @@ async function load(){
  const map=new Map((ls||[]).map(x=>[x.member_id,x]));
  members=(ms||[]).map(m=>({...m,level:map.get(m.id)||null}));
  render();
+ await loadFinance();
 }
 function render(){
  const q=$('search').value.trim().toLowerCase();
@@ -319,7 +347,7 @@ async function openMember(id){
  $('newLevel').value=String(selected.level?.level_number||1);
  $('newStatus').value=selected.level?.status||'active';
  $('reason').value='';$('changeMsg').textContent='';
- $('drawer').classList.remove('hidden');await loadHistory();
+ $('drawer').classList.remove('hidden');await loadHistory();await loadMemberPlans(selected.id);
 }
 async function loadHistory(){
  const {data,error}=await db.from('member_level_history').select('*').eq('member_id',selected.id).order('changed_at',{ascending:false});
@@ -360,6 +388,118 @@ db.auth.onAuthStateChange(async(event,session)=>{
  }
 });
 window.addEventListener('load',()=>setTimeout(()=>verifySession('PAGE_LOAD'),150));
+
+
+let payments=[], memberPlans=[];
+
+async function loadFinance(){
+  const {data:p,error:pe}=await db.from('payments').select('*').order('requested_at',{ascending:false});
+  if(pe){ console.warn('payments:',pe.message); return; }
+  const {data:mp,error:mpe}=await db.from('member_plans').select('*');
+  if(mpe){ console.warn('member_plans:',mpe.message); return; }
+  payments=p||[]; memberPlans=mp||[];
+  renderFinance();
+}
+
+function money(v){ return Number(v||0).toLocaleString('ko-KR')+'원'; }
+function fmtDate(v){ return v?new Date(v).toLocaleDateString('ko-KR'):'-'; }
+
+function renderFinance(){
+  const memberMap=new Map(members.map(m=>[m.id,m]));
+  const pending=payments.filter(p=>p.payment_status==='pending').length;
+  const paid=payments.filter(p=>p.payment_status==='paid').length;
+  const activePro=memberPlans.filter(p=>p.plan_code==='PRO'&&p.status==='active').length;
+  const now=Date.now(), thirty=now+30*86400000;
+  const expiring=memberPlans.filter(p=>p.plan_code==='PRO'&&p.status==='active'&&p.expires_at&&new Date(p.expires_at).getTime()>=now&&new Date(p.expires_at).getTime()<=thirty).length;
+
+  ['pendingPay','payPending'].forEach(id=>{const e=$(id);if(e)e.textContent=pending});
+  ['proCount','payPro'].forEach(id=>{const e=$(id);if(e)e.textContent=activePro});
+  if($('payPaid'))$('payPaid').textContent=paid;
+  if($('payExpiring'))$('payExpiring').textContent=expiring;
+
+  const body=$('paymentRows');
+  if(body){
+    body.innerHTML=payments.length?payments.map(p=>{
+      const m=memberMap.get(p.member_id)||{};
+      const action=p.payment_status==='pending'
+        ? `<button class="memberbtn confirmPay" data-id="${p.id}">입금확인</button>`
+        : (p.payment_status==='paid'?'<b style="color:#16794f">완료</b>':'-');
+      return `<tr><td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
+      <td>${esc(p.organization_code)}</td><td>${esc(p.plan_code)}</td><td>${money(p.amount)}</td>
+      <td>${esc(p.depositor_name||'-')}</td><td>${esc(p.payment_status)}</td><td>${fmtDate(p.requested_at)}</td><td>${action}</td></tr>`
+    }).join(''):'<tr><td colspan="8" class="empty">아직 입금신청 내역이 없습니다.</td></tr>';
+    document.querySelectorAll('.confirmPay').forEach(b=>b.onclick=()=>confirmPayment(Number(b.dataset.id)));
+  }
+}
+
+async function loadMemberPlans(memberId){
+  const list=memberPlans.filter(p=>p.member_id===memberId);
+  const orgs=['WTKF','IPMA','IDP'];
+  $('memberPlans').innerHTML=orgs.map(org=>{
+    const p=list.find(x=>x.organization_code===org);
+    if(!p)return `<div class="history"><b>${org}</b> · FREE</div>`;
+    return `<div class="history"><b>${org}</b> · ${esc(p.plan_code)} · ${esc(p.status)}
+      ${p.expires_at?`<br><span style="color:#6d7888">만료 ${fmtDate(p.expires_at)}</span>`:''}</div>`;
+  }).join('');
+}
+
+async function confirmPayment(id){
+  if(!confirm('입금을 확인하고 해당 조직 PRO를 1년 활성화할까요?')) return;
+  const pay=payments.find(p=>p.id===id); if(!pay)return;
+  const {data:{user}}=await db.auth.getUser();
+  const start=new Date();
+  const end=new Date(start); end.setFullYear(end.getFullYear()+1);
+
+  const {error:pErr}=await db.from('payments').update({
+    payment_status:'paid',
+    paid_at:start.toISOString(),
+    confirmed_at:start.toISOString(),
+    confirmed_by:user?.id||null,
+    starts_at:start.toISOString(),
+    expires_at:end.toISOString()
+  }).eq('id',id);
+  if(pErr){alert('입금확인 실패: '+pErr.message);return}
+
+  const {error:planErr}=await db.from('member_plans').upsert({
+    member_id:pay.member_id,
+    organization_code:pay.organization_code,
+    plan_code:'PRO',
+    status:'active',
+    starts_at:start.toISOString(),
+    expires_at:end.toISOString(),
+    source_payment_id:id,
+    changed_reason:'연회비 입금확인',
+    changed_by:user?.id||null
+  },{onConflict:'member_id,organization_code'});
+  if(planErr){alert('PLAN 활성화 실패: '+planErr.message);return}
+  alert('입금확인 완료: PRO가 1년 활성화되었습니다.');
+  await loadFinance();
+  if(selected) await loadMemberPlans(selected.id);
+}
+
+const newPaymentBtn=$('newPaymentBtn');
+if(newPaymentBtn)newPaymentBtn.onclick=()=>{
+  const sel=$('paymentMember');
+  sel.innerHTML=members.map(m=>`<option value="${m.id}">${esc(m.name||'')} · ${esc(m.email||'')}</option>`).join('');
+  $('paymentAmount').value='0'; $('depositorName').value=''; $('paymentMemo').value=''; $('paymentMsg').textContent='';
+  $('paymentModal').classList.remove('hidden');
+};
+if($('paymentClose'))$('paymentClose').onclick=()=>$('paymentModal').classList.add('hidden');
+
+if($('savePaymentBtn'))$('savePaymentBtn').onclick=async()=>{
+  const member_id=$('paymentMember').value;
+  const organization_code=$('paymentOrg').value;
+  const plan_code=$('paymentPlan').value;
+  const amount=Number($('paymentAmount').value||0);
+  const depositor_name=$('depositorName').value.trim();
+  const memo=$('paymentMemo').value.trim();
+  if(!member_id){$('paymentMsg').textContent='회원을 선택해주세요.';return}
+  const {error}=await db.from('payments').insert({member_id,organization_code,plan_code,amount,depositor_name,memo,payment_status:'pending'});
+  if(error){$('paymentMsg').textContent='등록 실패: '+error.message;return}
+  $('paymentModal').classList.add('hidden');
+  await loadFinance();
+};
+
 
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
