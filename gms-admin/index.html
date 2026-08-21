@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v1.7.0 | Global Membership System</title>
+<title>GMS v1.8.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -67,7 +67,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.7.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.8.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -297,22 +297,45 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.7.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.8.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
  <div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
- <div class="card"><b>현재 회원등급</b><div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div></div>
- <div class="card"><div class="row"><div class="field"><label>새 등급</label><select id="newLevel"></select></div><div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div></div>
- <div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: 지도자과정 수료 및 활동실적 반영"></textarea></div>
- <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">등급 변경 및 이력 저장</button><div id="changeMsg" class="msg"></div></div>
- <div class="card"><b>조직별 LEVEL</b>
+ <div class="card">
+  <b>GLOBAL LEVEL</b>
+  <div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div>
+  <div style="font-size:12px;color:#6d7888;margin-top:6px">전체 조직 활동을 종합한 참고·공헌 등급</div>
+ </div>
+ <div class="card">
+  <b>조직별 LEVEL 변경</b>
+  <div class="field" style="margin-top:12px"><label>조직 선택</label>
+    <select id="drawerOrg">
+      <option value="WTKF">WTKF · 태권검도</option>
+      <option value="IPMA">IPMA · 경찰무도</option>
+      <option value="IDP">IDP · 드론순찰대</option>
+    </select>
+  </div>
+  <div class="card" style="background:#f8fafc;margin-top:10px">
+    <div style="font-size:11px;color:#6d7888;font-weight:800">선택 조직 현재 LEVEL</div>
+    <div id="drawerOrgCurrent" style="font-size:22px;font-weight:900;margin-top:6px">-</div>
+    <div id="drawerOrgPlan" style="font-size:12px;color:#6d7888;margin-top:5px"></div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <div class="field"><label>새 등급</label><select id="newLevel"></select></div>
+    <div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div>
+  </div>
+  <div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: IPMA 지도자과정 수료 및 활동실적 반영"></textarea></div>
+  <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">선택 조직 등급 변경 및 이력 저장</button>
+  <div id="changeMsg" class="msg"></div>
+ </div>
+ <div class="card"><b>조직별 LEVEL</b><div style="font-size:12px;color:#6d7888;margin-top:4px">실제 교육·자격·콘텐츠 권한 판단에 사용하는 조직별 성장등급</div>
       <div id="orgLevels" style="margin-top:10px"></div>
     </div>
     <div class="card"><b>조직별 PLAN</b>
       <div id="memberPlans" style="margin-top:10px"></div>
     </div>
-    <div class="card"><b>등급 변경 이력</b><div id="history"></div></div>
+    <div class="card"><b>GLOBAL LEVEL 변경 이력</b><div id="history"></div></div>
 </div></div>
 <script>
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
@@ -441,7 +464,7 @@ async function openMember(id){
  $('newLevel').value=String(selected.level?.level_number||1);
  $('newStatus').value=selected.level?.status||'active';
  $('reason').value='';$('changeMsg').textContent='';
- $('drawer').classList.remove('hidden');await loadHistory();await loadMemberPlans(selected.id);await loadMemberOrgLevels(selected.id);
+ $('drawer').classList.remove('hidden');await loadHistory();await loadMemberPlans(selected.id);await loadMemberOrgLevels(selected.id);updateDrawerOrgSummary();
 }
 async function loadHistory(){
  const {data,error}=await db.from('member_level_history').select('*').eq('member_id',selected.id).order('changed_at',{ascending:false});
@@ -452,25 +475,49 @@ $('close').onclick=()=>{$('drawer').classList.add('hidden');selected=null};
 
 $('changeBtn').onclick=async()=>{
  if(!selected)return;
- const n=Number($('newLevel').value),code=LEVELS.find(x=>Number(x[0])===n)[1],reason=$('reason').value.trim(),status=$('newStatus').value;
+ const organization_code=$('drawerOrg').value;
+ const n=Number($('newLevel').value);
+ const code=LEVELS.find(x=>Number(x[0])===n)[1];
+ const reason=$('reason').value.trim();
+ const status=$('newStatus').value;
  if(!reason){$('changeMsg').textContent='변경 사유를 입력해주세요.';return}
- if(!selected.level){$('changeMsg').textContent='현재 등급 레코드가 없습니다.';return}
- if(n===selected.level.level_number&&status===selected.level.status){$('changeMsg').textContent='현재 등급/상태와 동일합니다.';return}
+
+ const currentOrg=orgLevelFor(selected.id,organization_code);
+ if(!currentOrg){$('changeMsg').textContent='선택 조직의 현재 등급정보가 없습니다.';return}
+ if(n===currentOrg.level_number && status===currentOrg.status){
+   $('changeMsg').textContent='현재 조직 등급/상태와 동일합니다.';return
+ }
+
  $('changeBtn').disabled=true;$('changeMsg').textContent='처리 중…';
  const {data:{user}}=await db.auth.getUser();
- const {error:hErr}=await db.from('member_level_history').insert({
-   member_id:selected.id,from_level_number:selected.level.level_number,from_level_code:selected.level.level_code,
-   to_level_number:n,to_level_code:code,reason,changed_by:user?.id||null
+
+ const {error:hErr}=await db.from('organization_member_level_history').insert({
+   member_id:selected.id,
+   organization_code,
+   from_level_number:currentOrg.level_number,
+   from_level_code:currentOrg.level_code,
+   to_level_number:n,
+   to_level_code:code,
+   reason,
+   changed_by:user?.id||null
  });
- if(hErr){$('changeMsg').textContent='이력 저장 실패: '+hErr.message;$('changeBtn').disabled=false;return}
- const {error:uErr}=await db.from('member_levels').update({
-   level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null
- }).eq('member_id',selected.id);
- if(uErr){$('changeMsg').textContent='등급 변경 실패: '+uErr.message;$('changeBtn').disabled=false;return}
- $('changeMsg').textContent='등급 변경이 완료되었습니다.';
- await load();selected=members.find(m=>m.id===selected.id);
- $('current').textContent=`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`;
- await loadHistory();$('changeBtn').disabled=false;
+ if(hErr){$('changeMsg').textContent='조직등급 이력 저장 실패: '+hErr.message;$('changeBtn').disabled=false;return}
+
+ const {error:uErr}=await db.from('organization_member_levels').update({
+   level_number:n,
+   level_code:code,
+   status,
+   changed_reason:reason,
+   changed_by:user?.id||null
+ }).eq('id',currentOrg.id);
+
+ if(uErr){$('changeMsg').textContent='조직등급 변경 실패: '+uErr.message;$('changeBtn').disabled=false;return}
+
+ $('changeMsg').textContent='조직 LEVEL 변경이 완료되었습니다.';
+ await loadOrganizationLevels();
+ await loadMemberOrgLevels(selected.id);
+ updateDrawerOrgSummary();
+ $('changeBtn').disabled=false;
 };
 
 // OAuth 복귀 이벤트 + 최초 진입 모두 처리
@@ -752,6 +799,21 @@ if($('orgLevelApply'))$('orgLevelApply').onclick=async()=>{
   await loadOrganizationLevels();
   await loadMemberOrgLevels(member_id);
 };
+
+
+function updateDrawerOrgSummary(){
+ if(!selected)return;
+ const org=$('drawerOrg')?.value||'WTKF';
+ const lv=orgLevelFor(selected.id,org);
+ const plan=(memberPlans||[]).find(p=>p.member_id===selected.id&&p.organization_code===org);
+ $('drawerOrgCurrent').textContent=lv?`LV.${lv.level_number} ${lv.level_code.replace('_',' ')}`:'미지정';
+ $('drawerOrgPlan').textContent=`PLAN: ${plan?.plan_code||'FREE'} · ${plan?.status||'active'}`;
+ if(lv){
+   $('newLevel').value=String(lv.level_number);
+   $('newStatus').value=lv.status||'active';
+ }
+}
+if($('drawerOrg'))$('drawerOrg').onchange=updateDrawerOrgSummary;
 
 async function loadMemberOrgLevels(memberId){
   if(!$('orgLevels'))return;
