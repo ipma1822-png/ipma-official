@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v1.9.2 | Global Membership System</title>
+<title>GMS v2.0.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -67,7 +67,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.9.2</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.0.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -263,11 +263,94 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 </div>
 </div>
 
- <div id="page-learning" class="page hidden"><div class="pagehead"><div><div class="eyebrow">LEARNING & ACTIVITY</div><h1>교육·활동기록</h1><p>기존 learning_progress와 activity_events를 GMS에서 통합합니다.</p></div></div><div class="phasegrid">
-  <div class="phase"><span class="badge next">STEP 8</span><h3>영상 학습시간</h3><p>태권검도·경찰무도 교육영상 시청기록.</p></div><div class="phase"><span class="badge next">STEP 8</span><h3>시뮬레이터</h3><p>태권검도·드론 시뮬레이터 훈련시간과 미션기록.</p></div><div class="phase"><span class="badge next">STEP 7</span><h3>세미나·활동</h3><p>세미나 참가, 지부활동, 지도·봉사활동 기록.</p></div>
- </div></div>
+ 
+<div id="page-learning" class="page hidden">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">LEARNING & ACTIVITY CENTER</div>
+      <h1>교육·활동 기록</h1>
+      <p>영상 학습 · 시뮬레이터 · 세미나/교육 · G-POINT를 회원별로 통합 조회합니다.</p>
+    </div>
+    <button id="activityTestBtn" class="btn gold">+ 테스트 활동 등록</button>
+  </div>
 
- <div id="page-points" class="page hidden"><div class="pagehead"><div><div class="eyebrow">G-POINT</div><h1>활동 포인트</h1><p>영상·훈련·교육·자격·조직공헌을 점수화하여 LEVEL 성장과 연결합니다.</p></div></div><div class="notice">G-POINT는 돈으로 최고등급을 사는 구조가 아니라, 실제 교육과 활동의 누적을 보여주는 성장지표로 설계합니다.</div></div>
+  <div class="stats">
+    <div class="stat"><span>영상 학습시간</span><b id="videoHours">0h</b></div>
+    <div class="stat"><span>시뮬레이터</span><b id="simHours">0h</b></div>
+    <div class="stat"><span>교육·세미나</span><b id="seminarCount">0</b></div>
+    <div class="stat"><span>총 G-POINT</span><b id="pointTotal">0</b></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panelhead"><b>회원별 활동 요약</b><input id="activitySearch" class="search" placeholder="이름 또는 이메일 검색"></div>
+      <div class="scroll"><table>
+        <thead><tr><th>회원</th><th>영상</th><th>시뮬레이터</th><th>교육/세미나</th><th>G-POINT</th><th>상세</th></tr></thead>
+        <tbody id="activityMemberRows"></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="panelhead"><b>최근 활동</b><span class="badge live">LIVE DATA</span></div>
+      <div class="panelbody" id="recentActivity"><div class="empty">아직 활동기록이 없습니다.</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="activityDrawer" class="drawer hidden"><div class="drawerbox">
+  <div class="drawerhead">
+    <div><small>ACTIVITY DETAIL</small><h2 id="activityMemberName" style="margin:5px 0"></h2><div id="activityMemberEmail" style="color:#6d7888"></div></div>
+    <button id="activityClose" class="x">✕</button>
+  </div>
+  <div class="card">
+    <b>누적 활동</b>
+    <div id="activitySummary" style="margin-top:10px;line-height:1.8"></div>
+  </div>
+  <div class="card"><b>영상 학습</b><div id="activityVideos"></div></div>
+  <div class="card"><b>시뮬레이터</b><div id="activitySims"></div></div>
+  <div class="card"><b>교육·세미나</b><div id="activitySeminars"></div></div>
+  <div class="card"><b>G-POINT 내역</b><div id="activityPoints"></div></div>
+</div></div>
+
+<div id="activityTestModal" class="drawer hidden"><div class="drawerbox">
+  <div class="drawerhead">
+    <div><small>ACTIVITY TEST INPUT</small><h2 style="margin:5px 0">테스트 활동 등록</h2></div>
+    <button id="activityTestClose" class="x">✕</button>
+  </div>
+  <div class="card">
+    <div class="field"><label>회원</label><select id="testActivityMember"></select></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>조직</label><select id="testActivityOrg"><option value="WTKF">WTKF 태권검도</option><option value="IPMA">IPMA 경찰무도</option><option value="IDP">IDP 드론순찰대</option></select></div>
+      <div class="field"><label>활동유형</label><select id="testActivityType"><option value="VIDEO">영상학습</option><option value="SIMULATOR">시뮬레이터</option><option value="SEMINAR">교육·세미나</option></select></div>
+    </div>
+    <div class="field" style="margin-top:10px"><label>콘텐츠/과정명</label><input id="testActivityTitle" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px" placeholder="예: 태검 1장 기본동작"></div>
+    <div class="row" style="margin-top:10px">
+      <div class="field"><label>활동시간(분)</label><input id="testActivityMinutes" type="number" min="1" value="10" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
+      <div class="field"><label>완료율(%)</label><input id="testActivityProgress" type="number" min="0" max="100" value="100" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
+    </div>
+    <button id="saveTestActivity" class="btn gold" style="width:100%;margin-top:12px">테스트 기록 저장</button>
+    <div id="testActivityMsg" class="msg"></div>
+  </div>
+</div>
+
+ 
+<div id="page-points" class="page hidden">
+  <div class="pagehead">
+    <div><div class="eyebrow">G-POINT</div><h1>활동 포인트</h1><p>영상·훈련·교육·세미나 활동을 포인트로 누적하여 회원 성장지표로 활용합니다.</p></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span>전체 발급 POINT</span><b id="gPointTotal">0</b></div>
+    <div class="stat"><span>영상 POINT</span><b id="gPointVideo">0</b></div>
+    <div class="stat"><span>시뮬레이터 POINT</span><b id="gPointSim">0</b></div>
+    <div class="stat"><span>교육·세미나 POINT</span><b id="gPointSeminar">0</b></div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <div class="panelhead"><b>회원별 G-POINT</b></div>
+    <div class="scroll"><table>
+      <thead><tr><th>회원</th><th>총 POINT</th><th>영상</th><th>시뮬레이터</th><th>교육·세미나</th></tr></thead>
+      <tbody id="gPointRows"></tbody>
+    </table></div>
+  </div>
+</div>
 
  <div id="page-certificates" class="page hidden"><div class="pagehead"><div><div class="eyebrow">CERTIFICATE & LEADER</div><h1>자격·지도자 관리</h1><p>자격증·수료증·지도자과정·검정을 회원기록과 연결합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>자격증</h3><p>취득자격, 자격번호, 발급일, 상태.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지도자</h3><p>지도자과정과 지도활동 이력.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>검정·수료</h3><p>신청, 심사, 합격, 발급 상태.</p></div></div></div>
 
@@ -300,7 +383,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.9.2</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.0.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -443,6 +526,7 @@ async function load(){
  await loadFinance();
  await loadOrganizationLevels();
  await loadContentPolicies();
+ await loadActivityData();
 }
 function render(){
  const q=$('search').value.trim().toLowerCase();
@@ -1002,6 +1086,158 @@ if($('runAccessTest'))$('runAccessTest').onclick=()=>{
   const member=members.find(m=>m.id===memberId)||{};
   $('accessResult').innerHTML=`<b>${esc(member.name||'회원')}</b><br>${result.ok?'✅ 접근 가능':'🔒 접근 불가'}<br>${esc(result.reason)}`;
   $('accessResult').style.borderLeftColor=result.ok?'#16794f':'#a6333d';
+};
+
+
+let learningRecords=[], simulatorRecords=[], seminarRecords=[], activityPoints=[];
+
+async function loadActivityData(){
+  const results=await Promise.all([
+    db.from('learning_records').select('*').order('last_viewed_at',{ascending:false}),
+    db.from('simulator_records').select('*').order('last_trained_at',{ascending:false}),
+    db.from('seminar_records').select('*').order('activity_date',{ascending:false}),
+    db.from('activity_points').select('*').order('created_at',{ascending:false})
+  ]);
+  const [lr,sr,sem,pts]=results;
+  if(lr.error) console.warn('learning_records',lr.error.message); else learningRecords=lr.data||[];
+  if(sr.error) console.warn('simulator_records',sr.error.message); else simulatorRecords=sr.data||[];
+  if(sem.error) console.warn('seminar_records',sem.error.message); else seminarRecords=sem.data||[];
+  if(pts.error) console.warn('activity_points',pts.error.message); else activityPoints=pts.data||[];
+  renderActivityCenter();
+  renderPointCenter();
+}
+function minsToHuman(mins){
+  mins=Number(mins||0);
+  if(mins<60)return `${mins}분`;
+  const h=Math.floor(mins/60),m=mins%60;
+  return m?`${h}시간 ${m}분`:`${h}시간`;
+}
+function memberActivity(memberId){
+  const videos=learningRecords.filter(x=>x.member_id===memberId);
+  const sims=simulatorRecords.filter(x=>x.member_id===memberId);
+  const seminars=seminarRecords.filter(x=>x.member_id===memberId);
+  const points=activityPoints.filter(x=>x.member_id===memberId);
+  return {
+    videos,sims,seminars,points,
+    videoMinutes:videos.reduce((s,x)=>s+Number(x.watched_minutes||0),0),
+    simMinutes:sims.reduce((s,x)=>s+Number(x.training_minutes||0),0),
+    seminarMinutes:seminars.reduce((s,x)=>s+Number(x.education_minutes||0),0),
+    pointTotal:points.reduce((s,x)=>s+Number(x.points||0),0)
+  };
+}
+function renderActivityCenter(){
+  const videoMin=learningRecords.reduce((s,x)=>s+Number(x.watched_minutes||0),0);
+  const simMin=simulatorRecords.reduce((s,x)=>s+Number(x.training_minutes||0),0);
+  const pt=activityPoints.reduce((s,x)=>s+Number(x.points||0),0);
+  if($('videoHours'))$('videoHours').textContent=(videoMin/60).toFixed(videoMin%60?1:0)+'h';
+  if($('simHours'))$('simHours').textContent=(simMin/60).toFixed(simMin%60?1:0)+'h';
+  if($('seminarCount'))$('seminarCount').textContent=seminarRecords.length;
+  if($('pointTotal'))$('pointTotal').textContent=pt.toLocaleString('ko-KR');
+
+  const q=($('activitySearch')?.value||'').trim().toLowerCase();
+  const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
+  if($('activityMemberRows')){
+    $('activityMemberRows').innerHTML=list.map(m=>{
+      const a=memberActivity(m.id);
+      return `<tr>
+        <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
+        <td>${minsToHuman(a.videoMinutes)}</td>
+        <td>${minsToHuman(a.simMinutes)}</td>
+        <td>${a.seminars.length}건</td>
+        <td><b>${a.pointTotal.toLocaleString('ko-KR')}</b></td>
+        <td><button class="memberbtn activityDetail" data-id="${m.id}">상세</button></td>
+      </tr>`;
+    }).join('');
+    document.querySelectorAll('.activityDetail').forEach(b=>b.onclick=()=>openActivityMember(b.dataset.id));
+  }
+  renderRecentActivity();
+}
+if($('activitySearch'))$('activitySearch').oninput=renderActivityCenter;
+
+function renderRecentActivity(){
+  const memberMap=new Map(members.map(m=>[m.id,m]));
+  const events=[];
+  learningRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.last_viewed_at||x.updated_at||0).getTime(),kind:'영상',member_id:x.member_id,title:x.content_title,detail:minsToHuman(x.watched_minutes)}));
+  simulatorRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.last_trained_at||x.updated_at||0).getTime(),kind:'시뮬레이터',member_id:x.member_id,title:x.simulator_title,detail:minsToHuman(x.training_minutes)}));
+  seminarRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.activity_date||x.created_at||0).getTime(),kind:'교육',member_id:x.member_id,title:x.activity_title,detail:x.completion_status||''}));
+  events.sort((a,b)=>b.t-a.t);
+  const box=$('recentActivity'); if(!box)return;
+  box.innerHTML=events.length?events.slice(0,10).map(e=>{
+    const m=memberMap.get(e.member_id)||{};
+    return `<div class="history"><b>${esc(e.kind)} · ${esc(e.title||'')}</b><br>${esc(m.name||'')} · ${esc(e.detail||'')}<br><span style="color:#6d7888">${e.t?new Date(e.t).toLocaleString('ko-KR'):'-'}</span></div>`;
+  }).join(''):'<div class="empty">아직 활동기록이 없습니다.</div>';
+}
+function openActivityMember(memberId){
+  const m=members.find(x=>x.id===memberId);if(!m)return;
+  const a=memberActivity(memberId);
+  $('activityMemberName').textContent=m.name||'이름 없음';
+  $('activityMemberEmail').textContent=m.email||'';
+  $('activitySummary').innerHTML=`영상 ${minsToHuman(a.videoMinutes)}<br>시뮬레이터 ${minsToHuman(a.simMinutes)}<br>교육·세미나 ${a.seminars.length}건 / ${minsToHuman(a.seminarMinutes)}<br>G-POINT ${a.pointTotal.toLocaleString('ko-KR')}`;
+  $('activityVideos').innerHTML=a.videos.length?a.videos.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.content_title||x.content_key)}</b><br>${minsToHuman(x.watched_minutes)} · 완료율 ${Number(x.progress_percent||0)}%</div>`).join(''):'<div class="empty">영상 기록 없음</div>';
+  $('activitySims').innerHTML=a.sims.length?a.sims.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.simulator_title||x.simulator_key)}</b><br>${minsToHuman(x.training_minutes)} · 실행 ${Number(x.session_count||0)}회</div>`).join(''):'<div class="empty">시뮬레이터 기록 없음</div>';
+  $('activitySeminars').innerHTML=a.seminars.length?a.seminars.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.activity_title)}</b><br>${fmtDate(x.activity_date)} · ${esc(x.completion_status||'')}</div>`).join(''):'<div class="empty">교육·세미나 기록 없음</div>';
+  $('activityPoints').innerHTML=a.points.length?a.points.map(x=>`<div class="history"><b>+${Number(x.points||0)} POINT · ${esc(x.activity_type)}</b><br>${esc(x.description||'')}<br><span style="color:#6d7888">${new Date(x.created_at).toLocaleString('ko-KR')}</span></div>`).join(''):'<div class="empty">POINT 기록 없음</div>';
+  $('activityDrawer').classList.remove('hidden');
+}
+if($('activityClose'))$('activityClose').onclick=()=>$('activityDrawer').classList.add('hidden');
+
+function renderPointCenter(){
+  const totals={VIDEO:0,SIMULATOR:0,SEMINAR:0};
+  activityPoints.forEach(x=>{if(totals[x.activity_type]!==undefined)totals[x.activity_type]+=Number(x.points||0)});
+  const all=activityPoints.reduce((s,x)=>s+Number(x.points||0),0);
+  if($('gPointTotal'))$('gPointTotal').textContent=all.toLocaleString('ko-KR');
+  if($('gPointVideo'))$('gPointVideo').textContent=totals.VIDEO.toLocaleString('ko-KR');
+  if($('gPointSim'))$('gPointSim').textContent=totals.SIMULATOR.toLocaleString('ko-KR');
+  if($('gPointSeminar'))$('gPointSeminar').textContent=totals.SEMINAR.toLocaleString('ko-KR');
+  if($('gPointRows')){
+    $('gPointRows').innerHTML=members.map(m=>{
+      const pts=activityPoints.filter(x=>x.member_id===m.id);
+      const sum=t=>pts.filter(x=>x.activity_type===t).reduce((s,x)=>s+Number(x.points||0),0);
+      return `<tr><td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td><td><b>${pts.reduce((s,x)=>s+Number(x.points||0),0)}</b></td><td>${sum('VIDEO')}</td><td>${sum('SIMULATOR')}</td><td>${sum('SEMINAR')}</td></tr>`;
+    }).join('');
+  }
+}
+
+/* 테스트 입력: 실제 홈페이지 연결 전 DB 누적 흐름 검증 */
+if($('activityTestBtn'))$('activityTestBtn').onclick=()=>{
+  $('testActivityMember').innerHTML=members.map(m=>`<option value="${m.id}">${esc(m.name||'')} · ${esc(m.email||'')}</option>`).join('');
+  $('testActivityTitle').value='';
+  $('testActivityMinutes').value='10';
+  $('testActivityProgress').value='100';
+  $('testActivityMsg').textContent='';
+  $('activityTestModal').classList.remove('hidden');
+};
+if($('activityTestClose'))$('activityTestClose').onclick=()=>$('activityTestModal').classList.add('hidden');
+
+if($('saveTestActivity'))$('saveTestActivity').onclick=async()=>{
+  const member_id=$('testActivityMember').value;
+  const organization_code=$('testActivityOrg').value;
+  const type=$('testActivityType').value;
+  const title=$('testActivityTitle').value.trim();
+  const minutes=Math.max(1,Number($('testActivityMinutes').value||0));
+  const progress=Math.min(100,Math.max(0,Number($('testActivityProgress').value||0)));
+  if(!member_id||!title){$('testActivityMsg').textContent='회원과 콘텐츠/과정명을 입력해주세요.';return}
+
+  let error=null;
+  if(type==='VIDEO'){
+    const r=await db.rpc('gms_record_learning_activity',{
+      p_member_id:member_id,p_organization_code:organization_code,p_content_key:'TEST-'+Date.now(),
+      p_content_title:title,p_minutes:minutes,p_progress_percent:progress
+    }); error=r.error;
+  }else if(type==='SIMULATOR'){
+    const r=await db.rpc('gms_record_simulator_activity',{
+      p_member_id:member_id,p_organization_code:organization_code,p_simulator_key:'TEST-'+Date.now(),
+      p_simulator_title:title,p_minutes:minutes,p_level_or_mission:'TEST'
+    }); error=r.error;
+  }else{
+    const r=await db.rpc('gms_record_seminar_activity',{
+      p_member_id:member_id,p_organization_code:organization_code,p_activity_title:title,
+      p_minutes:minutes,p_completion_status:'completed'
+    }); error=r.error;
+  }
+  if(error){$('testActivityMsg').textContent='기록 실패: '+error.message;return}
+  $('activityTestModal').classList.add('hidden');
+  await loadActivityData();
 };
 
 function showPage(id){
