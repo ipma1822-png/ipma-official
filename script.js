@@ -79,14 +79,34 @@
     else {el.textContent='—';status.textContent='GMS 연결 후 자동 표시';}
   }
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
+  function countryFlag(code){
+    const c=String(code||'').toLowerCase();
+    return c ? `<img class="feed-flag" src="assets/flags/${escapeHtml(c)}.svg" alt="${escapeHtml(c.toUpperCase())}" onerror="this.style.display='none'">` : '<span class="feed-globe">🌐</span>';
+  }
+  function orgLabel(codes){
+    const map={WTKF:'TAEKWONKUMDO',IPMA:'POLICE MARTIAL ARTS',IDP:'DRONE PATROL'};
+    return codes.map(c=>map[c]||c).join(' · ');
+  }
+  function groupMemberRows(rows){
+    const groups=[];
+    rows.forEach(x=>{
+      const stamp=new Date(x.occurred_at||0);
+      const minute=Number.isNaN(stamp.getTime())?'':stamp.toISOString().slice(0,16);
+      const key=[x.subject_masked||'',x.detail||'',x.country_code||'',minute].join('|');
+      let g=groups.find(v=>v.key===key);
+      if(!g){g={key,subject:x.subject_masked||'회원',detail:x.detail||'Global Member',country:x.country_code||'',time:x.occurred_at,orgs:[]};groups.push(g)}
+      if(x.organization_code&&!g.orgs.includes(x.organization_code))g.orgs.push(x.organization_code);
+    });
+    return groups.slice(0,10);
+  }
   async function loadGatewayMemberFeed(){
     const feed=document.getElementById('gatewayMemberFeed'); if(!feed)return;
-    const {data,error}=await gmsRpc('gms_get_public_activity',{p_organization_code:null,p_limit:18});
+    const {data,error}=await gmsRpc('gms_get_public_activity',{p_organization_code:null,p_limit:30});
     if(error||!Array.isArray(data)){feed.innerHTML='<span class="member-live-item">GMS 실시간 피드를 연결하는 중입니다.</span>';return}
-    const rows=data.filter(x=>x.event_type==='new_member').slice(0,12);
-    if(!rows.length){feed.innerHTML='<span class="member-live-item">새로운 회원이 승인되면 이곳에 실시간으로 표시됩니다.</span>';return}
-    const html=rows.map(x=>`<span class="member-live-item"><span class="org">${escapeHtml(x.organization_code||'GMS')}</span><b>${escapeHtml(x.subject_masked||'회원')}</b>${escapeHtml(x.detail||'신규 회원')}<small>${new Date(x.occurred_at).toLocaleDateString('ko-KR')}</small></span>`).join('');
-    feed.innerHTML=html+html;
+    const groups=groupMemberRows(data.filter(x=>x.event_type==='new_member'));
+    if(!groups.length){feed.innerHTML='<span class="member-live-item">새로운 회원이 승인되면 이곳에 실시간으로 표시됩니다.</span>';return}
+    const itemHtml=groups.map(g=>`<span class="member-live-item">${countryFlag(g.country)}<span class="member-country">${escapeHtml((g.country||'GLOBAL').toUpperCase())}</span><b>${escapeHtml(g.subject)}</b><span class="member-joined">NEW GLOBAL MEMBER</span><span class="orgs">${escapeHtml(orgLabel(g.orgs))}</span><small>${new Date(g.time).toLocaleDateString('ko-KR')}</small></span>`).join('');
+    feed.innerHTML=`<span class="member-live-set">${itemHtml}</span><span class="member-live-set" aria-hidden="true">${itemHtml}</span>`;
   }
   async function refreshGmsLive(){await Promise.all([loadMembers(),loadGatewayMemberFeed()])}
   function initGmsRealtime(){
@@ -94,7 +114,11 @@
     try{
       gmsClient=window.supabase.createClient(sb.url,sb.anonKey,{auth:{persistSession:false}});
       gmsClient.channel('gateway-public-members').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},payload=>{
-        if(payload.new?.is_public!==false)refreshGmsLive();
+        if(payload.new?.is_public!==false){
+          const board=document.getElementById('gatewayLiveBoard');
+          if(board){board.classList.remove('live-flash');void board.offsetWidth;board.classList.add('live-flash')}
+          refreshGmsLive();
+        }
       }).subscribe();
     }catch(e){console.warn('GMS realtime',e)}
   }
