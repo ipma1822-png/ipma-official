@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.0.1 | Global Membership System</title>
+<title>GMS v2.1.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -53,6 +53,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .drawer{position:fixed;inset:0;background:#07172b77;display:flex;justify-content:flex-end;z-index:150}.drawerbox{width:min(520px,100%);height:100%;overflow:auto;background:#fff;padding:22px}.drawerhead{display:flex;justify-content:space-between;gap:10px;align-items:start}.x{border:0;background:#edf1f5;border-radius:50%;width:38px;height:38px;cursor:pointer}
 .card{border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:5px}.field select,.field textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px}.field textarea{min-height:90px;resize:vertical}.history{font-size:12px;line-height:1.6;border-bottom:1px solid #edf0f4;padding:9px 0}.empty{color:var(--muted);padding:20px}
 .footer{text-align:center;color:#8792a1;font-size:11px;padding:24px 0}
+.publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
 
 @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.phasegrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
 @media(max-width:900px){
@@ -67,7 +68,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.0.1</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.1.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -115,6 +116,16 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div id="page-dashboard" class="page">
   <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members" onclick="showPage('members'); return false;">회원관리 바로가기</button></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
+  <div class="stats" style="margin-top:16px">
+   <div class="stat accent"><span>기존 단증회원 · 중복제거</span><b id="legacyUnique">0</b></div>
+   <div class="stat accent"><span>WTKF 태권검도</span><b id="wtkfLegacy">0</b></div>
+   <div class="stat accent"><span>IPMA 경찰무도</span><b id="ipmaLegacy">0</b></div>
+   <div class="stat accent"><span>최근 30일 공개활동</span><b id="activity30">0</b></div>
+  </div>
+  <div class="grid2">
+   <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.1</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">기존 Excel 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+  </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
     <div class="quick">
@@ -383,7 +394,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.0.1</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.1.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -528,7 +539,34 @@ async function load(){
  await loadOrganizationLevels();
  await loadContentPolicies();
  await loadActivityData().catch(err=>console.warn('activity init:',err?.message||err));
+ await loadPublicDashboard().catch(err=>console.warn('public dashboard init:',err?.message||err));
 }
+async function loadPublicDashboard(){
+ const [all,wtkf,ipma,feed]=await Promise.all([
+   db.rpc('gms_get_public_stats',{p_organization_code:null}),
+   db.rpc('gms_get_public_stats',{p_organization_code:'WTKF'}),
+   db.rpc('gms_get_public_stats',{p_organization_code:'IPMA'}),
+   db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
+ ]);
+ const status=$('publicStatsStatus');
+ if(all.error){
+   if(status)status.textContent='DB 설정 필요: admin/SUPABASE-GMS-PUBLIC-STATS-ACTIVITY-V2.1.sql 을 먼저 실행하세요.';
+   return;
+ }
+ const n=v=>Number(v||0).toLocaleString('ko-KR');
+ if($('legacyUnique'))$('legacyUnique').textContent=n(all.data?.legacy_unique_people);
+ if($('wtkfLegacy'))$('wtkfLegacy').textContent=n(wtkf.data?.legacy_members);
+ if($('ipmaLegacy'))$('ipmaLegacy').textContent=n(ipma.data?.legacy_members);
+ if($('activity30'))$('activity30').textContent=n(all.data?.activity_30d);
+ if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>온라인 회원 ${n(all.data?.online_members_total)}명 · 기존 단증등록 ${n(all.data?.legacy_members)}건`;
+ const box=$('dashboardPublicFeed');
+ if(!box)return;
+ if(feed.error){box.innerHTML=`<div class="empty">${esc(feed.error.message)}</div>`;return}
+ const labels={new_member:'신규회원',new_branch:'신규지부',appointment:'임원임명',certificate:'단증발급',notice:'소식'};
+ const rows=feed.data||[];
+ box.innerHTML=rows.length?rows.map(x=>`<div class="feedrow"><span class="feedtype">${esc(labels[x.event_type]||'소식')}</span><div><b>${esc(x.organization_code)} · ${esc(x.subject_masked||'')}</b><small>${esc(x.detail||'')} · ${new Date(x.occurred_at).toLocaleString('ko-KR')}</small></div></div>`).join(''):'<div class="empty">공개 활동이 등록되면 이곳에 자동 표시됩니다.</div>';
+}
+
 function render(){
  const q=$('search').value.trim().toLowerCase();
  const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
