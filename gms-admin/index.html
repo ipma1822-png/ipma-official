@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.0.1 | Global Membership System</title>
+<title>GMS v2.4.0.2.2 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -68,7 +68,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.1</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.2.2</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -127,7 +127,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.2</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -485,7 +485,10 @@ async function showApp(session){
  $('adminInfo').textContent=`관리자 ${session.user.email} 로그인`;
  $('adminEmailTop').textContent=session.user.email;
  await load();
- showPage('dashboard');
+ const requested=(location.hash||'').replace('#','').trim();
+ const initialPage=requested && document.getElementById('page-'+requested) ? requested : 'dashboard';
+ showPage(initialPage);
+ if(initialPage==='global-members') await loadGlobalApplications().catch(err=>console.warn('global applications page:',err?.message||err));
 }
 async function verifySession(source='verify'){
  $('authstate').textContent=`로그인 상태 확인 중 (${source})…`;
@@ -1347,17 +1350,19 @@ if($('saveTestActivity'))$('saveTestActivity').onclick=async()=>{
 };
 
 function showPage(id){
- document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+ document.querySelectorAll('.page').forEach(p=>{p.classList.add('hidden');p.style.display='none';});
  const page=document.getElementById('page-'+id);
  if(!page){
    console.warn('GMS page not found:', id);
    return;
  }
  page.classList.remove('hidden');
+ page.style.display='block';
  if(location.hash !== '#'+id) history.replaceState({},document.title,'#'+id);
  document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));
  document.querySelectorAll('.navitem').forEach(n=>{n.classList.remove('open');n.classList.remove('force-open')});
  document.body.classList.remove('menu-open');
+ if(id==='global-members') loadGlobalApplications().catch(err=>console.warn('global applications page:',err?.message||err));
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.addEventListener('click',(e)=>{
@@ -1398,8 +1403,9 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.0 Realtime
+// GMS v2.4.0.2 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
-window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;});
+window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
+window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
 </script>
 </body></html>
