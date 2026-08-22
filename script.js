@@ -55,19 +55,50 @@
   }
   let countersStarted=false;
   function runCounters(){if(countersStarted)return;countersStarted=true;countTo(document.querySelector('[data-counter="countries"]'),cfg.stats?.countries||51);countTo(document.querySelector('[data-counter="branches"]'),cfg.stats?.branches||150,'+');loadMembers();}
+  let gmsClient=null;
+  async function gmsRpc(name,args={}){
+    const sb=cfg.supabase||{};
+    if(!sb.url||!sb.anonKey)return {data:null,error:new Error('Supabase config missing')};
+    try{
+      const res=await fetch(`${sb.url}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:sb.anonKey,Authorization:`Bearer ${sb.anonKey}`,'Content-Type':'application/json'},body:JSON.stringify(args)});
+      const data=await res.json().catch(()=>null); if(!res.ok)throw new Error(data?.message||`HTTP ${res.status}`); return {data,error:null};
+    }catch(error){return {data:null,error}}
+  }
   async function loadMembers(){
     const el=document.querySelector('[data-counter="members"]'), status=document.getElementById('memberStatus');
-    const sb=cfg.supabase||{};
-    if(sb.url && sb.anonKey && sb.table){
-      try{
-        const res=await fetch(`${sb.url}/rest/v1/${sb.table}?select=${encodeURIComponent(sb.memberCountColumn||'id')}`,{headers:{apikey:sb.anonKey,Authorization:`Bearer ${sb.anonKey}`,Prefer:'count=exact'},method:'HEAD'});
-        const range=res.headers.get('content-range'); const count=range?Number(range.split('/')[1]):NaN;
-        if(Number.isFinite(count)){el.textContent='0';countTo(el,count);status.textContent='LIVE · SUPABASE';return;}
-      }catch(err){console.warn('member count',err)}
+    const {data,error}=await gmsRpc('gms_get_public_stats',{p_organization_code:null});
+    if(!error&&data){
+      const count=Number(data.public_members_total||0); el.textContent='0';countTo(el,count);status.textContent='LIVE · GMS';
+      const today=document.getElementById('gatewayTodayMembers'),ga=document.getElementById('gatewayGlobalApproved'),gc=document.getElementById('gatewayGlobalCountries');
+      if(today)today.textContent=Number(data.new_members_today||0).toLocaleString('ko-KR');
+      if(ga)ga.textContent=Number(data.global_approved||0).toLocaleString('ko-KR');
+      if(gc)gc.textContent=Number(data.global_countries||0).toLocaleString('ko-KR');
+      return;
     }
     if(Number.isFinite(cfg.stats?.membersFallback)){el.textContent='0';countTo(el,cfg.stats.membersFallback);status.textContent='현재 등록 회원';}
-    else {el.textContent='—';status.textContent='SUPABASE 연결 후 자동 표시';}
+    else {el.textContent='—';status.textContent='GMS 연결 후 자동 표시';}
   }
+  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
+  async function loadGatewayMemberFeed(){
+    const feed=document.getElementById('gatewayMemberFeed'); if(!feed)return;
+    const {data,error}=await gmsRpc('gms_get_public_activity',{p_organization_code:null,p_limit:18});
+    if(error||!Array.isArray(data)){feed.innerHTML='<span class="member-live-item">GMS 실시간 피드를 연결하는 중입니다.</span>';return}
+    const rows=data.filter(x=>x.event_type==='new_member').slice(0,12);
+    if(!rows.length){feed.innerHTML='<span class="member-live-item">새로운 회원이 승인되면 이곳에 실시간으로 표시됩니다.</span>';return}
+    const html=rows.map(x=>`<span class="member-live-item"><span class="org">${escapeHtml(x.organization_code||'GMS')}</span><b>${escapeHtml(x.subject_masked||'회원')}</b>${escapeHtml(x.detail||'신규 회원')}<small>${new Date(x.occurred_at).toLocaleDateString('ko-KR')}</small></span>`).join('');
+    feed.innerHTML=html+html;
+  }
+  async function refreshGmsLive(){await Promise.all([loadMembers(),loadGatewayMemberFeed()])}
+  function initGmsRealtime(){
+    const sb=cfg.supabase||{}; if(!window.supabase||!sb.url||!sb.anonKey)return;
+    try{
+      gmsClient=window.supabase.createClient(sb.url,sb.anonKey,{auth:{persistSession:false}});
+      gmsClient.channel('gateway-public-members').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},payload=>{
+        if(payload.new?.is_public!==false)refreshGmsLive();
+      }).subscribe();
+    }catch(e){console.warn('GMS realtime',e)}
+  }
+  loadGatewayMemberFeed(); initGmsRealtime();
 
   const dialog=document.getElementById('linkDialog');
   function enterSite(key){const url=cfg.links?.[key];if(url){const u=new URL(url,location.href);u.searchParams.set('lang',currentLang);window.location.href=u.toString()}else{dialog.showModal()}}
@@ -75,7 +106,7 @@
   document.getElementById('dialogClose').onclick=()=>dialog.close();document.getElementById('dialogOk').onclick=()=>dialog.close();
 
 
-  // IPMA v1.1.1 — actual country flag images
+  // IPMA v1.1.0 — 20-language global navigation layer
   const LANGUAGES = [{"code": "ko", "flag": "kr", "name": "한국어"}, {"code": "en", "flag": "us", "name": "English"}, {"code": "zh", "flag": "cn", "name": "中文"}, {"code": "ja", "flag": "jp", "name": "日本語"}, {"code": "es", "flag": "es", "name": "Español"}, {"code": "fr", "flag": "fr", "name": "Français"}, {"code": "de", "flag": "de", "name": "Deutsch"}, {"code": "pt", "flag": "br", "name": "Português"}, {"code": "it", "flag": "it", "name": "Italiano"}, {"code": "ru", "flag": "ru", "name": "Русский"}, {"code": "mn", "flag": "mn", "name": "Монгол"}, {"code": "vi", "flag": "vn", "name": "Tiếng Việt"}, {"code": "th", "flag": "th", "name": "ไทย"}, {"code": "id", "flag": "id", "name": "Bahasa Indonesia"}, {"code": "ms", "flag": "my", "name": "Bahasa Melayu"}, {"code": "fil", "flag": "ph", "name": "Filipino"}, {"code": "hi", "flag": "in", "name": "हिन्दी"}, {"code": "ar", "flag": "sa", "name": "العربية"}, {"code": "tr", "flag": "tr", "name": "Türkçe"}, {"code": "ne", "flag": "np", "name": "नेपाली"}];
   const I18N = {"ko": ["경찰무도", "태권검도", "드론순찰대", "바로가기", "숫자가 말해주는 성장하는 네트워크", "규모를 설명하지 않습니다. 계속 변하는 숫자로 보여줍니다.", "기술 · 체력 · 정신력 · 현장 대응", "전통 · 정신 · 문화 · 미래세대", "첨단기술 · 감시 · 수색 · 구조 · 안전", "사이트 입장 →", "세 개의 세계, 하나의 관문"], "en": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "zh": ["警察武道", "跆拳剑道", "无人机巡逻队", "快速入口", "用数字展现不断成长的全球网络", "通过持续变化的数据展示我们的全球规模。", "技术 · 体能 · 精神 · 现场应对", "传统 · 精神 · 文化 · 未来一代", "先进技术 · 巡逻 · 搜索 · 救援 · 安全", "进入网站 →", "三个领域，一个全球门户"], "ja": ["警察武道", "テコンドー剣道", "ドローンパトロール", "クイックアクセス", "数字で見る成長するネットワーク", "変化し続ける数字で世界規模を示します。", "技術 · 体力 · 精神 · 現場対応", "伝統 · 精神 · 文化 · 次世代", "先端技術 · 監視 · 捜索 · 救助 · 安全", "サイトへ →", "三つの世界、一つのゲートウェイ"], "es": ["Artes Marciales Policiales", "TaekwonKumdo", "Patrulla de Drones", "Acceso rápido", "Una red global en crecimiento", "Mostramos nuestra escala con cifras que siguen creciendo.", "Técnica · Aptitud · Disciplina · Respuesta", "Tradición · Espíritu · Cultura · Futuro", "Tecnología · Patrulla · Búsqueda · Rescate · Seguridad", "ENTRAR →", "Tres mundos, una puerta global"], "fr": ["Arts martiaux policiers", "TaekwonKumdo", "Patrouille de drones", "Accès rapide", "Un réseau mondial en croissance", "Notre réseau mondial évolue en temps réel.", "Technique · Forme · Discipline · Intervention", "Tradition · Esprit · Culture · Avenir", "Technologie · Patrouille · Recherche · Sauvetage · Sécurité", "ENTRER →", "Trois univers, une passerelle"], "de": ["Polizei-Kampfkunst", "TaekwonKumdo", "Drohnenpatrouille", "Schnellzugriff", "Ein wachsendes globales Netzwerk", "Unser Netzwerk wächst und verbindet die Welt.", "Technik · Fitness · Disziplin · Einsatz", "Tradition · Geist · Kultur · Zukunft", "Technologie · Patrouille · Suche · Rettung · Sicherheit", "SEITE ÖFFNEN →", "Drei Welten, ein Tor"], "pt": ["Artes Marciais Policiais", "TaekwonKumdo", "Patrulha de Drones", "Acesso rápido", "Uma rede global em crescimento", "Nossa rede conecta pessoas em todo o mundo.", "Técnica · Condicionamento · Disciplina · Resposta", "Tradição · Espírito · Cultura · Futuro", "Tecnologia · Patrulha · Busca · Resgate · Segurança", "ENTRAR →", "Três mundos, um portal"], "it": ["Arti Marziali di Polizia", "TaekwonKumdo", "Pattuglia Drone", "Accesso rapido", "Una rete globale in crescita", "La nostra rete collega il mondo.", "Tecnica · Fitness · Disciplina · Risposta", "Tradizione · Spirito · Cultura · Futuro", "Tecnologia · Pattuglia · Ricerca · Soccorso · Sicurezza", "ENTRA →", "Tre mondi, un portale"], "ru": ["Полицейские боевые искусства", "Тхэквондо-кумдо", "Дрон-патруль", "Быстрый доступ", "Растущая глобальная сеть", "Наша сеть объединяет людей по всему миру.", "Техника · Подготовка · Дисциплина · Реагирование", "Традиции · Дух · Культура · Будущее", "Технологии · Патруль · Поиск · Спасение · Безопасность", "ВОЙТИ →", "Три направления, один портал"], "mn": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "vi": ["Võ thuật Cảnh sát", "TaekwonKumdo", "Tuần tra Drone", "Truy cập nhanh", "Mạng lưới toàn cầu đang phát triển", "Mạng lưới của chúng tôi kết nối toàn thế giới.", "Kỹ thuật · Thể lực · Kỷ luật · Ứng phó", "Truyền thống · Tinh thần · Văn hóa · Tương lai", "Công nghệ · Tuần tra · Tìm kiếm · Cứu hộ · An toàn", "VÀO TRANG →", "Ba lĩnh vực, một cổng toàn cầu"], "th": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "id": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "ms": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "fil": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "hi": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "ar": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "tr": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"], "ne": ["Police Martial Arts", "TaekwonKumdo", "Drone Patrol", "Quick Access", "A growing network shown by numbers", "We show our scale through numbers that keep changing.", "Skills · Fitness · Discipline · Field Response", "Tradition · Spirit · Culture · Future Generations", "Advanced Technology · Patrol · Search · Rescue · Safety", "ENTER SITE →", "Three worlds, one gateway"]};
   const langDialog=document.getElementById('languageDialog'), langGrid=document.getElementById('languageGrid'), langBtn=document.getElementById('langBtn'), langBtnText=document.getElementById('langBtnText');
@@ -91,7 +122,7 @@
     document.querySelector('.enter h2').textContent=L[10]; const gs=document.querySelectorAll('.gate-card strong'); if(gs.length===3){gs[0].textContent=L[0];gs[1].textContent=L[1];gs[2].textContent=L[2];}
     document.querySelectorAll('.language-option').forEach(x=>x.classList.toggle('active',x.dataset.lang===code));
   }
-  LANGUAGES.forEach(x=>{const b=document.createElement('button');b.className='language-option';b.dataset.lang=x.code;b.innerHTML=`<img src="assets/flags/${x.flag}.png" alt=""><span><strong>${x.name}</strong><small>${x.flag.toUpperCase()}</small></span>`;b.onclick=()=>{applyLanguage(x.code);langDialog.close()};langGrid.appendChild(b)});
+  LANGUAGES.forEach(x=>{const b=document.createElement('button');b.className='language-option';b.dataset.lang=x.code;b.innerHTML=`<img src="assets/flags/${x.flag}.svg" alt=""><span><strong>${x.name}</strong><small>${x.flag.toUpperCase()}</small></span>`;b.onclick=()=>{applyLanguage(x.code);langDialog.close()};langGrid.appendChild(b)});
   langBtn.onclick=()=>langDialog.showModal(); document.getElementById('languageClose').onclick=()=>langDialog.close(); applyLanguage(currentLang);
 
   // User-initiated, copyright-free procedural ambient sound. Muted by default.

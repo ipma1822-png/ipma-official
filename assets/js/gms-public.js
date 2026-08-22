@@ -7,6 +7,7 @@
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  const esc=v=>String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
  const label=t=>({new_member:'신규회원',new_branch:'신규지부',appointment:'임원임명',certificate:'단증발급',notice:'소식'}[t]||'소식');
+ const country=x=>x.country_code?`[${esc(x.country_code)}] `:'';
  async function load(){
    const [sr,ar]=await Promise.all([
      db.rpc('gms_get_public_stats',{p_organization_code:org}),
@@ -22,7 +23,7 @@
    if(feed){
      if(ar.error){feed.innerHTML='<span>통합 활동피드 DB 설정 후 자동 표시됩니다.</span>';return}
      const a=ar.data||[];
-     feed.innerHTML=a.length?a.map(x=>`<span class="gms-feed-item"><b>${label(x.event_type)}</b> ${esc(x.subject_masked||'')} ${esc(x.detail||'')} <small>${new Date(x.occurred_at).toLocaleDateString('ko-KR')}</small></span>`).join(''):'<span class="gms-feed-item">새로운 활동 소식이 등록되면 이곳에 자동으로 표시됩니다.</span>';
+     feed.innerHTML=a.length?a.map(x=>`<span class="gms-feed-item"><b>${label(x.event_type)}</b> ${country(x)}${esc(x.subject_masked||'')} ${esc(x.detail||'')} <small>${new Date(x.occurred_at).toLocaleDateString('ko-KR')}</small></span>`).join(''):'<span class="gms-feed-item">새로운 활동 소식이 등록되면 이곳에 자동으로 표시됩니다.</span>';
    }
  }
  load().catch(()=>{});
