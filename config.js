@@ -1,12 +1,12 @@
 window.GATEWAY_CONFIG = {
-  version: "1.1.0",
+  version: "1.1.2",
   stats: {
     countries: 51,
     branches: 150,
     membersFallback: null
   },
   links: {
-    police: "",
+    police: "https://ipma.kr/about/",
     taekwonkumdo: "https://ipma1822-png.github.io/taekwonkumdo/",
     drone: "https://idp.ai.kr/"
   },
