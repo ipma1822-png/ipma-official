@@ -26,4 +26,5 @@
    }
  }
  load().catch(()=>{});
+ try{db.channel('gms-public-'+org).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity',filter:'organization_code=eq.'+org},()=>load()).subscribe();}catch(e){console.warn('GMS Realtime:',e)}
 })();

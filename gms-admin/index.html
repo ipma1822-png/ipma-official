@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.1.0 | Global Membership System</title>
+<title>GMS v2.2.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -68,7 +68,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.1.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.2.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -97,6 +97,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="navitem"><a href="#organization" class="navtop" data-page="organization" onclick="showPage('organization'); return false;">임원·지부</a>
    <div class="mega"><a href="#organization" class="wide" data-page="organization" onclick="showPage('organization'); return false;">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">임원위촉</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부장</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부관리</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">조직도</a></div>
   </div>
+  <div class="navitem"><a href="#global-members" class="navtop" data-page="global-members" onclick="showPage('global-members'); return false;">세계회원</a>
+   <div class="mega"><a href="#global-members" class="wide" data-page="global-members" onclick="showPage('global-members'); return false;">GLOBAL MEMBERSHIP<small>20개 언어 국제회원 신청 · 국가별 회원관리 · 승인대기</small></a><a href="#global-members" data-page="global-members" onclick="showPage('global-members'); return false;">국제회원 신청</a><a href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼</a><a href="#global-members" data-page="global-members" onclick="showPage('global-members'); return false;">국가·언어별 관리</a></div>
+  </div>
   <div class="navitem"><a href="#statistics" class="navtop" data-page="statistics" onclick="showPage('statistics'); return false;">통계·설정</a>
    <div class="mega"><a href="#statistics" class="wide" data-page="statistics" onclick="showPage('statistics'); return false;">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">회원통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">수익통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">활동통계</a><a href="#content-access" data-page="content-access" onclick="showPage('content-access'); return false;">콘텐츠 권한정책</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">관리자 설정</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 메모</a></div>
   </div>
@@ -124,7 +127,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.1</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.2</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -135,6 +138,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <a href="#learning" class="qcard" data-page="learning" onclick="showPage('learning'); return false;"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
      <a href="#certificates" class="qcard" data-page="certificates" onclick="showPage('certificates'); return false;"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
      <a href="#organization" class="qcard" data-page="organization" onclick="showPage('organization'); return false;"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
+     <a href="#global-members" class="qcard" data-page="global-members" onclick="showPage('global-members'); return false;"><span class="qicon">🌍</span><b>20개 언어 세계회원</b><small>국가·언어별 신규신청 확인, 승인, 세계회원 관리</small></a>
      <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
@@ -367,7 +371,14 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
  <div id="page-organization" class="page hidden"><div class="pagehead"><div><div class="eyebrow">APPOINTMENT & BRANCH</div><h1>임원·지부관리</h1><p>회원정보를 기반으로 임원위촉과 지부활동을 관리합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>임원위촉</h3><p>직책·임기·위촉일·상태·이력을 관리.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지부관리</h3><p>3개 조직의 국내외 지부정보와 지부장 연결.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>조직공헌</h3><p>지부활동·행사·교육실적을 LEVEL/G-POINT에 반영.</p></div></div></div>
 
- <div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
+ <div id="page-global-members" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">GLOBAL MEMBERSHIP · 20 LANGUAGES</div><h1>세계회원 관리</h1><p>전 세계에서 접수된 회원신청을 국가·언어·조직별로 확인하고 승인합니다.</p></div><a class="btn gold" href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼 ↗</a></div>
+ <div class="stats"><div class="stat"><span>전체 국제신청</span><b id="gaTotal">0</b></div><div class="stat"><span>승인대기</span><b id="gaPending">0</b></div><div class="stat"><span>승인완료</span><b id="gaApproved">0</b></div><div class="stat"><span>가입 국가</span><b id="gaCountries">0</b></div></div>
+ <div class="panel" style="margin-top:16px"><div class="panelhead"><b>국제회원 신청 목록</b><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="gaStatusFilter" class="search" style="width:auto"><option value="">전체상태</option><option value="pending">승인대기</option><option value="approved">승인완료</option><option value="needs_review">확인필요</option><option value="rejected">거절</option></select><input id="gaSearch" class="search" placeholder="이름·이메일·국가 검색"></div></div><div class="scroll"><table><thead><tr><th>신청자</th><th>국가·언어</th><th>관심조직</th><th>이메일</th><th>접수일</th><th>상태</th><th>관리</th></tr></thead><tbody id="gaRows"></tbody></table></div></div>
+ <div class="notice" style="margin-top:16px"><b>운영 원칙</b><br>신청 즉시 공개 회원수에 포함하지 않고, 본부 승인 후 해당 조직의 신규회원 활동피드와 공개 카운터에 반영합니다. 회원의 선호언어를 기준으로 회신·기본자료 발송을 관리합니다.</div>
+</div>
+
+<div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
 
  <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · WTKF/IPMA/IDP PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
 
@@ -394,7 +405,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.1.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.2.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -450,6 +461,7 @@ const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
 });
 const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
 let members=[], selected=null, booted=false;
+let globalApplications=[];
 const $=id=>document.getElementById(id);
 let learningRecords=[], simulatorRecords=[], seminarRecords=[], activityPoints=[];
 
@@ -540,6 +552,7 @@ async function load(){
  await loadContentPolicies();
  await loadActivityData().catch(err=>console.warn('activity init:',err?.message||err));
  await loadPublicDashboard().catch(err=>console.warn('public dashboard init:',err?.message||err));
+ await loadGlobalApplications().catch(err=>console.warn('global applications init:',err?.message||err));
 }
 async function loadPublicDashboard(){
  const [all,wtkf,ipma,feed]=await Promise.all([
@@ -558,8 +571,10 @@ async function loadPublicDashboard(){
  if($('wtkfLegacy'))$('wtkfLegacy').textContent=n(wtkf.data?.legacy_members);
  if($('ipmaLegacy'))$('ipmaLegacy').textContent='1,052호';
  if($('activity30'))$('activity30').textContent=n(all.data?.activity_30d);
- if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>전체 회원 ${n(Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0))}명 · 회원자료 ${n(all.data?.legacy_members)}건`;
- const totalEl=$('total'); if(totalEl) totalEl.textContent=n(Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0));
+ if($('globalApproved'))$('globalApproved').textContent=n(all.data?.global_approved);
+ if($('globalPending'))$('globalPending').textContent=n(all.data?.global_pending);
+ if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>전체 회원 ${n(all.data?.public_members_total ?? (Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0)))}명 · 세계회원 승인 ${n(all.data?.global_approved)}명 · 회원자료 ${n(all.data?.legacy_members)}건`;
+ const totalEl=$('total'); if(totalEl) totalEl.textContent=n(all.data?.public_members_total ?? (Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0)));
  const box=$('dashboardPublicFeed');
  if(!box)return;
  if(feed.error){box.innerHTML=`<div class="empty">${esc(feed.error.message)}</div>`;return}
@@ -567,6 +582,24 @@ async function loadPublicDashboard(){
  const rows=feed.data||[];
  box.innerHTML=rows.length?rows.map(x=>`<div class="feedrow"><span class="feedtype">${esc(labels[x.event_type]||'소식')}</span><div><b>${esc(x.organization_code)} · ${esc(x.subject_masked||'')}</b><small>${esc(x.detail||'')} · ${new Date(x.occurred_at).toLocaleString('ko-KR')}</small></div></div>`).join(''):'<div class="empty">공개 활동이 등록되면 이곳에 자동 표시됩니다.</div>';
 }
+
+
+async function loadGlobalApplications(){
+ const {data,error}=await db.from('gms_global_applications').select('*').order('created_at',{ascending:false}).limit(1000);
+ if(error){ if($('gaRows')) $('gaRows').innerHTML=`<tr><td colspan="7" class="empty">국제회원 DB 설정 필요: ${esc(error.message)}</td></tr>`; return; }
+ globalApplications=data||[]; renderGlobalApplications();
+}
+function renderGlobalApplications(){
+ if(!$('gaRows')) return;
+ const q=String($('gaSearch')?.value||'').trim().toLowerCase();
+ const sf=String($('gaStatusFilter')?.value||'');
+ const list=globalApplications.filter(x=>(!sf||x.status===sf)&&(!q||`${x.name||''} ${x.name_en||''} ${x.email||''} ${x.country_name||''} ${x.country_code||''}`.toLowerCase().includes(q)));
+ const n=v=>Number(v||0).toLocaleString('ko-KR');
+ $('gaTotal').textContent=n(globalApplications.length); $('gaPending').textContent=n(globalApplications.filter(x=>x.status==='pending').length); $('gaApproved').textContent=n(globalApplications.filter(x=>x.status==='approved').length); $('gaCountries').textContent=n(new Set(globalApplications.map(x=>x.country_code).filter(Boolean)).size);
+ const statusLabel={pending:'승인대기',approved:'승인완료',needs_review:'확인필요',rejected:'거절'};
+ $('gaRows').innerHTML=list.length?list.map(x=>`<tr><td><b>${esc(x.name||'')}</b><br><small>${esc(x.name_en||'')}</small></td><td>${esc(x.country_name||x.country_code||'')}<br><small>${esc(x.preferred_language||'')}</small></td><td>${esc((x.organizations||[]).join(' · '))}</td><td><a href="mailto:${esc(x.email||'')}">${esc(x.email||'')}</a></td><td>${new Date(x.created_at).toLocaleDateString('ko-KR')}</td><td><span class="badge ${x.status==='approved'?'live':'next'}">${statusLabel[x.status]||esc(x.status||'')}</span></td><td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="padding:7px 9px" onclick="setGlobalStatus('${x.id}','approved')">승인</button><button class="btn" style="padding:7px 9px;background:#667085" onclick="setGlobalStatus('${x.id}','needs_review')">확인</button><a class="btn gold" style="padding:7px 9px" href="mailto:${esc(x.email||'')}?subject=${encodeURIComponent('[GMS] Global Membership 안내')}">회신</a></div></td></tr>`).join(''):'<tr><td colspan="7" class="empty">조건에 맞는 국제회원 신청이 없습니다.</td></tr>';
+}
+async function setGlobalStatus(id,status){ const {data:{user}}=await db.auth.getUser(); const {error}=await db.from('gms_global_applications').update({status,reviewed_at:new Date().toISOString(),reviewed_by:user?.email||null}).eq('id',id); if(error){alert('상태 변경 실패: '+error.message);return} await loadGlobalApplications(); await loadPublicDashboard(); }
 
 function render(){
  const q=$('search').value.trim().toLowerCase();
@@ -1335,5 +1368,9 @@ showLogin=async function(message=''){
  const hub=document.getElementById('adminHubTop'); if(hub)hub.classList.add('hidden');
  await oldShowLogin(message);
 };
+
+// GMS v2.2 Realtime
+try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
+window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;});
 </script>
 </body></html>
