@@ -23,6 +23,7 @@
       <a href="#network">NETWORK</a>
       <a href="#enter">바로가기</a>
     </nav>
+    <button class="lang-btn" id="langBtn" type="button" aria-haspopup="dialog">🌐 <span id="langBtnText">한국어</span></button>
     <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false" title="배경 사운드 켜기">SOUND ○</button>
   </header>
 
@@ -106,6 +107,8 @@
   </main>
 
   <footer><span>IPMA GATEWAY</span><small>Police Martial Arts · TaekwonKumdo · Drone Patrol</small><b id="version">v1.0.0</b></footer>
+
+  <dialog id="languageDialog" class="language-dialog"><button class="dialog-x" id="languageClose" aria-label="닫기">×</button><p class="lang-kicker">20 LANGUAGES · ONE GLOBAL NETWORK</p><h3>언어를 선택하세요</h3><p class="lang-help">주요 메뉴와 안내를 선택한 언어로 볼 수 있습니다. 교육 영상 자막은 순차적으로 추가됩니다.</p><div class="language-grid" id="languageGrid"></div></dialog>
 
   <dialog id="linkDialog"><button class="dialog-x" id="dialogClose" aria-label="닫기">×</button><h3>사이트 연결 준비</h3><p>경찰무도 홈페이지의 최종 연결 주소를 <code>config.js</code>에 입력하면 이 버튼이 바로 작동합니다.</p><button id="dialogOk">확인</button></dialog>
 
