@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.0.2.2 | Global Membership System</title>
+<title>GMS v2.4.0.3 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -68,7 +68,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.2.2</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.3</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -127,7 +127,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.2</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.3</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -345,7 +345,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
     <button id="saveTestActivity" class="btn gold" style="width:100%;margin-top:12px">테스트 기록 저장</button>
     <div id="testActivityMsg" class="msg"></div>
   </div>
-</div>
+</div></div>
 
  
 <div id="page-points" class="page hidden">
@@ -406,7 +406,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.0.3</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -472,8 +472,9 @@ LEVELS.forEach(([n,c])=>{
 
 function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
 function cleanOAuthUrl(){
-  if(location.search || location.hash){
-    history.replaceState({},document.title,location.pathname);
+  const routeHash=(location.hash||'').match(/^#(dashboard|members|levels|org-levels|membership-plan|payments|content-access|learning|points|certificates|organization|global-members|statistics|member-card|settings|roadmap)$/)?.[0] || '';
+  if(location.search || (location.hash && !routeHash)){
+    history.replaceState({},document.title,location.pathname + routeHash);
   }
 }
 async function showLogin(message=''){
