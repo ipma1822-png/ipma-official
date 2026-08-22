@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v1.9.0 | Global Membership System</title>
+<title>GMS v1.9.1 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -31,7 +31,7 @@
 .mega{display:none;position:absolute;top:100%;left:0;width:470px;background:#fff;border:1px solid var(--line);border-radius:0 0 16px 16px;box-shadow:0 18px 40px #06142520;padding:18px;z-index:90}
 .navitem:hover>.mega,.navitem.force-open>.mega{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .navitem:nth-last-child(-n+2) .mega{left:auto;right:0}
-.mega a{padding:11px 12px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:800;color:#39485d;background:#f7f9fc}
+.mega a{position:relative;z-index:101;pointer-events:auto;cursor:pointer;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:800;color:#39485d;background:#f7f9fc}
 .mega a:hover,.mega a.active{background:#edf4fb;color:#0d4a7d}.mega .wide{grid-column:1/-1;background:linear-gradient(135deg,#0c2d4d,#174b78);color:#fff}
 .mega small{display:block;font-weight:500;opacity:.75;margin-top:4px;line-height:1.4}
 
@@ -65,9 +65,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <body>
 <header class="top">
  <div class="topin">
-  <div class="brand" data-page="dashboard"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
+  <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.9.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v1.9.1</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
    <button id="logout" class="btn ghost hidden">로그아웃</button>
@@ -78,26 +78,26 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
 <nav id="appNav" class="navbar hidden">
  <div class="navin">
-  <div class="navitem"><a class="navtop" data-page="dashboard">운영본부</a>
-   <div class="mega"><a class="wide" data-page="dashboard">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a data-page="roadmap">개발 로드맵</a><a data-page="settings">운영 설정</a></div>
+  <div class="navitem"><a href="#dashboard" class="navtop" data-page="dashboard" onclick="showPage('dashboard'); return false;">운영본부</a>
+   <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="members">회원관리</a>
-   <div class="mega"><a class="wide" data-page="members">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a data-page="members">전체회원</a><a data-page="members">신규회원</a><a data-page="members">무료회원</a><a data-page="membership-plan">유료회원 / PLAN</a><a data-page="org-levels">조직별 LEVEL</a><a data-page="plan-admin">PLAN 관리</a><a data-page="levels">9단계 회원등급</a><a data-page="member-card">디지털 회원카드</a></div>
+  <div class="navitem"><a href="#members" class="navtop" data-page="members" onclick="showPage('members'); return false;">회원관리</a>
+   <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); return false;">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a href="#members" data-page="members" onclick="showPage('members'); return false;">전체회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">신규회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">무료회원</a><a href="#membership-plan" data-page="membership-plan" onclick="showPage('membership-plan'); return false;">유료회원 / PLAN</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">PLAN 관리</a><a href="#levels" data-page="levels" onclick="showPage('levels'); return false;">9단계 회원등급</a><a href="#member-card" data-page="member-card" onclick="showPage('member-card'); return false;">디지털 회원카드</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="finance">회비·수익</a>
-   <div class="mega"><a class="wide" data-page="finance">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a data-page="finance">입금대기</a><a data-page="finance">입금완료</a><a data-page="finance">만료예정</a><a data-page="finance">연회비 설정</a><a data-page="finance">서비스 상품</a></div>
+  <div class="navitem"><a href="#finance" class="navtop" data-page="finance" onclick="showPage('finance'); return false;">회비·수익</a>
+   <div class="mega"><a href="#finance" class="wide" data-page="finance" onclick="showPage('finance'); return false;">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금대기</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금완료</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">만료예정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">연회비 설정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">서비스 상품</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="learning">교육·활동</a>
-   <div class="mega"><a class="wide" data-page="learning">교육·활동 기록<small>영상·시뮬레이터·세미나·G-POINT 연동</small></a><a data-page="learning">교육이력</a><a data-page="learning">영상학습</a><a data-page="learning">시뮬레이터</a><a data-page="points">G-POINT</a><a data-page="learning">세미나 참가</a><a data-page="content-access">콘텐츠 권한관리</a></div>
+  <div class="navitem"><a href="#learning" class="navtop" data-page="learning" onclick="showPage('learning'); return false;">교육·활동</a>
+   <div class="mega"><a href="#learning" class="wide" data-page="learning" onclick="showPage('learning'); return false;">교육·활동 기록<small>영상·시뮬레이터·세미나·G-POINT 연동</small></a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">교육이력</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">영상학습</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">시뮬레이터</a><a href="#points" data-page="points" onclick="showPage('points'); return false;">G-POINT</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">세미나 참가</a><a href="#content-access" data-page="content-access" onclick="showPage('content-access'); return false;">콘텐츠 권한관리</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="certificates">자격·지도자</a>
-   <div class="mega"><a class="wide" data-page="certificates">자격·지도자 관리<small>자격증, 수료증, 지도자과정, 검정관리</small></a><a data-page="certificates">자격증 관리</a><a data-page="certificates">수료현황</a><a data-page="certificates">지도자 관리</a><a data-page="certificates">검정 신청</a></div>
+  <div class="navitem"><a href="#certificates" class="navtop" data-page="certificates" onclick="showPage('certificates'); return false;">자격·지도자</a>
+   <div class="mega"><a href="#certificates" class="wide" data-page="certificates" onclick="showPage('certificates'); return false;">자격·지도자 관리<small>자격증, 수료증, 지도자과정, 검정관리</small></a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">자격증 관리</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">수료현황</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">지도자 관리</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">검정 신청</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="organization">임원·지부</a>
-   <div class="mega"><a class="wide" data-page="organization">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a data-page="organization">임원위촉</a><a data-page="organization">지부장</a><a data-page="organization">지부관리</a><a data-page="organization">조직도</a></div>
+  <div class="navitem"><a href="#organization" class="navtop" data-page="organization" onclick="showPage('organization'); return false;">임원·지부</a>
+   <div class="mega"><a href="#organization" class="wide" data-page="organization" onclick="showPage('organization'); return false;">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">임원위촉</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부장</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부관리</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">조직도</a></div>
   </div>
-  <div class="navitem"><a class="navtop" data-page="statistics">통계·설정</a>
-   <div class="mega"><a class="wide" data-page="statistics">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a data-page="statistics">회원통계</a><a data-page="statistics">수익통계</a><a data-page="statistics">활동통계</a><a data-page="content-access">콘텐츠 권한정책</a><a data-page="settings">관리자 설정</a><a data-page="settings">운영 메모</a></div>
+  <div class="navitem"><a href="#statistics" class="navtop" data-page="statistics" onclick="showPage('statistics'); return false;">통계·설정</a>
+   <div class="mega"><a href="#statistics" class="wide" data-page="statistics" onclick="showPage('statistics'); return false;">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">회원통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">수익통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">활동통계</a><a href="#content-access" data-page="content-access" onclick="showPage('content-access'); return false;">콘텐츠 권한정책</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">관리자 설정</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 메모</a></div>
   </div>
  </div>
 </nav>
@@ -113,17 +113,17 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
 <section id="app" class="hidden">
  <div id="page-dashboard" class="page">
-  <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members">회원관리 바로가기</button></div>
+  <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members" onclick="showPage('members'); return false;">회원관리 바로가기</button></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
     <div class="quick">
-     <a class="qcard" data-page="members"><span class="qicon">👥</span><b>통합 회원관리</b><small>회원 검색, 현재 LEVEL 확인, 승급·조정</small></a>
-     <a class="qcard" data-page="finance"><span class="qicon">₩</span><b>회비·입금관리</b><small>연회비 신청과 입금확인 시스템 구축 예정</small></a>
-     <a class="qcard" data-page="points"><span class="qicon">★</span><b>G-POINT</b><small>학습·훈련·공헌 활동점수 연동 예정</small></a>
-     <a class="qcard" data-page="learning"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
-     <a class="qcard" data-page="certificates"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
-     <a class="qcard" data-page="organization"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
+     <a href="#members" class="qcard" data-page="members" onclick="showPage('members'); return false;"><span class="qicon">👥</span><b>통합 회원관리</b><small>회원 검색, 현재 LEVEL 확인, 승급·조정</small></a>
+     <a href="#finance" class="qcard" data-page="finance" onclick="showPage('finance'); return false;"><span class="qicon">₩</span><b>회비·입금관리</b><small>연회비 신청과 입금확인 시스템 구축 예정</small></a>
+     <a href="#points" class="qcard" data-page="points" onclick="showPage('points'); return false;"><span class="qicon">★</span><b>G-POINT</b><small>학습·훈련·공헌 활동점수 연동 예정</small></a>
+     <a href="#learning" class="qcard" data-page="learning" onclick="showPage('learning'); return false;"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
+     <a href="#certificates" class="qcard" data-page="certificates" onclick="showPage('certificates'); return false;"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
+     <a href="#organization" class="qcard" data-page="organization" onclick="showPage('organization'); return false;"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
      <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
@@ -297,7 +297,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.9.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v1.9.1</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -1006,7 +1006,7 @@ function showPage(id){
  const page=document.getElementById('page-'+id);
  if(page) page.classList.remove('hidden');
  document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));
- document.querySelectorAll('.mega').forEach(m=>m.classList.remove('open'));
+ document.querySelectorAll('.navitem').forEach(n=>{n.classList.remove('open');n.classList.remove('force-open')});
  document.body.classList.remove('menu-open');
  window.scrollTo({top:0,behavior:'smooth'});
 }
