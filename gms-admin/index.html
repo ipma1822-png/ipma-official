@@ -117,14 +117,14 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="pagehead"><div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members" onclick="showPage('members'); return false;">회원관리 바로가기</button></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
   <div class="stats" style="margin-top:16px">
-   <div class="stat accent"><span>기존 단증회원 · 중복제거</span><b id="legacyUnique">0</b></div>
-   <div class="stat accent"><span>WTKF 태권검도</span><b id="wtkfLegacy">0</b></div>
-   <div class="stat accent"><span>IPMA 경찰무도</span><b id="ipmaLegacy">0</b></div>
+   <div class="stat accent"><span>등록 회원</span><b id="legacyUnique">0</b></div>
+   <div class="stat accent"><span>태권검도 회원</span><b id="wtkfLegacy">0</b></div>
+   <div class="stat accent"><span>경찰무도 단증 발급</span><b id="ipmaLegacy">0</b></div>
    <div class="stat accent"><span>최근 30일 공개활동</span><b id="activity30">0</b></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.1</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">기존 Excel 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.1</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -556,9 +556,10 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  if($('legacyUnique'))$('legacyUnique').textContent=n(all.data?.legacy_unique_people);
  if($('wtkfLegacy'))$('wtkfLegacy').textContent=n(wtkf.data?.legacy_members);
- if($('ipmaLegacy'))$('ipmaLegacy').textContent=n(ipma.data?.legacy_members);
+ if($('ipmaLegacy'))$('ipmaLegacy').textContent='1,052호';
  if($('activity30'))$('activity30').textContent=n(all.data?.activity_30d);
- if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>온라인 회원 ${n(all.data?.online_members_total)}명 · 기존 단증등록 ${n(all.data?.legacy_members)}건`;
+ if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>전체 회원 ${n(Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0))}명 · 회원자료 ${n(all.data?.legacy_members)}건`;
+ const totalEl=$('total'); if(totalEl) totalEl.textContent=n(Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0));
  const box=$('dashboardPublicFeed');
  if(!box)return;
  if(feed.error){box.innerHTML=`<div class="empty">${esc(feed.error.message)}</div>`;return}
