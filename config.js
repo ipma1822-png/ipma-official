@@ -1,5 +1,5 @@
 window.GATEWAY_CONFIG = {
-  version: "1.1.2",
+  version: "1.2.0",
   stats: {
     countries: 51,
     branches: 150,
@@ -11,8 +11,8 @@ window.GATEWAY_CONFIG = {
     drone: "https://idp.ai.kr/"
   },
   supabase: {
-    url: "",
-    anonKey: "",
+    url: "https://ojxarsfaewehwjidwgac.supabase.co",
+    anonKey: "sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0",
     table: "profiles",
     memberCountColumn: "id"
   },
