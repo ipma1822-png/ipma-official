@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.0.4 | Global Membership System</title>
+<title>GMS v2.4.0.5 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -56,11 +56,137 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
 
 @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.phasegrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
+
+.mobile-label{display:none}
 @media(max-width:900px){
- .menuBtn{display:block}.adminpill{display:none}.navbar{display:none}.menu-open .navbar{display:block;position:fixed;left:0;right:0;top:74px;bottom:0;overflow:auto;z-index:95}
- .navin{display:block;width:100%}.navtop{border-bottom:1px solid #edf0f4;padding:16px 20px}.mega,.navitem:hover>.mega,.navitem.force-open>.mega{position:static;width:auto;box-shadow:none;border:0;border-radius:0;padding:9px 15px 16px;display:none;grid-template-columns:1fr 1fr;background:#f7f9fc}.navitem.open>.mega{display:grid}.navitem:nth-last-child(-n+2) .mega{right:auto}
+  /* 상단 헤더: 글자 줄바꿈 방지 + 버튼 컴팩트 */
+  .top{position:sticky;top:0;z-index:110}
+  .topin{width:100%;min-height:62px;padding:7px 10px;gap:8px}
+  .brand{min-width:0;flex:1}
+  .brand b{display:block;font-size:15px;line-height:1.08;letter-spacing:0;white-space:normal}
+  .brand span{font-size:7px;line-height:1.25;letter-spacing:.08em;margin-top:4px;white-space:normal}
+  .topright{gap:5px;flex:0 0 auto}
+  .adminpill{display:none!important}
+  .btn.ghost{min-height:38px;padding:7px 9px;border-radius:9px;font-size:11px;line-height:1;white-space:nowrap}
+  .desktop-label{display:none}.mobile-label{display:inline}
+  .menuBtn{display:block;width:40px;height:40px;padding:0;font-size:20px;line-height:1;flex:0 0 40px}
+
+  /* 모바일 기본상태: 주요 메뉴가 항상 가로로 보임 */
+  .navbar{
+    display:block;
+    position:sticky;
+    top:62px;
+    z-index:105;
+    background:#fff;
+    overflow:visible;
+    border-bottom:1px solid var(--line);
+    box-shadow:0 4px 16px #07172b10;
+  }
+  .navbar.hidden{display:none!important}
+  .navin{
+    width:100%;
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    overflow-x:auto;
+    overflow-y:visible;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding:0 6px;
+  }
+  .navin::-webkit-scrollbar{display:none}
+  .navitem{position:static;flex:0 0 auto}
+  .navtop{
+    display:block;
+    padding:12px 11px 10px;
+    font-size:12px;
+    line-height:1.15;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+  }
+
+  /* 가로 메뉴 터치 시 메가메뉴가 화면 폭 안에서 펼쳐짐 */
+  .mega,
+  .navitem:hover>.mega,
+  .navitem.force-open>.mega{
+    display:none;
+    position:fixed;
+    top:106px;
+    left:10px!important;
+    right:10px!important;
+    width:auto;
+    max-height:58vh;
+    overflow:auto;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:0 0 14px 14px;
+    background:#fff;
+    box-shadow:0 18px 40px #06142535;
+    z-index:120;
+  }
+  .navitem.open>.mega{display:grid}
+  .mega a{padding:10px 10px;font-size:12px}
+  .mega small{font-size:10px}
+
+  /* 햄버거를 누르면 전체 메뉴 모드 */
+  .menu-open .navbar{
+    display:block;
+    position:fixed;
+    left:0;right:0;
+    top:62px;bottom:0;
+    overflow:auto;
+    z-index:125;
+    background:#fff;
+  }
+  .menu-open .navin{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    align-content:start;
+    overflow:visible;
+    padding:8px;
+  }
+  .menu-open .navitem{position:relative;min-width:0}
+  .menu-open .navtop{
+    padding:14px 12px;
+    border:1px solid #e7ebf0;
+    border-radius:10px;
+    margin:4px;
+    background:#f8fafc;
+    font-size:13px;
+  }
+  .menu-open .navitem.open>.mega{
+    position:fixed;
+    top:118px;
+    left:10px!important;
+    right:10px!important;
+    max-height:70vh;
+  }
+
+  /* 본문 글자·배열 */
+  main{width:calc(100% - 20px);padding:18px 0 44px}
+  .pagehead{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:15px}
+  .pagehead h1{font-size:28px;line-height:1.15}
+  .pagehead p{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+  .pagehead>.btn,.pagehead>button{width:100%;min-height:46px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .stat{padding:14px;min-height:112px}
+  .stat b{font-size:26px}
+  .stat span{font-size:11px}
+  .grid3,.phasegrid,.quick{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .panelhead{align-items:flex-start;flex-direction:column}
 }
-@media(max-width:650px){.stats,.grid3,.phasegrid,.quick{grid-template-columns:1fr}.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
+@media(max-width:390px){
+  .brand b{font-size:14px}
+  .brand span{display:none}
+  .btn.ghost{padding:6px 8px;font-size:10px}
+  .navtop{padding-left:10px;padding-right:10px;font-size:11px}
+  .stats{grid-template-columns:1fr 1fr}
+}
+.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 </style>
 </head>
 <body>
@@ -68,10 +194,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.4</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.5</div>
    <div id="adminEmailTop" class="adminpill"></div>
-   <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self">사이트·관리자 허브</a>
-   <button id="logout" class="btn ghost hidden">로그아웃</button>
+   <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
+   <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
    <button id="menuBtn" class="menuBtn">☰</button>
   </div>
  </div>
@@ -127,7 +253,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.4</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.5</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -1376,13 +1502,24 @@ function showPage(id){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.addEventListener('click',(e)=>{
+ const topEl=e.target.closest('.navtop');
+ if(topEl && window.innerWidth<=900){
+   e.preventDefault();
+   const item=topEl.parentElement;
+   const wasOpen=item.classList.contains('open');
+   document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('open'));
+   if(!wasOpen) item.classList.add('open');
+   return;
+ }
  const pageEl=e.target.closest('[data-page]');
  if(pageEl){ e.preventDefault(); showPage(pageEl.dataset.page); }
- const topEl=e.target.closest('.navtop');
- if(topEl && window.innerWidth<=900){ e.preventDefault(); topEl.parentElement.classList.toggle('open'); }
 });
 const menuBtn=document.getElementById('menuBtn');
-if(menuBtn) menuBtn.onclick=()=>document.body.classList.toggle('menu-open');
+if(menuBtn) menuBtn.onclick=()=>{
+  document.body.classList.toggle('menu-open');
+  menuBtn.textContent=document.body.classList.contains('menu-open')?'✕':'☰';
+  menuBtn.setAttribute('aria-expanded',document.body.classList.contains('menu-open')?'true':'false');
+};
 document.addEventListener('click',(e)=>{
  if(window.innerWidth>900 && !e.target.closest('.navitem')) document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('force-open'));
 });
@@ -1413,7 +1550,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.0.4 Realtime
+// GMS v2.4.0.5 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
