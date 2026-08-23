@@ -170,10 +170,11 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .pagehead h1{font-size:28px;line-height:1.15}
   .pagehead p{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
   .pagehead>.btn,.pagehead>button{width:100%;min-height:46px}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .stat{padding:14px;min-height:112px}
-  .stat b{font-size:26px}
-  .stat span{font-size:11px}
+  /* 모바일 카운터: 한 줄 2개 배치, 크기만 컴팩트하게 */
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .stat{padding:10px 9px;min-height:82px;border-radius:11px}
+  .stat b{font-size:22px;margin-top:3px;line-height:1.05}
+  .stat span{font-size:10px;line-height:1.25;word-break:keep-all}
   .grid3,.phasegrid,.quick{grid-template-columns:1fr}
   .grid2{grid-template-columns:1fr}
   .row{grid-template-columns:1fr}
@@ -186,7 +187,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .navtop{padding-left:10px;padding-right:10px;font-size:11px}
   .stats{grid-template-columns:1fr 1fr}
 }
-.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
+.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}
 
 /* v2.4.0.6 · realtime organization activity slow upward scroll */
 .final-admin-card{
