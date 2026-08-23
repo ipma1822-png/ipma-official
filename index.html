@@ -1,1611 +1,182 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.0.8 | Global Membership System</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-:root{
- --navy:#07172b;--navy2:#123b63;--navy3:#0d2b4a;--gold:#d7ad50;--gold2:#b98b34;
- --bg:#f3f6fa;--line:#dce3eb;--text:#142033;--muted:#6d7888;--white:#fff;
- --green:#16794f;--red:#a6333d;--shadow:0 14px 34px #0b203510
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text)}
-.hidden{display:none!important}button,input,select,textarea{font:inherit}a{color:inherit}
-.top{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100}
-.topin{width:min(1450px,calc(100% - 28px));margin:auto;min-height:74px;display:flex;justify-content:space-between;align-items:center;gap:20px}
-.brand{cursor:pointer}.brand b{font-size:22px;letter-spacing:.02em}.brand span{display:block;color:#c5d0dd;font-size:10px;letter-spacing:.14em;margin-top:5px}
-.topright{display:flex;gap:10px;align-items:center}.adminpill{font-size:11px;color:#dbe5ef;border:1px solid #ffffff28;padding:8px 10px;border-radius:99px}
-.btn{border:0;border-radius:10px;padding:10px 14px;background:var(--navy);color:#fff;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-.btn.gold{background:linear-gradient(135deg,#d8b257,#a87a28)}.btn.ghost{background:transparent;border:1px solid #ffffff55}
-.googlebtn{width:100%;background:#fff;color:#1f2937;border:1px solid #cbd5df;margin-top:16px;padding:13px}.gmark{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#4285f4;border:1px solid #e1e6ec}
-.menuBtn{display:none;background:none;border:1px solid #ffffff44;color:#fff;border-radius:9px;padding:8px 11px;font-size:20px}
-
-/* MEGA MENU */
-.navbar{background:#fff;border-bottom:1px solid var(--line);box-shadow:0 3px 14px #07172b08}
-.navin{width:min(1450px,calc(100% - 28px));margin:auto;display:flex;align-items:stretch}
-.navitem{position:relative}.navtop{display:block;padding:16px 18px;font-weight:900;font-size:14px;text-decoration:none;color:#22324a;border-bottom:3px solid transparent;white-space:nowrap}
-.navitem:hover>.navtop,.navitem.force-open>.navtop,.navtop.active{color:#0d3c68;border-bottom-color:var(--gold)}
-.mega{display:none;position:absolute;top:100%;left:0;width:470px;background:#fff;border:1px solid var(--line);border-radius:0 0 16px 16px;box-shadow:0 18px 40px #06142520;padding:18px;z-index:90}
-.navitem:hover>.mega,.navitem.force-open>.mega{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.navitem:nth-last-child(-n+2) .mega{left:auto;right:0}
-.mega a{position:relative;z-index:101;pointer-events:auto;cursor:pointer;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:800;color:#39485d;background:#f7f9fc}
-.mega a:hover,.mega a.active{background:#edf4fb;color:#0d4a7d}.mega .wide{grid-column:1/-1;background:linear-gradient(135deg,#0c2d4d,#174b78);color:#fff}
-.mega small{display:block;font-weight:500;opacity:.75;margin-top:4px;line-height:1.4}
-
-/* APP */
-main{width:min(1450px,calc(100% - 28px));margin:auto;padding:26px 0 56px}
-.login{max-width:620px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
-.login p{color:#5f6b7a;line-height:1.65}.msg{min-height:22px;color:#9a2c36;font-size:13px;margin-top:10px;white-space:pre-line}.authstate{font-size:12px;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:10px;margin-top:12px;color:#566173}
-.pagehead{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.pagehead h1{margin:0;font-size:34px}.pagehead p{margin:7px 0 0;color:var(--muted);line-height:1.55}
-.eyebrow{font-size:11px;color:#9a742f;font-weight:900;letter-spacing:.15em;margin-bottom:7px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 8px 18px #07172b05}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:29px;margin-top:5px}
-.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;overflow:hidden;box-shadow:0 8px 24px #07172b06}.panelhead{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
-.panelbody{padding:18px}.search{padding:10px 12px;border:1px solid #cbd5df;border-radius:9px;width:min(350px,100%)}.scroll{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14px;border-bottom:1px solid #edf0f4;text-align:left;font-size:13px}th{background:#f8fafc}.level{font-weight:900}.memberbtn{border:0;background:none;color:#123b63;font-weight:900;cursor:pointer;text-decoration:underline}
-.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.qcard{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;text-decoration:none;transition:.18s}.qcard:hover{transform:translateY(-2px);box-shadow:var(--shadow)}.qicon{font-size:22px}.qcard b{display:block;margin:9px 0 5px}.qcard small{color:var(--muted);line-height:1.5}
-.orgcard{border:1px solid var(--line);border-radius:14px;padding:18px;background:linear-gradient(180deg,#fff,#f9fbfd)}.orgcard h3{margin:0 0 7px}.orgcard p{color:var(--muted);font-size:13px;line-height:1.6}.badge{display:inline-block;padding:5px 8px;border-radius:99px;font-size:10px;font-weight:900;background:#edf3f8;color:#31506d}.badge.live{background:#e9f7f0;color:var(--green)}.badge.next{background:#fff4df;color:#8d6422}
-.phasegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.phase{background:#fff;border:1px solid var(--line);border-radius:15px;padding:18px;min-height:170px}.phase h3{margin:7px 0 9px}.phase p{color:var(--muted);font-size:13px;line-height:1.6}.phase ul{margin:10px 0 0;padding-left:18px;color:#4d5b6d;font-size:12px;line-height:1.8}
-.notice{border-left:4px solid var(--gold);background:#fffaf0;padding:15px 17px;border-radius:10px;color:#76571f;font-size:13px;line-height:1.6}
-.drawer{position:fixed;inset:0;background:#07172b77;display:flex;justify-content:flex-end;z-index:150}.drawerbox{width:min(520px,100%);height:100%;overflow:auto;background:#fff;padding:22px}.drawerhead{display:flex;justify-content:space-between;gap:10px;align-items:start}.x{border:0;background:#edf1f5;border-radius:50%;width:38px;height:38px;cursor:pointer}
-.card{border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:5px}.field select,.field textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px}.field textarea{min-height:90px;resize:vertical}.history{font-size:12px;line-height:1.6;border-bottom:1px solid #edf0f4;padding:9px 0}.empty{color:var(--muted);padding:20px}
-.footer{text-align:center;color:#8792a1;font-size:11px;padding:24px 0}
-.publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
-
-@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.phasegrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
-
-.mobile-label{display:none}
-@media(max-width:900px){
-  /* 상단 헤더: 글자 줄바꿈 방지 + 버튼 컴팩트 */
-  .top{position:sticky;top:0;z-index:110}
-  .topin{width:100%;min-height:62px;padding:7px 10px;gap:8px}
-  .brand{min-width:0;flex:1}
-  .brand b{display:block;font-size:15px;line-height:1.08;letter-spacing:0;white-space:normal}
-  .brand span{font-size:7px;line-height:1.25;letter-spacing:.08em;margin-top:4px;white-space:normal}
-  .topright{gap:5px;flex:0 0 auto}
-  .adminpill{display:none!important}
-  .btn.ghost{min-height:38px;padding:7px 9px;border-radius:9px;font-size:11px;line-height:1;white-space:nowrap}
-  .desktop-label{display:none}.mobile-label{display:inline}
-  .menuBtn{display:block;width:40px;height:40px;padding:0;font-size:20px;line-height:1;flex:0 0 40px}
-
-  /* 모바일 기본상태: 주요 메뉴가 항상 가로로 보임 */
-  .navbar{
-    display:block;
-    position:sticky;
-    top:62px;
-    z-index:105;
-    background:#fff;
-    overflow:visible;
-    border-bottom:1px solid var(--line);
-    box-shadow:0 4px 16px #07172b10;
-  }
-  .navbar.hidden{display:none!important}
-  .navin{
-    width:100%;
-    display:flex;
-    align-items:stretch;
-    gap:0;
-    overflow-x:auto;
-    overflow-y:visible;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-    padding:0 6px;
-  }
-  .navin::-webkit-scrollbar{display:none}
-  .navitem{position:static;flex:0 0 auto}
-  .navtop{
-    display:block;
-    padding:12px 11px 10px;
-    font-size:12px;
-    line-height:1.15;
-    border-bottom:3px solid transparent;
-    white-space:nowrap;
-  }
-
-  /* 가로 메뉴 터치 시 메가메뉴가 화면 폭 안에서 펼쳐짐 */
-  .mega,
-  .navitem:hover>.mega,
-  .navitem.force-open>.mega{
-    display:none;
-    position:fixed;
-    top:106px;
-    left:10px!important;
-    right:10px!important;
-    width:auto;
-    max-height:58vh;
-    overflow:auto;
-    grid-template-columns:1fr 1fr;
-    gap:7px;
-    padding:12px;
-    border:1px solid var(--line);
-    border-radius:0 0 14px 14px;
-    background:#fff;
-    box-shadow:0 18px 40px #06142535;
-    z-index:120;
-  }
-  .navitem.open>.mega{display:grid}
-  .mega a{padding:10px 10px;font-size:12px}
-  .mega small{font-size:10px}
-
-  /* 햄버거를 누르면 전체 메뉴 모드 */
-  .menu-open .navbar{
-    display:block;
-    position:fixed;
-    left:0;right:0;
-    top:62px;bottom:0;
-    overflow:auto;
-    z-index:125;
-    background:#fff;
-  }
-  .menu-open .navin{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    align-content:start;
-    overflow:visible;
-    padding:8px;
-  }
-  .menu-open .navitem{position:relative;min-width:0}
-  .menu-open .navtop{
-    padding:14px 12px;
-    border:1px solid #e7ebf0;
-    border-radius:10px;
-    margin:4px;
-    background:#f8fafc;
-    font-size:13px;
-  }
-  .menu-open .navitem.open>.mega{
-    position:fixed;
-    top:118px;
-    left:10px!important;
-    right:10px!important;
-    max-height:70vh;
-  }
-
-  /* 본문 글자·배열 */
-  main{width:calc(100% - 20px);padding:18px 0 44px}
-  .pagehead{display:flex;flex-direction:column;align-items:stretch;gap:12px;margin-bottom:15px}
-  .pagehead h1{font-size:28px;line-height:1.15}
-  .pagehead p{font-size:14px;line-height:1.55;overflow-wrap:anywhere}
-  .pagehead>.btn,.pagehead>button{width:100%;min-height:46px}
-  .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .stat{padding:14px;min-height:112px}
-  .stat b{font-size:26px}
-  .stat span{font-size:11px}
-  .grid3,.phasegrid,.quick{grid-template-columns:1fr}
-  .grid2{grid-template-columns:1fr}
-  .row{grid-template-columns:1fr}
-  .panelhead{align-items:flex-start;flex-direction:column}
-}
-@media(max-width:390px){
-  .brand b{font-size:14px}
-  .brand span{display:none}
-  .btn.ghost{padding:6px 8px;font-size:10px}
-  .navtop{padding-left:10px;padding-right:10px;font-size:11px}
-  .stats{grid-template-columns:1fr 1fr}
-}
-.pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
-
-/* v2.4.0.8 · realtime organization activity slow upward scroll */
-.final-admin-card{
-  margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
-  border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
-  box-shadow:0 10px 28px rgba(7,23,43,.12)
-}
-.final-admin-kicker{display:block;color:#cda64e;font-size:10px;font-weight:900;letter-spacing:.14em;margin-bottom:5px}
-.final-admin-card strong{display:block;color:#fff;font-size:18px;line-height:1.2}
-.final-admin-card strong em{font-style:normal;color:#e7c46a;font-size:12px;margin-left:7px;letter-spacing:.04em}
-.final-admin-card small{display:block;margin-top:5px;color:#9aabc0;font-size:10px}
-.org-activity-scroll-window{
-  position:relative;overflow:hidden;max-height:310px;
-}
-.org-activity-scroll-track{
-  display:flex;flex-direction:column;will-change:transform;
-}
-.org-activity-scroll-track.is-auto-scroll{
-  animation:gmsOrgActivityUp 34s linear infinite;
-}
-.org-activity-scroll-track.is-auto-scroll:hover{
-  animation-play-state:paused;
-}
-@keyframes gmsOrgActivityUp{
-  from{transform:translateY(0)}
-  to{transform:translateY(-50%)}
-}
-@media(max-width:900px){
-  .final-admin-card{padding:12px 14px}
-  .final-admin-card strong{font-size:16px}
-  .final-admin-card strong em{display:block;margin:4px 0 0}
-  .org-activity-scroll-window{max-height:260px}
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#05070a" />
+  <meta name="description" content="경찰무도, 태권검도, 드론순찰대를 연결하는 글로벌 네트워크 게이트웨이" />
+  <title>IPMA GATEWAY</title>
+  <link rel="preload" as="image" href="assets/images/00-gateway.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<header class="top">
- <div class="topin">
-  <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
-  <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.8</div>
-   <div id="adminEmailTop" class="adminpill"></div>
-   <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
-   <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
-   <button id="menuBtn" class="menuBtn">☰</button>
-  </div>
- </div>
-</header>
-
-<nav id="appNav" class="navbar hidden">
- <div class="navin">
-  <div class="navitem"><a href="#dashboard" class="navtop" data-page="dashboard" onclick="showPage('dashboard'); return false;">운영본부</a>
-   <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
-  </div>
-  <div class="navitem"><a href="#members" class="navtop" data-page="members" onclick="showPage('members'); return false;">회원관리</a>
-   <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); return false;">통합 회원관리<small>회원검색, 현재등급, 등급변경, 이력관리</small></a><a href="#members" data-page="members" onclick="showPage('members'); return false;">전체회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">신규회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">무료회원</a><a href="#membership-plan" data-page="membership-plan" onclick="showPage('membership-plan'); return false;">유료회원 / PLAN</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">PLAN 관리</a><a href="#levels" data-page="levels" onclick="showPage('levels'); return false;">9단계 회원등급</a><a href="#member-card" data-page="member-card" onclick="showPage('member-card'); return false;">디지털 회원카드</a></div>
-  </div>
-  <div class="navitem"><a href="#finance" class="navtop" data-page="finance" onclick="showPage('finance'); return false;">회비·수익</a>
-   <div class="mega"><a href="#finance" class="wide" data-page="finance" onclick="showPage('finance'); return false;">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금대기</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금완료</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">만료예정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">연회비 설정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">서비스 상품</a></div>
-  </div>
-  <div class="navitem"><a href="#learning" class="navtop" data-page="learning" onclick="showPage('learning'); return false;">교육·활동</a>
-   <div class="mega"><a href="#learning" class="wide" data-page="learning" onclick="showPage('learning'); return false;">교육·활동 기록<small>영상·시뮬레이터·세미나·G-POINT 연동</small></a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">교육이력</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">영상학습</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">시뮬레이터</a><a href="#points" data-page="points" onclick="showPage('points'); return false;">G-POINT</a><a href="#learning" data-page="learning" onclick="showPage('learning'); return false;">세미나 참가</a><a href="#content-access" data-page="content-access" onclick="showPage('content-access'); return false;">콘텐츠 권한관리</a></div>
-  </div>
-  <div class="navitem"><a href="#certificates" class="navtop" data-page="certificates" onclick="showPage('certificates'); return false;">자격·지도자</a>
-   <div class="mega"><a href="#certificates" class="wide" data-page="certificates" onclick="showPage('certificates'); return false;">자격·지도자 관리<small>자격증, 수료증, 지도자과정, 검정관리</small></a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">자격증 관리</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">수료현황</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">지도자 관리</a><a href="#certificates" data-page="certificates" onclick="showPage('certificates'); return false;">검정 신청</a></div>
-  </div>
-  <div class="navitem"><a href="#organization" class="navtop" data-page="organization" onclick="showPage('organization'); return false;">임원·지부</a>
-   <div class="mega"><a href="#organization" class="wide" data-page="organization" onclick="showPage('organization'); return false;">조직 운영관리<small>임원위촉과 3개 조직 지부를 통합 관리</small></a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">임원위촉</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부장</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">지부관리</a><a href="#organization" data-page="organization" onclick="showPage('organization'); return false;">조직도</a></div>
-  </div>
-  <div class="navitem"><a href="#global-members" class="navtop" data-page="global-members" onclick="showPage('global-members'); return false;">세계회원</a>
-   <div class="mega"><a href="#global-members" class="wide" data-page="global-members" onclick="showPage('global-members'); return false;">GLOBAL MEMBERSHIP<small>20개 언어 국제회원 신청 · 국가별 회원관리 · 승인대기</small></a><a href="#global-members" data-page="global-members" onclick="showPage('global-members'); return false;">국제회원 신청</a><a href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼</a><a href="#global-members" data-page="global-members" onclick="showPage('global-members'); return false;">국가·언어별 관리</a></div>
-  </div>
-  <div class="navitem"><a href="#statistics" class="navtop" data-page="statistics" onclick="showPage('statistics'); return false;">통계·설정</a>
-   <div class="mega"><a href="#statistics" class="wide" data-page="statistics" onclick="showPage('statistics'); return false;">운영 통계<small>회원성장·수익·교육·조직 현황을 분석</small></a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">회원통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">수익통계</a><a href="#statistics" data-page="statistics" onclick="showPage('statistics'); return false;">활동통계</a><a href="#content-access" data-page="content-access" onclick="showPage('content-access'); return false;">콘텐츠 권한정책</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">관리자 설정</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 메모</a></div>
-  </div>
- </div>
-</nav>
-
-<main>
-<section id="login" class="login">
- <h1>통합 운영본부</h1>
- <p>Google 계정으로 본인 인증 후, 등록된 GMS 관리자 계정만 운영본부에 접속할 수 있습니다.</p>
- <p style="font-size:12px;color:#6d7888;margin-top:-4px">기본 관리자: jeonseongkweon@gmail.com</p>
- <a id="googleLoginBtn" class="btn googlebtn" href="#"><span class="gmark">G</span>Google 계정으로 로그인</a>
- <div id="msg" class="msg"></div><div id="authstate" class="authstate">로그인 상태 확인 중…</div>
-</section>
-
-<section id="app" class="hidden">
- <div id="page-dashboard" class="page">
-  <div class="pagehead">
-
-<div class="final-admin-card" aria-label="최종 관리자">
-  <span class="final-admin-kicker">MASTER ADMINISTRATOR</span>
-  <strong>전성권 <em>JEON SEONG KWEON</em></strong>
-  <small>GMS · Global Membership System</small>
-</div>
-<div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members" onclick="showPage('members'); return false;">회원관리 바로가기</button></div>
-  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
-  <div class="stats" style="margin-top:16px">
-   <div class="stat accent"><span>등록 회원</span><b id="legacyUnique">0</b></div>
-   <div class="stat accent"><span>태권검도 회원</span><b id="wtkfLegacy">0</b></div>
-   <div class="stat accent"><span>경찰무도 단증 발급</span><b id="ipmaLegacy">0</b></div>
-   <div class="stat accent"><span>최근 30일 공개활동</span><b id="activity30">0</b></div>
-  </div>
-  <div class="grid2">
-   <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.8</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
-  </div>
-  <div class="grid2">
-   <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
-    <div class="quick">
-     <a href="#members" class="qcard" data-page="members" onclick="showPage('members'); return false;"><span class="qicon">👥</span><b>통합 회원관리</b><small>회원 검색, 현재 LEVEL 확인, 승급·조정</small></a>
-     <a href="#finance" class="qcard" data-page="finance" onclick="showPage('finance'); return false;"><span class="qicon">₩</span><b>회비·입금관리</b><small>연회비 신청과 입금확인 시스템 구축 예정</small></a>
-     <a href="#points" class="qcard" data-page="points" onclick="showPage('points'); return false;"><span class="qicon">★</span><b>G-POINT</b><small>학습·훈련·공헌 활동점수 연동 예정</small></a>
-     <a href="#learning" class="qcard" data-page="learning" onclick="showPage('learning'); return false;"><span class="qicon">▶</span><b>교육·훈련기록</b><small>영상과 시뮬레이터 활동기록 통합</small></a>
-     <a href="#certificates" class="qcard" data-page="certificates" onclick="showPage('certificates'); return false;"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
-     <a href="#organization" class="qcard" data-page="organization" onclick="showPage('organization'); return false;"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
-     <a href="#global-members" class="qcard" data-page="global-members" onclick="showPage('global-members'); return false;"><span class="qicon">🌍</span><b>20개 언어 세계회원</b><small>국가·언어별 신규신청 확인, 승인, 세계회원 관리</small></a>
-     <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
-    </div>
-   </div></div>
-   <div class="panel"><div class="panelhead"><b>현재 구축상태</b><span class="badge live">운영 중</span></div><div class="panelbody">
-    <div class="notice"><b>현재 정상 작동</b><br>Google 관리자 로그인 · 회원목록 · LV.1~LV.9 · 등급변경 · 승급이력</div>
-    <p style="font-size:13px;color:#657181;line-height:1.7">다음 개발은 <b>PLAN / 회비·입금확인</b> 기능을 붙이는 것이 가장 자연스럽습니다. 이후 G-POINT와 학습기록을 연결합니다.</p>
-   </div></div>
-  </div>
-  <div class="grid3">
-   <div class="orgcard"><span class="badge live">WTKF</span><h3>태권검도</h3><p>무기술·도장교육 회원사업. 향후 FREE / PRO와 지도자과정 연결.</p></div>
-   <div class="orgcard"><span class="badge live">IPMA</span><h3>경찰무도</h3><p>호신술·경호·안전교육. 기존 수익사업 신청구조를 GMS와 연동.</p></div>
-   <div class="orgcard"><span class="badge live">IDP</span><h3>드론순찰대</h3><p>드론·순찰·안전기술. 대원·지부·시뮬레이터 기록을 통합 예정.</p></div>
-  </div>
- </div>
-
- <div id="page-members" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT</div><h1>통합 회원관리</h1><p>회원 한 명의 현재 LEVEL과 등급변경 이력을 관리합니다.</p></div></div>
-  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total2">-</b></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
-  <div class="panel" style="margin-top:16px"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div><div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>현재등급</th><th>상태</th><th>변경사유</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
- </div>
-
- <div id="page-levels" class="page hidden"><div class="pagehead"><div><div class="eyebrow">9 LEVEL SYSTEM</div><h1>9단계 회원등급</h1><p>LEVEL은 회원의 성장·활동·공헌을 나타내며 PLAN과 분리합니다.</p></div></div><div class="phasegrid">
-  <div class="phase"><span class="badge">LV.1~3</span><h3>WHITE · GREEN · BLUE</h3><p>무료회원과 초기 활동회원의 성장구간.</p></div>
-  <div class="phase"><span class="badge">LV.4~6</span><h3>SILVER · GOLD · PLATINUM</h3><p>교육·자격·활동실적이 축적된 전문회원 구간.</p></div>
-  <div class="phase"><span class="badge">LV.7~9</span><h3>DIAMOND · CROWN · ROYAL CROWN</h3><p>최고위 공헌·지도·조직활동 등급. CROWN 이상은 본부 특별승인 원칙.</p></div>
- </div></div>
-
- 
-<div id="page-org-levels" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">ORGANIZATION LEVEL</div><h1>조직별 회원등급</h1><p>통합 LEVEL과 별도로 WTKF · IPMA · IDP의 성장등급을 각각 관리합니다.</p></div></div>
-  <div class="notice">예: GLOBAL LV.5 GOLD / WTKF LV.5 GOLD / IPMA LV.3 BLUE / IDP LV.1 WHITE 처럼 한 회원의 조직별 성장상태를 분리해서 관리합니다.</div>
-  <div class="panel" style="margin-top:16px">
-    <div class="panelhead"><b>회원별 조직 LEVEL</b><input id="orgLevelSearch" class="search" placeholder="이름 또는 이메일 검색"></div>
-    <div class="scroll"><table>
-      <thead><tr><th>회원</th><th>WTKF</th><th>IPMA</th><th>IDP</th><th>GLOBAL</th><th>관리</th></tr></thead>
-      <tbody id="orgLevelRows"></tbody>
-    </table></div>
-  </div>
-</div>
-
-<div id="orgLevelModal" class="drawer hidden"><div class="drawerbox">
-  <div class="drawerhead"><div><small>ORGANIZATION LEVEL CONTROL</small><h2 id="orgLevelMemberName" style="margin:5px 0"></h2><div id="orgLevelMemberEmail" style="color:#6d7888"></div></div><button id="orgLevelClose" class="x">✕</button></div>
-  <div class="card">
-    <div class="field"><label>조직</label><select id="orgLevelOrg"><option value="WTKF">WTKF 태권검도</option><option value="IPMA">IPMA 경찰무도</option><option value="IDP">IDP 드론순찰대</option></select></div>
-    <div class="field" style="margin-top:10px"><label>새 조직 LEVEL</label><select id="orgLevelNew"></select></div>
-    <div class="field" style="margin-top:10px"><label>변경 사유</label><textarea id="orgLevelReason" placeholder="예: IPMA 지도자교육 이수 및 활동실적 반영"></textarea></div>
-    <button id="orgLevelApply" class="btn gold" style="width:100%;margin-top:12px">조직 LEVEL 변경</button>
-    <div id="orgLevelMsg" class="msg"></div>
-  </div>
-</div>
-</div>
-
-<div id="page-membership-plan" class="page hidden"><div class="pagehead"><div><div class="eyebrow">PLAN</div><h1>FREE / PRO 서비스</h1><p>LEVEL과 분리된 이용서비스 체계입니다.</p></div></div><div class="phasegrid">
-  <div class="phase"><span class="badge next">NEXT</span><h3>TAEKWONKUMDO PRO</h3><p>태권검도 전문교육·영상·지도자과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>POLICE MARTIAL ARTS PRO</h3><p>경찰무도·호신술·경호·안전 전문과정.</p></div><div class="phase"><span class="badge next">NEXT</span><h3>DRONE PATROL PRO / ALL PASS</h3><p>드론교육 및 향후 3개 조직 통합상품 확장.</p></div>
- </div></div>
-
- 
-<div id="page-plan-admin" class="page hidden">
-  <div class="pagehead">
-    <div>
-      <div class="eyebrow">MEMBER PLAN CONTROL</div>
-      <h1>회원 PLAN 관리</h1>
-      <p>WTKF · IPMA · IDP의 FREE / PRO 상태와 시작일·만료일을 관리합니다.</p>
-    </div>
-  </div>
-  <div class="stats">
-    <div class="stat"><span>전체 PLAN</span><b id="planTotal">0</b></div>
-    <div class="stat"><span>활성 PRO</span><b id="planPro">0</b></div>
-    <div class="stat"><span>만료예정 30일</span><b id="planSoon">0</b></div>
-    <div class="stat"><span>HOLD</span><b id="planHold">0</b></div>
-  </div>
-  <div class="panel" style="margin-top:16px">
-    <div class="panelhead">
-      <b>회원별 조직 PLAN</b>
-      <input id="planSearch" class="search" placeholder="이름 또는 이메일 검색">
-    </div>
-    <div class="scroll"><table>
-      <thead><tr><th>회원</th><th>조직</th><th>PLAN</th><th>상태</th><th>시작일</th><th>만료일</th><th>남은기간</th><th>관리</th></tr></thead>
-      <tbody id="planRows"></tbody>
-    </table></div>
-  </div>
-</div>
-
-<div id="planModal" class="drawer hidden"><div class="drawerbox">
-  <div class="drawerhead">
-    <div><small>PLAN CONTROL</small><h2 id="planMemberName" style="margin:5px 0"></h2><div id="planMemberEmail" style="color:#6d7888"></div></div>
-    <button id="planClose" class="x">✕</button>
-  </div>
-  <div class="card">
-    <div id="planCurrent" style="font-size:23px;font-weight:900"></div>
-    <div id="planDates" style="margin-top:8px;color:#6d7888;font-size:13px;line-height:1.7"></div>
-  </div>
-  <div class="card">
-    <div class="field"><label>상태 변경</label>
-      <select id="planAction">
-        <option value="extend">PRO 1년 연장</option>
-        <option value="hold">HOLD 전환</option>
-        <option value="activate">ACTIVE 복구</option>
-        <option value="free">FREE 전환</option>
-      </select>
-    </div>
-    <div class="field" style="margin-top:10px"><label>변경 사유</label><textarea id="planReason" placeholder="예: 연회비 재납부 / 관리자 승인 / 휴면 처리"></textarea></div>
-    <button id="planApply" class="btn gold" style="width:100%;margin-top:12px">PLAN 변경 적용</button>
-    <div id="planMsg" class="msg"></div>
-  </div>
-</div>
-</div>
-
-<div id="page-finance" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">PAYMENT & REVENUE</div><h1>회비·입금관리</h1><p>계좌입금 → 관리자 확인 → PRO 1년 활성화 흐름을 관리합니다.</p></div><button class="btn gold" id="newPaymentBtn">+ 입금신청 등록</button></div>
-  <div class="stats"><div class="stat"><span>입금대기</span><b id="payPending">0</b></div><div class="stat"><span>납부완료</span><b id="payPaid">0</b></div><div class="stat"><span>활성 PRO</span><b id="payPro">0</b></div><div class="stat"><span>만료예정 30일</span><b id="payExpiring">0</b></div></div>
-  <div class="panel" style="margin-top:16px">
-    <div class="panelhead"><b>연회비·입금내역</b><span class="badge live">BANK TRANSFER</span></div>
-    <div class="scroll"><table>
-      <thead><tr><th>회원</th><th>조직</th><th>PLAN</th><th>금액</th><th>입금자</th><th>상태</th><th>신청일</th><th>관리</th></tr></thead>
-      <tbody id="paymentRows"></tbody>
-    </table></div>
-  </div>
-</div>
-
-<div id="paymentModal" class="drawer hidden"><div class="drawerbox">
-  <div class="drawerhead"><div><small>PAYMENT APPLICATION</small><h2 style="margin:5px 0">입금신청 등록</h2></div><button id="paymentClose" class="x">✕</button></div>
-  <div class="card">
-    <div class="field"><label>회원</label><select id="paymentMember"></select></div>
-    <div class="row" style="margin-top:10px">
-      <div class="field"><label>조직</label><select id="paymentOrg"><option>WTKF</option><option>IPMA</option><option>IDP</option></select></div>
-      <div class="field"><label>PLAN</label><select id="paymentPlan"><option value="PRO">PRO</option></select></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <div class="field"><label>금액(원)</label><input id="paymentAmount" type="number" min="0" value="0" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
-      <div class="field"><label>입금자명</label><input id="depositorName" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
-    </div>
-    <div class="field" style="margin-top:10px"><label>관리자 메모</label><textarea id="paymentMemo"></textarea></div>
-    <button class="btn gold" id="savePaymentBtn" style="width:100%;margin-top:12px">입금대기 등록</button>
-    <div id="paymentMsg" class="msg"></div>
-  </div>
-</div>
-</div>
-
- 
-<div id="page-learning" class="page hidden">
-  <div class="pagehead">
-    <div>
-      <div class="eyebrow">LEARNING & ACTIVITY CENTER</div>
-      <h1>교육·활동 기록</h1>
-      <p>영상 학습 · 시뮬레이터 · 세미나/교육 · G-POINT를 회원별로 통합 조회합니다.</p>
-    </div>
-    <button id="activityTestBtn" class="btn gold">+ 테스트 활동 등록</button>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><span>영상 학습시간</span><b id="videoHours">0h</b></div>
-    <div class="stat"><span>시뮬레이터</span><b id="simHours">0h</b></div>
-    <div class="stat"><span>교육·세미나</span><b id="seminarCount">0</b></div>
-    <div class="stat"><span>총 G-POINT</span><b id="pointTotal">0</b></div>
-  </div>
-
-  <div class="grid2">
-    <div class="panel">
-      <div class="panelhead"><b>회원별 활동 요약</b><input id="activitySearch" class="search" placeholder="이름 또는 이메일 검색"></div>
-      <div class="scroll"><table>
-        <thead><tr><th>회원</th><th>영상</th><th>시뮬레이터</th><th>교육/세미나</th><th>G-POINT</th><th>상세</th></tr></thead>
-        <tbody id="activityMemberRows"></tbody>
-      </table></div>
-    </div>
-    <div class="panel">
-      <div class="panelhead"><b>최근 활동</b><span class="badge live">LIVE DATA</span></div>
-      <div class="panelbody" id="recentActivity"><div class="empty">아직 활동기록이 없습니다.</div></div>
-    </div>
-  </div>
-</div>
-
-<div id="activityDrawer" class="drawer hidden"><div class="drawerbox">
-  <div class="drawerhead">
-    <div><small>ACTIVITY DETAIL</small><h2 id="activityMemberName" style="margin:5px 0"></h2><div id="activityMemberEmail" style="color:#6d7888"></div></div>
-    <button id="activityClose" class="x">✕</button>
-  </div>
-  <div class="card">
-    <b>누적 활동</b>
-    <div id="activitySummary" style="margin-top:10px;line-height:1.8"></div>
-  </div>
-  <div class="card"><b>영상 학습</b><div id="activityVideos"></div></div>
-  <div class="card"><b>시뮬레이터</b><div id="activitySims"></div></div>
-  <div class="card"><b>교육·세미나</b><div id="activitySeminars"></div></div>
-  <div class="card"><b>G-POINT 내역</b><div id="activityPoints"></div></div>
-</div></div>
-
-<div id="activityTestModal" class="drawer hidden"><div class="drawerbox">
-  <div class="drawerhead">
-    <div><small>ACTIVITY TEST INPUT</small><h2 style="margin:5px 0">테스트 활동 등록</h2></div>
-    <button id="activityTestClose" class="x">✕</button>
-  </div>
-  <div class="card">
-    <div class="field"><label>회원</label><select id="testActivityMember"></select></div>
-    <div class="row" style="margin-top:10px">
-      <div class="field"><label>조직</label><select id="testActivityOrg"><option value="WTKF">WTKF 태권검도</option><option value="IPMA">IPMA 경찰무도</option><option value="IDP">IDP 드론순찰대</option></select></div>
-      <div class="field"><label>활동유형</label><select id="testActivityType"><option value="VIDEO">영상학습</option><option value="SIMULATOR">시뮬레이터</option><option value="SEMINAR">교육·세미나</option></select></div>
-    </div>
-    <div class="field" style="margin-top:10px"><label>콘텐츠/과정명</label><input id="testActivityTitle" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px" placeholder="예: 태검 1장 기본동작"></div>
-    <div class="row" style="margin-top:10px">
-      <div class="field"><label>활동시간(분)</label><input id="testActivityMinutes" type="number" min="1" value="10" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
-      <div class="field"><label>완료율(%)</label><input id="testActivityProgress" type="number" min="0" max="100" value="100" style="width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px"></div>
-    </div>
-    <button id="saveTestActivity" class="btn gold" style="width:100%;margin-top:12px">테스트 기록 저장</button>
-    <div id="testActivityMsg" class="msg"></div>
-  </div>
-</div></div>
-
- 
-<div id="page-points" class="page hidden">
-  <div class="pagehead">
-    <div><div class="eyebrow">G-POINT</div><h1>활동 포인트</h1><p>영상·훈련·교육·세미나 활동을 포인트로 누적하여 회원 성장지표로 활용합니다.</p></div>
-  </div>
-  <div class="stats">
-    <div class="stat"><span>전체 발급 POINT</span><b id="gPointTotal">0</b></div>
-    <div class="stat"><span>영상 POINT</span><b id="gPointVideo">0</b></div>
-    <div class="stat"><span>시뮬레이터 POINT</span><b id="gPointSim">0</b></div>
-    <div class="stat"><span>교육·세미나 POINT</span><b id="gPointSeminar">0</b></div>
-  </div>
-  <div class="panel" style="margin-top:16px">
-    <div class="panelhead"><b>회원별 G-POINT</b></div>
-    <div class="scroll"><table>
-      <thead><tr><th>회원</th><th>총 POINT</th><th>영상</th><th>시뮬레이터</th><th>교육·세미나</th></tr></thead>
-      <tbody id="gPointRows"></tbody>
-    </table></div>
-  </div>
-</div>
-
- <div id="page-certificates" class="page hidden"><div class="pagehead"><div><div class="eyebrow">CERTIFICATE & LEADER</div><h1>자격·지도자 관리</h1><p>자격증·수료증·지도자과정·검정을 회원기록과 연결합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>자격증</h3><p>취득자격, 자격번호, 발급일, 상태.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지도자</h3><p>지도자과정과 지도활동 이력.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>검정·수료</h3><p>신청, 심사, 합격, 발급 상태.</p></div></div></div>
-
- <div id="page-organization" class="page hidden"><div class="pagehead"><div><div class="eyebrow">APPOINTMENT & BRANCH</div><h1>임원·지부관리</h1><p>회원정보를 기반으로 임원위촉과 지부활동을 관리합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>임원위촉</h3><p>직책·임기·위촉일·상태·이력을 관리.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지부관리</h3><p>3개 조직의 국내외 지부정보와 지부장 연결.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>조직공헌</h3><p>지부활동·행사·교육실적을 LEVEL/G-POINT에 반영.</p></div></div></div>
-
- <div id="page-global-members" class="page hidden">
- <div class="pagehead"><div><div class="eyebrow">GLOBAL MEMBERSHIP · 20 LANGUAGES · CRM</div><h1>세계회원 관리</h1><p>국가·언어·조직별 신청을 확인하고 승인 → 공개 카운터 → 신규회원 피드까지 한 번에 연결합니다.</p></div><a class="btn gold" href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼 ↗</a></div>
- <div class="stats"><div class="stat"><span>전체 국제신청</span><b id="gaTotal">0</b></div><div class="stat"><span>오늘 신청</span><b id="gaToday">0</b></div><div class="stat"><span>승인대기</span><b id="gaPending">0</b></div><div class="stat"><span>승인완료</span><b id="gaApproved">0</b></div><div class="stat"><span>회신완료</span><b id="gaReplied">0</b></div><div class="stat"><span>가입 국가</span><b id="gaCountries">0</b></div></div>
- <div class="phasegrid" style="margin-top:16px"><div class="phase"><span class="badge live">COUNTRY</span><h3>국가별 회원</h3><div id="gaCountrySummary" style="line-height:1.9;color:#667085">신청 자료를 불러오는 중입니다.</div></div><div class="phase"><span class="badge live">LANGUAGE</span><h3>언어별 회원</h3><div id="gaLanguageSummary" style="line-height:1.9;color:#667085">신청 자료를 불러오는 중입니다.</div></div><div class="phase"><span class="badge live">ORGANIZATION</span><h3>관심 조직</h3><div id="gaOrgSummary" style="line-height:1.9;color:#667085">신청 자료를 불러오는 중입니다.</div></div></div>
- <div class="panel" style="margin-top:16px"><div class="panelhead"><b>국제회원 신청 목록</b><div style="display:flex;gap:8px;flex-wrap:wrap"><select id="gaStatusFilter" class="search" style="width:auto"><option value="">전체상태</option><option value="pending">승인대기</option><option value="approved">승인완료</option><option value="needs_review">확인필요</option><option value="rejected">거절</option></select><select id="gaOrgFilter" class="search" style="width:auto"><option value="">전체조직</option><option value="WTKF">태권검도</option><option value="IPMA">경찰무도</option><option value="IDP">드론순찰대</option></select><input id="gaSearch" class="search" placeholder="이름·이메일·국가·언어 검색"></div></div><div class="scroll"><table><thead><tr><th>신청자</th><th>국가·언어</th><th>관심조직</th><th>이메일</th><th>접수일</th><th>상태</th><th>회신</th><th>관리</th></tr></thead><tbody id="gaRows"></tbody></table></div></div>
- <div class="notice" style="margin-top:16px"><b>실시간 운영 원칙</b><br>신청만으로 공개 회원수는 올라가지 않습니다. <b>본부 승인</b> 순간 해당 조직의 공개 회원 카운터와 신규회원 활동피드가 갱신됩니다. 공개 화면에는 마스킹된 이름과 국가 정보만 표시합니다.</div>
-</div>
-
-<div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
-
- <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · WTKF/IPMA/IDP PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
-
- 
-<div id="page-content-access" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">CONTENT ACCESS POLICY</div><h1>콘텐츠 접근권한</h1><p>각 홈페이지의 영상·자료·시뮬레이터를 FREE / PRO / LEVEL 조건과 연결하기 위한 정책영역입니다.</p></div></div>
-  <div class="phasegrid">
-    <div class="phase"><span class="badge live">PUBLIC</span><h3>공개 콘텐츠</h3><p>로그인 없이 누구나 이용.</p></div>
-    <div class="phase"><span class="badge">FREE MEMBER</span><h3>무료회원 콘텐츠</h3><p>로그인 회원에게만 공개.</p></div>
-    <div class="phase"><span class="badge next">PRO</span><h3>PRO 콘텐츠</h3><p>조직별 활성 PRO만 이용.</p></div>
-    <div class="phase"><span class="badge next">LEVEL</span><h3>등급 제한</h3><p>예: GOLD 이상, 지도자 전용.</p></div>
-    <div class="phase"><span class="badge next">LEADER</span><h3>지도자·임원</h3><p>appointment / certificate 조건과 연동 예정.</p></div>
-    <div class="phase"><span class="badge next">LOCKED</span><h3>잠긴 콘텐츠 UX</h3><p>정회원 신청·회원혜택 버튼으로 자연스럽게 전환.</p></div>
-  </div>
-  <div class="notice" style="margin-top:16px">다음 패치에서 태권검도·경찰무도·드론순찰대의 실제 콘텐츠 페이지에 이 정책을 연결합니다.</div>
-</div>
-
-<div id="page-settings" class="page hidden"><div class="pagehead"><div><div class="eyebrow">SYSTEM SETTINGS</div><h1>운영 설정</h1><p>관리자 권한, 등급정책, 포인트정책, 상품정책을 관리할 영역입니다.</p></div></div><div class="notice">현재는 최고관리자 Google 로그인과 RLS 권한을 사용합니다. 향후 역할별 ADMIN / FINANCE / EDUCATION 권한으로 세분화할 수 있습니다.</div></div>
-
- <div id="page-roadmap" class="page hidden"><div class="pagehead"><div><div class="eyebrow">GMS ROADMAP</div><h1>개발 로드맵</h1><p>기존 시스템을 보존하면서 단계적으로 확장합니다.</p></div></div><div class="phasegrid">
-  <div class="phase"><span class="badge live">완료</span><h3>1~4단계 기반</h3><ul><li>통합회원 구조 점검</li><li>9단계 LEVEL</li><li>관리자 Google 로그인</li><li>등급조정·이력</li></ul></div>
-  <div class="phase"><span class="badge next">NEXT</span><h3>5~7단계 수익·포인트</h3><ul><li>회비신청·입금확인</li><li>FREE / PRO</li><li>G-POINT</li></ul></div>
-  <div class="phase"><span class="badge next">LATER</span><h3>8~10단계 통합운영</h3><ul><li>학습·시뮬레이터</li><li>자격·임원·지부</li><li>통계·자동안내</li></ul></div>
- </div></div>
-</section>
-
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.0.8</b></div>
-</main>
-
-<div id="drawer" class="drawer hidden"><div class="drawerbox">
- <div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
- <div class="card">
-  <b>GLOBAL LEVEL</b>
-  <div id="current" style="font-size:25px;font-weight:900;margin-top:8px"></div>
-  <div style="font-size:12px;color:#6d7888;margin-top:6px">전체 조직 활동을 종합한 참고·공헌 등급</div>
- </div>
- <div class="card">
-  <b>조직별 LEVEL 변경</b>
-  <div class="field" style="margin-top:12px"><label>조직 선택</label>
-    <select id="drawerOrg">
-      <option value="WTKF">WTKF · 태권검도</option>
-      <option value="IPMA">IPMA · 경찰무도</option>
-      <option value="IDP">IDP · 드론순찰대</option>
-    </select>
-  </div>
-  <div class="card" style="background:#f8fafc;margin-top:10px">
-    <div style="font-size:11px;color:#6d7888;font-weight:800">선택 조직 현재 LEVEL</div>
-    <div id="drawerOrgCurrent" style="font-size:22px;font-weight:900;margin-top:6px">-</div>
-    <div id="drawerOrgPlan" style="font-size:12px;color:#6d7888;margin-top:5px"></div>
-  </div>
-  <div class="row" style="margin-top:10px">
-    <div class="field"><label>새 등급</label><select id="newLevel"></select></div>
-    <div class="field"><label>상태</label><select id="newStatus"><option value="active">active</option><option value="hold">hold</option></select></div>
-  </div>
-  <div class="field" style="margin-top:10px"><label>변경/승급 사유</label><textarea id="reason" placeholder="예: IPMA 지도자과정 수료 및 활동실적 반영"></textarea></div>
-  <button id="changeBtn" class="btn gold" style="width:100%;margin-top:12px">선택 조직 등급 변경 및 이력 저장</button>
-  <div id="changeMsg" class="msg"></div>
- </div>
- <div class="card"><b>조직별 LEVEL</b><div style="font-size:12px;color:#6d7888;margin-top:4px">실제 교육·자격·콘텐츠 권한 판단에 사용하는 조직별 성장등급</div>
-      <div id="orgLevels" style="margin-top:10px"></div>
-    </div>
-    <div class="card"><b>조직별 PLAN</b>
-      <div id="memberPlans" style="margin-top:10px"></div>
-    </div>
-    <div class="card"><b>GLOBAL LEVEL 변경 이력</b><div id="history"></div></div>
-</div></div>
-<script>
-const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
-const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
-const REDIRECT_URL='https://ipma.kr/gms-admin/callback.html';
-const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];
-
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
-  auth:{
-    persistSession:true,
-    autoRefreshToken:true,
-    detectSessionInUrl:true,
-    flowType:'pkce'
-  }
-});
-const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
-let members=[], selected=null, booted=false;
-let globalApplications=[];
-const $=id=>document.getElementById(id);
-let learningRecords=[], simulatorRecords=[], seminarRecords=[], activityPoints=[];
-
-LEVELS.forEach(([n,c])=>{
- const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('newLevel').appendChild(o)
-});
-
-function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
-function cleanOAuthUrl(){
-  const routeHash=(location.hash||'').match(/^#(dashboard|members|levels|org-levels|membership-plan|payments|content-access|learning|points|certificates|organization|global-members|statistics|member-card|settings|roadmap)$/)?.[0] || '';
-  if(location.search || (location.hash && !routeHash)){
-    history.replaceState({},document.title,location.pathname + routeHash);
-  }
-}
-async function showLogin(message=''){
- $('login').classList.remove('hidden');$('app').classList.add('hidden');$('logout').classList.add('hidden');
- if(message)$('msg').textContent=message;
-}
-async function showApp(session){
- $('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');
- $('adminInfo').textContent=`관리자 ${session.user.email} 로그인`;
- $('adminEmailTop').textContent=session.user.email;
- await load();
- const requested=(location.hash||'').replace('#','').trim();
- const initialPage=requested && document.getElementById('page-'+requested) ? requested : 'dashboard';
- showPage(initialPage);
- if(initialPage==='global-members') await loadGlobalApplications().catch(err=>console.warn('global applications page:',err?.message||err));
-}
-async function verifySession(source='verify'){
- $('authstate').textContent=`로그인 상태 확인 중 (${source})…`;
- let session=null;
- try{
-   const {data,error}=await db.auth.getSession();
-   if(error) throw error;
-   session=data.session;
-   if(!session){
-     // OAuth 복귀 직후 저장이 약간 늦는 브라우저를 위한 재확인
-     await new Promise(r=>setTimeout(r,500));
-     const retry=await db.auth.getSession();
-     session=retry.data.session;
-   }
-   if(!session){
-     $('authstate').textContent='현재 로그인 세션이 없습니다. Google 계정으로 로그인해 주세요.';
-     await showLogin();
-     return false;
-   }
-   const email=String(session.user?.email||'').toLowerCase();
-   $('authstate').textContent=`Google 인증됨: ${email}`;
-   if(!isAdmin(email)){
-     await db.auth.signOut();
-     await showLogin(`Google 인증은 성공했지만 GMS 관리자 권한이 없는 계정입니다.\n인증 계정: ${email}`);
-     return false;
-   }
-   cleanOAuthUrl();
-   await showApp(session);
-   return true;
- }catch(e){
-   $('authstate').textContent='세션 확인 오류';
-   await showLogin('로그인 세션 확인 실패: '+(e?.message||e));
-   return false;
- }
-}
-
-$('googleLoginBtn').onclick=async(e)=>{
- e.preventDefault();
- $('msg').textContent='Google 로그인 화면으로 이동합니다…';
- $('authstate').textContent='Google OAuth 시작 중…';
- const {data,error}=await db.auth.signInWithOAuth({
-   provider:'google',
-   options:{redirectTo:REDIRECT_URL}
- });
- if(error){
-   $('msg').textContent='Google 로그인 시작 실패: '+error.message;
- }
-};
-
-$('logout').onclick=async()=>{
- await db.auth.signOut();
- location.replace(REDIRECT_URL);
-};
-
-async function refreshMembersOnly(){
- const {data:ms,error}=await db.from('members').select('id,name,email,status,created_at').order('created_at');
- if(error){console.error('회원 조회 실패:',error); return false}
- const {data:ls,error:le}=await db.from('member_levels').select('member_id,level_number,level_code,status,changed_reason,updated_at');
- if(le){console.error('회원등급 조회 실패:',le); return false}
- const map=new Map((ls||[]).map(x=>[x.member_id,x]));
- members=(ms||[]).map(m=>({...m,level:map.get(m.id)||null}));
- render();
- return true;
-}
-
-async function load(){
- const ok=await refreshMembersOnly();
- if(!ok){alert('회원 조회에 실패했습니다. Supabase 연결을 확인해 주세요.');return}
- await loadFinance();
- await loadOrganizationLevels();
- await loadContentPolicies();
- await loadActivityData().catch(err=>console.warn('activity init:',err?.message||err));
- await loadPublicDashboard().catch(err=>console.warn('public dashboard init:',err?.message||err));
- await loadGlobalApplications().catch(err=>console.warn('global applications init:',err?.message||err));
-}
-async function loadPublicDashboard(){
- const [all,wtkf,ipma,feed]=await Promise.all([
-   db.rpc('gms_get_public_stats',{p_organization_code:null}),
-   db.rpc('gms_get_public_stats',{p_organization_code:'WTKF'}),
-   db.rpc('gms_get_public_stats',{p_organization_code:'IPMA'}),
-   db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
- ]);
- const status=$('publicStatsStatus');
- if(all.error){
-   if(status)status.textContent='DB 설정 필요: admin/SUPABASE-GMS-PUBLIC-STATS-ACTIVITY-V2.1.sql 을 먼저 실행하세요.';
-   return;
- }
- const n=v=>Number(v||0).toLocaleString('ko-KR');
- if($('legacyUnique'))$('legacyUnique').textContent=n(all.data?.legacy_unique_people);
- if($('wtkfLegacy'))$('wtkfLegacy').textContent=n(wtkf.data?.legacy_members);
- if($('ipmaLegacy'))$('ipmaLegacy').textContent='1,052호';
- if($('activity30'))$('activity30').textContent=n(all.data?.activity_30d);
- if($('globalApproved'))$('globalApproved').textContent=n(all.data?.global_approved);
- if($('globalPending'))$('globalPending').textContent=n(all.data?.global_pending);
- if(status)status.innerHTML=`<b>공개 통계 정상 연결</b><br>전체 회원 ${n(all.data?.public_members_total ?? (Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0)))}명 · 세계회원 승인 ${n(all.data?.global_approved)}명 · 회원자료 ${n(all.data?.legacy_members)}건`;
- const totalEl=$('total'); if(totalEl) totalEl.textContent=n(all.data?.public_members_total ?? (Number(all.data?.legacy_unique_people||0)+Number(all.data?.online_members_total||0)));
- const box=$('dashboardPublicFeed');
- if(!box)return;
- if(feed.error){box.innerHTML=`<div class="empty">${esc(feed.error.message)}</div>`;return}
- const labels={new_member:'신규회원',new_branch:'신규지부',appointment:'임원임명',certificate:'단증발급',notice:'소식'};
- const rows=feed.data||[];
- box.classList.remove('is-auto-scroll');
- box.innerHTML=rows.length?rows.map(x=>`<div class="feedrow"><span class="feedtype">${esc(labels[x.event_type]||'소식')}</span><div><b>${esc(x.organization_code)} · ${esc(x.subject_masked||'')}</b><small>${esc(x.detail||'')} · ${new Date(x.occurred_at).toLocaleString('ko-KR')}</small></div></div>`).join(''):'<div class="empty">공개 활동이 등록되면 이곳에 자동 표시됩니다.</div>';
- if(rows.length>4){
-   const original=[...box.children];
-   original.forEach(n=>box.appendChild(n.cloneNode(true)));
-   requestAnimationFrame(()=>box.classList.add('is-auto-scroll'));
- }
-}
-
-
-async function loadGlobalApplications(){
- // v2.4.0.4: 관리자 전용 SECURITY DEFINER RPC로 조회하여 RLS의 빈 결과 문제를 방지합니다.
- const {data,error}=await db.rpc('gms_admin_list_global_applications');
- if(error){
-   console.error('global applications rpc:', error);
-   if($('gaCountrySummary')) $('gaCountrySummary').textContent='세계회원 조회 오류: '+error.message;
-   if($('gaLanguageSummary')) $('gaLanguageSummary').textContent='SQL 패치 v2.4.0.4를 먼저 실행해 주세요.';
-   if($('gaOrgSummary')) $('gaOrgSummary').textContent='관리자 전용 조회 RPC 연결이 필요합니다.';
-   if($('gaRows')) $('gaRows').innerHTML=`<tr><td colspan="8" class="empty">세계회원 조회 실패: ${esc(error.message)}</td></tr>`;
-   return;
- }
- globalApplications=(data||[]).sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
- renderGlobalApplications();
-}
-const GLOBAL_LANG_NAMES={ko:'한국어',en:'English',zh:'中文',ja:'日本語',es:'Español',fr:'Français',de:'Deutsch',pt:'Português',it:'Italiano',ru:'Русский',mn:'Монгол',vi:'Tiếng Việt',th:'ไทย',id:'Bahasa Indonesia',ms:'Bahasa Melayu',fil:'Filipino',tl:'Filipino',hi:'हिन्दी',ar:'العربية',tr:'Türkçe',ne:'नेपाली'};
-const GLOBAL_REPLY={
- ko:['[세계본부] 회원가입을 환영합니다','회원가입 신청에 감사드립니다. 세계본부에서 신청 내용을 확인했습니다. 앞으로 회원님의 관심 조직과 활동에 맞추어 안내드리겠습니다.'],
- en:['[World Headquarters] Welcome to our Global Membership','Thank you for your membership application. World Headquarters has received your information. We will guide you according to your selected organization and interests.'],
- zh:['[世界总部] 欢迎加入全球会员网络','感谢您提交会员申请。世界总部已收到您的资料。我们将根据您选择的组织和关注领域为您提供后续说明。'],
- ja:['[世界本部] グローバル会員登録ありがとうございます','会員申請ありがとうございます。世界本部で申請内容を確認しました。ご希望の組織と活動内容に合わせてご案内いたします。'],
- es:['[Sede Mundial] Bienvenido a nuestra membresía global','Gracias por su solicitud. La Sede Mundial ha recibido sus datos y le orientará según la organización y actividades seleccionadas.'],
- fr:['[Siège mondial] Bienvenue dans notre réseau mondial','Merci pour votre demande d’adhésion. Le siège mondial a reçu vos informations et vous guidera selon l’organisation choisie.'],
- de:['[Weltzentrale] Willkommen in unserem globalen Netzwerk','Vielen Dank für Ihren Mitgliedsantrag. Die Weltzentrale hat Ihre Angaben erhalten und wird Sie entsprechend Ihrer gewählten Organisation informieren.'],
- pt:['[Sede Mundial] Bem-vindo à nossa rede global','Obrigado por sua inscrição. A Sede Mundial recebeu seus dados e fornecerá orientações conforme a organização escolhida.'],
- it:['[Sede Mondiale] Benvenuto nella nostra rete globale','Grazie per la richiesta di adesione. La Sede Mondiale ha ricevuto i tuoi dati e ti guiderà in base all’organizzazione scelta.'],
- ru:['[Всемирная штаб-квартира] Добро пожаловать','Спасибо за заявку на членство. Всемирная штаб-квартира получила ваши данные и предоставит дальнейшую информацию.'],
- vi:['[Trụ sở Thế giới] Chào mừng bạn','Cảm ơn bạn đã đăng ký thành viên. Trụ sở Thế giới đã nhận thông tin và sẽ hướng dẫn theo tổ chức bạn lựa chọn.'],
- th:['[สำนักงานใหญ่โลก] ยินดีต้อนรับ','ขอบคุณสำหรับการสมัครสมาชิก สำนักงานใหญ่โลกได้รับข้อมูลของคุณแล้วและจะแนะนำตามองค์กรที่คุณเลือก'],
- id:['[Markas Dunia] Selamat datang','Terima kasih atas pendaftaran Anda. Markas Dunia telah menerima informasi Anda dan akan memberikan panduan sesuai organisasi pilihan.'],
- ms:['[Ibu Pejabat Dunia] Selamat datang','Terima kasih atas permohonan keahlian. Ibu Pejabat Dunia telah menerima maklumat anda dan akan memberikan panduan seterusnya.'],
- fil:['[World Headquarters] Maligayang pagdating','Salamat sa iyong membership application. Natanggap na ng World Headquarters ang iyong impormasyon at magbibigay kami ng gabay ayon sa napili mong organisasyon.'],
- hi:['[विश्व मुख्यालय] आपका स्वागत है','सदस्यता आवेदन के लिए धन्यवाद। विश्व मुख्यालय ने आपकी जानकारी प्राप्त कर ली है और चुने गए संगठन के अनुसार मार्गदर्शन करेगा।'],
- ar:['[المقر العالمي] مرحباً بكم','شكراً لطلب العضوية. استلم المقر العالمي معلوماتكم وسنقدم الإرشادات وفقاً للمنظمة التي اخترتموها.'],
- tr:['[Dünya Merkezi] Hoş geldiniz','Üyelik başvurunuz için teşekkür ederiz. Dünya Merkezi bilgilerinizi aldı ve seçtiğiniz kuruluşa göre size rehberlik edecektir.'],
- ne:['[विश्व मुख्यालय] स्वागत छ','सदस्यता आवेदनका लागि धन्यवाद। विश्व मुख्यालयले तपाईंको जानकारी प्राप्त गरेको छ र रोजेको संस्थाअनुसार मार्गदर्शन गर्नेछ।']
-};
-function summaryTop(items,keyFn,max=8){const m=new Map();items.forEach(x=>{const k=keyFn(x);if(!k)return;m.set(k,(m.get(k)||0)+1)});return [...m.entries()].sort((a,b)=>b[1]-a[1]).slice(0,max)}
-function renderGlobalApplications(){
- if(!$('gaRows')) return;
- const q=String($('gaSearch')?.value||'').trim().toLowerCase(), sf=String($('gaStatusFilter')?.value||''), of=String($('gaOrgFilter')?.value||'');
- const list=globalApplications.filter(x=>(!sf||x.status===sf)&&(!of||(x.organizations||[]).includes(of))&&(!q||`${x.name||''} ${x.name_en||''} ${x.email||''} ${x.country_name||''} ${x.country_code||''} ${x.preferred_language||''}`.toLowerCase().includes(q)));
- const n=v=>Number(v||0).toLocaleString('ko-KR'), now=new Date(), todayKey=now.toISOString().slice(0,10);
- $('gaTotal').textContent=n(globalApplications.length); $('gaToday').textContent=n(globalApplications.filter(x=>String(x.created_at||'').slice(0,10)===todayKey).length); $('gaPending').textContent=n(globalApplications.filter(x=>x.status==='pending').length); $('gaApproved').textContent=n(globalApplications.filter(x=>x.status==='approved').length); $('gaReplied').textContent=n(globalApplications.filter(x=>x.replied_at).length); $('gaCountries').textContent=n(new Set(globalApplications.map(x=>x.country_code).filter(Boolean)).size);
- const country=summaryTop(globalApplications,x=>x.country_name||x.country_code), langs=summaryTop(globalApplications,x=>GLOBAL_LANG_NAMES[x.preferred_language]||x.preferred_language), orgs=summaryTop(globalApplications.flatMap(x=>(x.organizations||[]).map(o=>({o}))),x=>x.o);
- if($('gaCountrySummary'))$('gaCountrySummary').innerHTML=country.length?country.map(([k,v])=>`<div><b>${esc(k)}</b> · ${n(v)}명</div>`).join(''):'아직 신청이 없습니다.';
- if($('gaLanguageSummary'))$('gaLanguageSummary').innerHTML=langs.length?langs.map(([k,v])=>`<div><b>${esc(k)}</b> · ${n(v)}명</div>`).join(''):'아직 신청이 없습니다.';
- const ol={WTKF:'태권검도',IPMA:'경찰무도',IDP:'드론순찰대'}; if($('gaOrgSummary'))$('gaOrgSummary').innerHTML=orgs.length?orgs.map(([k,v])=>`<div><b>${esc(ol[k]||k)}</b> · ${n(v)}명</div>`).join(''):'아직 신청이 없습니다.';
- const statusLabel={pending:'승인대기',approved:'승인완료',needs_review:'확인필요',rejected:'거절'};
- $('gaRows').innerHTML=list.length?list.map(x=>`<tr><td><b>${esc(x.name||'')}</b><br><small>${esc(x.name_en||'')}</small></td><td>${esc(x.country_name||x.country_code||'')}<br><small>${esc(GLOBAL_LANG_NAMES[x.preferred_language]||x.preferred_language||'')}</small></td><td>${esc((x.organizations||[]).join(' · '))}</td><td><a href="mailto:${esc(x.email||'')}">${esc(x.email||'')}</a></td><td>${new Date(x.created_at).toLocaleDateString('ko-KR')}</td><td><span class="badge ${x.status==='approved'?'live':'next'}">${statusLabel[x.status]||esc(x.status||'')}</span></td><td>${x.replied_at?`<span class="badge live">완료</span><br><small>${new Date(x.replied_at).toLocaleDateString('ko-KR')}</small>`:'<span class="badge next">미회신</span>'}</td><td><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn" style="padding:7px 9px" onclick="setGlobalStatus('${x.id}','approved')">승인</button><button class="btn" style="padding:7px 9px;background:#667085" onclick="setGlobalStatus('${x.id}','needs_review')">확인</button><button class="btn gold" style="padding:7px 9px" onclick="openGlobalReply('${x.id}')">${esc(GLOBAL_LANG_NAMES[x.preferred_language]||'메일')} 회신</button>${x.replied_at?'':`<button class="btn" style="padding:7px 9px;background:#0f766e" onclick="markGlobalReplied('${x.id}')">회신완료</button>`}</div></td></tr>`).join(''):'<tr><td colspan="8" class="empty">조건에 맞는 국제회원 신청이 없습니다.</td></tr>';
-}
-async function setGlobalStatus(id,status){ const {error}=await db.rpc('gms_review_global_application',{p_id:id,p_status:status}); if(error){alert('상태 변경 실패: '+error.message);return} await loadGlobalApplications(); if(status==='approved') await refreshMembersOnly(); await loadPublicDashboard(); }
-function openGlobalReply(id){const x=globalApplications.find(a=>a.id===id);if(!x)return;const lang=x.preferred_language||'en',tpl=GLOBAL_REPLY[lang]||GLOBAL_REPLY.en;const org=(x.organizations||[]).join(', ');const body=`${x.name||''} 님\n\n${tpl[1]}\n\nOrganization: ${org}\nGlobal Membership: https://ipma.kr/global-join/\nIPMA: https://ipma.kr/\n\nWorld Headquarters`;location.href=`mailto:${encodeURIComponent(x.email||'')}?subject=${encodeURIComponent(tpl[0])}&body=${encodeURIComponent(body)}`;}
-async function markGlobalReplied(id){const {error}=await db.rpc('gms_mark_global_replied',{p_id:id});if(error){alert('회신완료 처리 실패: '+error.message);return}await loadGlobalApplications();}
-
-function render(){
- const q=$('search').value.trim().toLowerCase();
- const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
- $('total').textContent=members.length;
- $('white').textContent=members.filter(m=>m.level?.level_number===1).length;
- $('greenplus').textContent=members.filter(m=>(m.level?.level_number||0)>=2).length;
- $('nolevel').textContent=members.filter(m=>!m.level).length;
- $('rows').innerHTML=list.map(m=>`<tr>
- <td><b>${esc(m.name||'')}</b></td><td>${esc(m.email||'')}</td>
- <td class="level">${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</td>
- <td>${esc(m.level?.status||m.status||'')}</td><td>${esc(m.level?.changed_reason||'')}</td>
- <td><button class="memberbtn" data-id="${m.id}">등급관리</button></td></tr>`).join('');
- document.querySelectorAll('.memberbtn').forEach(b=>b.onclick=()=>openMember(b.dataset.id));
-}
-function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
-$('search').oninput=render;
-
-async function openMember(id){
- selected=members.find(m=>m.id===id);if(!selected)return;
- $('dname').textContent=selected.name||'이름 없음';$('demail').textContent=selected.email||'';
- $('current').textContent=selected.level?`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`:'등급 미지정';
- $('newLevel').value=String(selected.level?.level_number||1);
- $('newStatus').value=selected.level?.status||'active';
- $('reason').value='';$('changeMsg').textContent='';
- $('drawer').classList.remove('hidden');await loadHistory();await loadMemberPlans(selected.id);await loadMemberOrgLevels(selected.id);updateDrawerOrgSummary();
-}
-async function loadHistory(){
- const {data,error}=await db.from('member_level_history').select('*').eq('member_id',selected.id).order('changed_at',{ascending:false});
- if(error){$('history').innerHTML='<div class="empty">'+esc(error.message)+'</div>';return}
- $('history').innerHTML=(data||[]).length?(data||[]).map(h=>`<div class="history"><b>${esc(h.from_level_code||'NONE')} → ${esc(h.to_level_code)}</b><br>${esc(h.reason||'사유 없음')}<br><span style="color:#6d7888">${new Date(h.changed_at).toLocaleString('ko-KR')}</span></div>`).join(''):'<div class="empty">아직 변경 이력이 없습니다.</div>';
-}
-$('close').onclick=()=>{$('drawer').classList.add('hidden');selected=null};
-
-$('changeBtn').onclick=async()=>{
- if(!selected)return;
- const organization_code=$('drawerOrg').value;
- const n=Number($('newLevel').value);
- const code=LEVELS.find(x=>Number(x[0])===n)[1];
- const reason=$('reason').value.trim();
- const status=$('newStatus').value;
- if(!reason){$('changeMsg').textContent='변경 사유를 입력해주세요.';return}
-
- const currentOrg=orgLevelFor(selected.id,organization_code);
- if(!currentOrg){$('changeMsg').textContent='선택 조직의 현재 등급정보가 없습니다.';return}
- if(n===currentOrg.level_number && status===currentOrg.status){
-   $('changeMsg').textContent='현재 조직 등급/상태와 동일합니다.';return
- }
-
- $('changeBtn').disabled=true;$('changeMsg').textContent='처리 중…';
- const {data:{user}}=await db.auth.getUser();
-
- const {error:hErr}=await db.from('organization_member_level_history').insert({
-   member_id:selected.id,
-   organization_code,
-   from_level_number:currentOrg.level_number,
-   from_level_code:currentOrg.level_code,
-   to_level_number:n,
-   to_level_code:code,
-   reason,
-   changed_by:user?.id||null
- });
- if(hErr){$('changeMsg').textContent='조직등급 이력 저장 실패: '+hErr.message;$('changeBtn').disabled=false;return}
-
- const {error:uErr}=await db.from('organization_member_levels').update({
-   level_number:n,
-   level_code:code,
-   status,
-   changed_reason:reason,
-   changed_by:user?.id||null
- }).eq('id',currentOrg.id);
-
- if(uErr){$('changeMsg').textContent='조직등급 변경 실패: '+uErr.message;$('changeBtn').disabled=false;return}
-
- $('changeMsg').textContent='조직 LEVEL 변경이 완료되었습니다.';
- await loadOrganizationLevels();
- await loadMemberOrgLevels(selected.id);
- updateDrawerOrgSummary();
- $('changeBtn').disabled=false;
-};
-
-// OAuth 복귀 이벤트 + 최초 진입 모두 처리
-db.auth.onAuthStateChange(async(event,session)=>{
- if(event==='SIGNED_IN' && session){
-   await verifySession('SIGNED_IN');
- }else if(event==='SIGNED_OUT'){
-   await showLogin();
- }
-});
-window.addEventListener('load',()=>setTimeout(()=>verifySession('PAGE_LOAD'),150));
-
-
-let payments=[], memberPlans=[];
-
-async function loadFinance(){
-  const {data:p,error:pe}=await db.from('payments').select('*').order('requested_at',{ascending:false});
-  if(pe){ console.warn('payments:',pe.message); return; }
-  const {data:mp,error:mpe}=await db.from('member_plans').select('*');
-  if(mpe){ console.warn('member_plans:',mpe.message); return; }
-  payments=p||[]; memberPlans=mp||[];
-  renderFinance();
-  renderPlanAdmin();
-}
-
-function money(v){ return Number(v||0).toLocaleString('ko-KR')+'원'; }
-function fmtDate(v){ return v?new Date(v).toLocaleDateString('ko-KR'):'-'; }
-
-function renderFinance(){
-  const memberMap=new Map(members.map(m=>[m.id,m]));
-  const pending=payments.filter(p=>p.payment_status==='pending').length;
-  const paid=payments.filter(p=>p.payment_status==='paid').length;
-  const activePro=memberPlans.filter(p=>p.plan_code==='PRO'&&p.status==='active').length;
-  const now=Date.now(), thirty=now+30*86400000;
-  const expiring=memberPlans.filter(p=>p.plan_code==='PRO'&&p.status==='active'&&p.expires_at&&new Date(p.expires_at).getTime()>=now&&new Date(p.expires_at).getTime()<=thirty).length;
-
-  ['pendingPay','payPending'].forEach(id=>{const e=$(id);if(e)e.textContent=pending});
-  ['proCount','payPro'].forEach(id=>{const e=$(id);if(e)e.textContent=activePro});
-  if($('payPaid'))$('payPaid').textContent=paid;
-  if($('payExpiring'))$('payExpiring').textContent=expiring;
-
-  const body=$('paymentRows');
-  if(body){
-    body.innerHTML=payments.length?payments.map(p=>{
-      const m=memberMap.get(p.member_id)||{};
-      const action=p.payment_status==='pending'
-        ? `<button class="memberbtn confirmPay" data-id="${p.id}">입금확인</button>`
-        : (p.payment_status==='paid'?'<b style="color:#16794f">완료</b>':'-');
-      return `<tr><td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
-      <td>${esc(p.organization_code)}</td><td>${esc(p.plan_code)}</td><td>${money(p.amount)}</td>
-      <td>${esc(p.depositor_name||'-')}</td><td>${esc(p.payment_status)}</td><td>${fmtDate(p.requested_at)}</td><td>${action}</td></tr>`
-    }).join(''):'<tr><td colspan="8" class="empty">아직 입금신청 내역이 없습니다.</td></tr>';
-    document.querySelectorAll('.confirmPay').forEach(b=>b.onclick=()=>confirmPayment(Number(b.dataset.id)));
-  }
-}
-
-async function loadMemberPlans(memberId){
-  const list=memberPlans.filter(p=>p.member_id===memberId);
-  const orgs=['WTKF','IPMA','IDP'];
-  $('memberPlans').innerHTML=orgs.map(org=>{
-    const p=list.find(x=>x.organization_code===org);
-    if(!p)return `<div class="history"><b>${org}</b> · FREE</div>`;
-    return `<div class="history"><b>${org}</b> · ${esc(p.plan_code)} · ${esc(p.status)}
-      ${p.expires_at?`<br><span style="color:#6d7888">만료 ${fmtDate(p.expires_at)}</span>`:''}</div>`;
-  }).join('');
-}
-
-async function confirmPayment(id){
-  if(!confirm('입금을 확인하고 해당 조직 PRO를 1년 활성화할까요?')) return;
-  const pay=payments.find(p=>p.id===id); if(!pay)return;
-  const {data:{user}}=await db.auth.getUser();
-  const start=new Date();
-  const end=new Date(start); end.setFullYear(end.getFullYear()+1);
-
-  const {error:pErr}=await db.from('payments').update({
-    payment_status:'paid',
-    paid_at:start.toISOString(),
-    confirmed_at:start.toISOString(),
-    confirmed_by:user?.id||null,
-    starts_at:start.toISOString(),
-    expires_at:end.toISOString()
-  }).eq('id',id);
-  if(pErr){alert('입금확인 실패: '+pErr.message);return}
-
-  const {error:planErr}=await db.from('member_plans').upsert({
-    member_id:pay.member_id,
-    organization_code:pay.organization_code,
-    plan_code:'PRO',
-    status:'active',
-    starts_at:start.toISOString(),
-    expires_at:end.toISOString(),
-    source_payment_id:id,
-    changed_reason:'연회비 입금확인',
-    changed_by:user?.id||null
-  },{onConflict:'member_id,organization_code'});
-  if(planErr){alert('PLAN 활성화 실패: '+planErr.message);return}
-  alert('입금확인 완료: PRO가 1년 활성화되었습니다.');
-  await loadFinance();
-  if(selected) await loadMemberPlans(selected.id);
-}
-
-const newPaymentBtn=$('newPaymentBtn');
-if(newPaymentBtn)newPaymentBtn.onclick=()=>{
-  const sel=$('paymentMember');
-  sel.innerHTML=members.map(m=>`<option value="${m.id}">${esc(m.name||'')} · ${esc(m.email||'')}</option>`).join('');
-  $('paymentAmount').value='0'; $('depositorName').value=''; $('paymentMemo').value=''; $('paymentMsg').textContent='';
-  $('paymentModal').classList.remove('hidden');
-};
-if($('paymentClose'))$('paymentClose').onclick=()=>$('paymentModal').classList.add('hidden');
-
-if($('savePaymentBtn'))$('savePaymentBtn').onclick=async()=>{
-  const member_id=$('paymentMember').value;
-  const organization_code=$('paymentOrg').value;
-  const plan_code=$('paymentPlan').value;
-  const amount=Number($('paymentAmount').value||0);
-  const depositor_name=$('depositorName').value.trim();
-  const memo=$('paymentMemo').value.trim();
-  if(!member_id){$('paymentMsg').textContent='회원을 선택해주세요.';return}
-  const {error}=await db.from('payments').insert({member_id,organization_code,plan_code,amount,depositor_name,memo,payment_status:'pending'});
-  if(error){$('paymentMsg').textContent='등록 실패: '+error.message;return}
-  $('paymentModal').classList.add('hidden');
-  await loadFinance();
-};
-
-
-
-let selectedPlan=null;
-
-function daysLeft(dateStr){
-  if(!dateStr) return '-';
-  const diff=Math.ceil((new Date(dateStr).getTime()-Date.now())/86400000);
-  if(diff<0) return `만료 ${Math.abs(diff)}일 경과`;
-  return `${diff}일`;
-}
-function renderPlanAdmin(){
-  const body=$('planRows'); if(!body)return;
-  const q=($('planSearch')?.value||'').trim().toLowerCase();
-  const memberMap=new Map(members.map(m=>[m.id,m]));
-  const rows=(memberPlans||[]).filter(p=>{
-    const m=memberMap.get(p.member_id)||{};
-    return !q || `${m.name||''} ${m.email||''}`.toLowerCase().includes(q);
-  });
-  $('planTotal').textContent=(memberPlans||[]).length;
-  $('planPro').textContent=(memberPlans||[]).filter(p=>p.plan_code==='PRO'&&p.status==='active').length;
-  const now=Date.now(), soon=now+30*86400000;
-  $('planSoon').textContent=(memberPlans||[]).filter(p=>p.plan_code==='PRO'&&p.status==='active'&&p.expires_at&&new Date(p.expires_at).getTime()>=now&&new Date(p.expires_at).getTime()<=soon).length;
-  $('planHold').textContent=(memberPlans||[]).filter(p=>p.status==='hold').length;
-  body.innerHTML=rows.map(p=>{
-    const m=memberMap.get(p.member_id)||{};
-    return `<tr>
-      <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
-      <td>${esc(p.organization_code)}</td>
-      <td><b>${esc(p.plan_code)}</b></td>
-      <td>${esc(p.status)}</td>
-      <td>${fmtDate(p.starts_at)}</td>
-      <td>${fmtDate(p.expires_at)}</td>
-      <td>${daysLeft(p.expires_at)}</td>
-      <td><button class="memberbtn planManage" data-id="${p.id}">관리</button></td>
-    </tr>`;
-  }).join('') || '<tr><td colspan="8" class="empty">PLAN 데이터가 없습니다.</td></tr>';
-  document.querySelectorAll('.planManage').forEach(b=>b.onclick=()=>openPlan(Number(b.dataset.id)));
-}
-function openPlan(id){
-  selectedPlan=(memberPlans||[]).find(p=>Number(p.id)===Number(id)); if(!selectedPlan)return;
-  const m=members.find(x=>x.id===selectedPlan.member_id)||{};
-  $('planMemberName').textContent=m.name||'이름 없음';
-  $('planMemberEmail').textContent=m.email||'';
-  $('planCurrent').textContent=`${selectedPlan.organization_code} · ${selectedPlan.plan_code} · ${selectedPlan.status}`;
-  $('planDates').innerHTML=`시작일: ${fmtDate(selectedPlan.starts_at)}<br>만료일: ${fmtDate(selectedPlan.expires_at)}<br>남은기간: ${daysLeft(selectedPlan.expires_at)}`;
-  $('planReason').value=''; $('planMsg').textContent='';
-  $('planModal').classList.remove('hidden');
-}
-if($('planClose')) $('planClose').onclick=()=>{$('planModal').classList.add('hidden');selectedPlan=null};
-if($('planSearch')) $('planSearch').oninput=renderPlanAdmin;
-
-if($('planApply')) $('planApply').onclick=async()=>{
-  if(!selectedPlan)return;
-  const action=$('planAction').value, reason=$('planReason').value.trim();
-  if(!reason){$('planMsg').textContent='변경 사유를 입력해주세요.';return}
-  const {data:{user}}=await db.auth.getUser();
-  let patch={changed_reason:reason,changed_by:user?.id||null};
-  const now=new Date();
-
-  if(action==='extend'){
-    let base=selectedPlan.expires_at ? new Date(selectedPlan.expires_at) : now;
-    if(base.getTime()<now.getTime()) base=now;
-    const end=new Date(base); end.setFullYear(end.getFullYear()+1);
-    patch={...patch,plan_code:'PRO',status:'active',starts_at:selectedPlan.starts_at||now.toISOString(),expires_at:end.toISOString()};
-  }else if(action==='hold'){
-    patch={...patch,status:'hold'};
-  }else if(action==='activate'){
-    patch={...patch,status:'active'};
-  }else if(action==='free'){
-    patch={...patch,plan_code:'FREE',status:'active',starts_at:null,expires_at:null,source_payment_id:null};
-  }
-
-  const {error}=await db.from('member_plans').update(patch).eq('id',selectedPlan.id);
-  if(error){$('planMsg').textContent='PLAN 변경 실패: '+error.message;return}
-  $('planMsg').textContent='PLAN 변경 완료';
-  await loadFinance();
-  renderPlanAdmin();
-  selectedPlan=(memberPlans||[]).find(p=>Number(p.id)===Number(selectedPlan.id));
-  openPlan(selectedPlan.id);
-};
-
-
-let organizationLevels=[];
-
-async function loadOrganizationLevels(){
-  const {data,error}=await db.from('organization_member_levels').select('*');
-  if(error){console.warn('organization_member_levels:',error.message);return}
-  organizationLevels=data||[];
-  renderOrganizationLevels();
-}
-
-function orgLevelFor(memberId,org){
-  return organizationLevels.find(x=>x.member_id===memberId&&x.organization_code===org);
-}
-function orgLevelText(memberId,org){
-  const x=orgLevelFor(memberId,org);
-  return x?`LV.${x.level_number} ${x.level_code.replace('_',' ')}`:'미지정';
-}
-function renderOrganizationLevels(){
-  const body=$('orgLevelRows'); if(!body)return;
-  const q=($('orgLevelSearch')?.value||'').trim().toLowerCase();
-  const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
-  body.innerHTML=list.map(m=>`<tr>
-    <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
-    <td>${orgLevelText(m.id,'WTKF')}</td>
-    <td>${orgLevelText(m.id,'IPMA')}</td>
-    <td>${orgLevelText(m.id,'IDP')}</td>
-    <td><b>${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</b></td>
-    <td><button class="memberbtn orgLevelManage" data-id="${m.id}">조직등급</button></td>
-  </tr>`).join('');
-  document.querySelectorAll('.orgLevelManage').forEach(b=>b.onclick=()=>openOrgLevel(b.dataset.id));
-}
-if($('orgLevelSearch'))$('orgLevelSearch').oninput=renderOrganizationLevels;
-
-function openOrgLevel(memberId){
-  const m=members.find(x=>x.id===memberId); if(!m)return;
-  $('orgLevelMemberName').textContent=m.name||'이름 없음';
-  $('orgLevelMemberEmail').textContent=m.email||'';
-  $('orgLevelModal').dataset.memberId=memberId;
-  $('orgLevelReason').value=''; $('orgLevelMsg').textContent='';
-  $('orgLevelModal').classList.remove('hidden');
-}
-if($('orgLevelClose'))$('orgLevelClose').onclick=()=>$('orgLevelModal').classList.add('hidden');
-
-LEVELS.forEach(([n,c])=>{
- const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('orgLevelNew').appendChild(o);
-});
-
-if($('orgLevelApply'))$('orgLevelApply').onclick=async()=>{
-  const member_id=$('orgLevelModal').dataset.memberId;
-  const organization_code=$('orgLevelOrg').value;
-  const level_number=Number($('orgLevelNew').value);
-  const level_code=LEVELS.find(x=>Number(x[0])===level_number)[1];
-  const reason=$('orgLevelReason').value.trim();
-  if(!reason){$('orgLevelMsg').textContent='변경 사유를 입력해주세요.';return}
-  const current=orgLevelFor(member_id,organization_code);
-  const {data:{user}}=await db.auth.getUser();
-
-  if(current){
-    const {error:hErr}=await db.from('organization_member_level_history').insert({
-      member_id,organization_code,
-      from_level_number:current.level_number,from_level_code:current.level_code,
-      to_level_number:level_number,to_level_code:level_code,
-      reason,changed_by:user?.id||null
-    });
-    if(hErr){$('orgLevelMsg').textContent='이력 저장 실패: '+hErr.message;return}
-  }
-
-  const {error}=await db.from('organization_member_levels').upsert({
-    member_id,organization_code,level_number,level_code,status:'active',
-    changed_reason:reason,changed_by:user?.id||null
-  },{onConflict:'member_id,organization_code'});
-  if(error){$('orgLevelMsg').textContent='조직 LEVEL 변경 실패: '+error.message;return}
-  $('orgLevelMsg').textContent='조직 LEVEL 변경 완료';
-  await loadOrganizationLevels();
-  await loadMemberOrgLevels(member_id);
-};
-
-
-function updateDrawerOrgSummary(){
- if(!selected)return;
- const org=$('drawerOrg')?.value||'WTKF';
- const lv=orgLevelFor(selected.id,org);
- const plan=(memberPlans||[]).find(p=>p.member_id===selected.id&&p.organization_code===org);
- $('drawerOrgCurrent').textContent=lv?`LV.${lv.level_number} ${lv.level_code.replace('_',' ')}`:'미지정';
- $('drawerOrgPlan').textContent=`PLAN: ${plan?.plan_code||'FREE'} · ${plan?.status||'active'}`;
- if(lv){
-   $('newLevel').value=String(lv.level_number);
-   $('newStatus').value=lv.status||'active';
- }
-}
-if($('drawerOrg'))$('drawerOrg').onchange=updateDrawerOrgSummary;
-
-async function loadMemberOrgLevels(memberId){
-  if(!$('orgLevels'))return;
-  const orgs=['WTKF','IPMA','IDP'];
-  $('orgLevels').innerHTML=orgs.map(org=>{
-    const lv=orgLevelFor(memberId,org);
-    return `<div class="history"><b>${org}</b> · ${lv?`LV.${lv.level_number} ${esc(lv.level_code.replace('_',' '))}`:'미지정'}
-      ${lv?.changed_reason?`<br><span style="color:#6d7888">${esc(lv.changed_reason)}</span>`:''}</div>`;
-  }).join('');
-}
-
-
-let contentPolicies=[], editingPolicyId=null;
-
-for(let i=1;i<=9;i++){
-  const code=LEVELS.find(x=>Number(x[0])===i)[1];
-  const o=document.createElement('option');
-  o.value=String(i); o.textContent=`LV.${i} ${code.replace('_',' ')}`;
-  $('policyMinLevel').appendChild(o);
-}
-
-async function loadContentPolicies(){
-  const {data,error}=await db.from('content_access_policies').select('*').order('organization_code').order('content_key');
-  if(error){console.warn('content_access_policies:',error.message);return}
-  contentPolicies=data||[];
-  renderContentPolicies();
-  populateAccessTest();
-}
-
-function renderContentPolicies(){
-  const q=($('policySearch')?.value||'').trim().toLowerCase();
-  const rows=contentPolicies.filter(p=>!q||`${p.content_key||''} ${p.content_title||''}`.toLowerCase().includes(q));
-  if($('policyTotal'))$('policyTotal').textContent=contentPolicies.length;
-  if($('policyPublic'))$('policyPublic').textContent=contentPolicies.filter(p=>p.access_type==='PUBLIC').length;
-  if($('policyPro'))$('policyPro').textContent=contentPolicies.filter(p=>p.access_type==='PRO').length;
-  if($('policyLevel'))$('policyLevel').textContent=contentPolicies.filter(p=>['LEVEL','LEADER'].includes(p.access_type)).length;
-
-  const body=$('policyRows');
-  if(body){
-    body.innerHTML=rows.length?rows.map(p=>`<tr>
-      <td><b>${esc(p.organization_code)}</b></td>
-      <td><b>${esc(p.content_title||p.content_key)}</b><br><small>${esc(p.content_key)}</small></td>
-      <td>${esc(p.access_type)}</td>
-      <td>${esc(p.required_plan||'-')}</td>
-      <td>${p.required_level?`LV.${p.required_level}`:'-'}</td>
-      <td>${p.is_active?'active':'off'}</td>
-      <td><button class="memberbtn editPolicy" data-id="${p.id}">관리</button></td>
-    </tr>`).join(''):'<tr><td colspan="7" class="empty">등록된 콘텐츠 권한정책이 없습니다.</td></tr>';
-    document.querySelectorAll('.editPolicy').forEach(b=>b.onclick=()=>openPolicy(Number(b.dataset.id)));
-  }
-}
-if($('policySearch'))$('policySearch').oninput=renderContentPolicies;
-
-function syncPolicyFields(){
-  const type=$('policyType').value;
-  if(type==='PUBLIC'){
-    $('policyPlan').value=''; $('policyMinLevel').value='';
-  }else if(type==='FREE_MEMBER'){
-    $('policyPlan').value='FREE'; $('policyMinLevel').value='';
-  }else if(type==='PRO'){
-    $('policyPlan').value='PRO';
-  }else if(type==='LEVEL'){
-    if(!$('policyMinLevel').value)$('policyMinLevel').value='1';
-  }
-}
-if($('policyType'))$('policyType').onchange=syncPolicyFields;
-
-function resetPolicyForm(){
-  editingPolicyId=null;
-  $('policyModalTitle').textContent='권한정책 등록';
-  $('policyOrg').value='WTKF';
-  $('policyType').value='PUBLIC';
-  $('policyKey').value='';
-  $('policyTitle').value='';
-  $('policyPlan').value='';
-  $('policyMinLevel').value='';
-  $('policyNotes').value='';
-  $('policyActive').checked=true;
-  $('deletePolicyBtn').classList.add('hidden');
-  $('policyMsg').textContent='';
-}
-if($('newPolicyBtn'))$('newPolicyBtn').onclick=()=>{
-  resetPolicyForm(); $('policyModal').classList.remove('hidden');
-};
-if($('policyClose'))$('policyClose').onclick=()=>$('policyModal').classList.add('hidden');
-
-function openPolicy(id){
-  const p=contentPolicies.find(x=>Number(x.id)===Number(id)); if(!p)return;
-  editingPolicyId=id;
-  $('policyModalTitle').textContent='권한정책 수정';
-  $('policyOrg').value=p.organization_code;
-  $('policyType').value=p.access_type;
-  $('policyKey').value=p.content_key||'';
-  $('policyTitle').value=p.content_title||'';
-  $('policyPlan').value=p.required_plan||'';
-  $('policyMinLevel').value=p.required_level?String(p.required_level):'';
-  $('policyNotes').value=p.notes||'';
-  $('policyActive').checked=!!p.is_active;
-  $('deletePolicyBtn').classList.remove('hidden');
-  $('policyMsg').textContent='';
-  $('policyModal').classList.remove('hidden');
-}
-
-if($('savePolicyBtn'))$('savePolicyBtn').onclick=async()=>{
-  const payload={
-    organization_code:$('policyOrg').value,
-    content_key:$('policyKey').value.trim(),
-    content_title:$('policyTitle').value.trim(),
-    access_type:$('policyType').value,
-    required_plan:$('policyPlan').value||null,
-    required_level:$('policyMinLevel').value?Number($('policyMinLevel').value):null,
-    is_active:$('policyActive').checked,
-    notes:$('policyNotes').value.trim()||null
-  };
-  if(!payload.content_key){$('policyMsg').textContent='콘텐츠 키를 입력해주세요.';return}
-  if(!payload.content_title){$('policyMsg').textContent='콘텐츠 제목을 입력해주세요.';return}
-  let error;
-  if(editingPolicyId){
-    ({error}=await db.from('content_access_policies').update(payload).eq('id',editingPolicyId));
-  }else{
-    ({error}=await db.from('content_access_policies').insert(payload));
-  }
-  if(error){$('policyMsg').textContent='저장 실패: '+error.message;return}
-  $('policyModal').classList.add('hidden');
-  await loadContentPolicies();
-};
-
-if($('deletePolicyBtn'))$('deletePolicyBtn').onclick=async()=>{
-  if(!editingPolicyId)return;
-  if(!confirm('이 콘텐츠 권한정책을 삭제할까요?'))return;
-  const {error}=await db.from('content_access_policies').delete().eq('id',editingPolicyId);
-  if(error){$('policyMsg').textContent='삭제 실패: '+error.message;return}
-  $('policyModal').classList.add('hidden');
-  await loadContentPolicies();
-};
-
-function populateAccessTest(){
-  const memberSel=$('accessMember'), policySel=$('accessPolicy');
-  if(memberSel){
-    memberSel.innerHTML=members.map(m=>`<option value="${m.id}">${esc(m.name||'')} · ${esc(m.email||'')}</option>`).join('');
-  }
-  if(policySel){
-    policySel.innerHTML=contentPolicies.map(p=>`<option value="${p.id}">${esc(p.organization_code)} · ${esc(p.content_title||p.content_key)} · ${esc(p.access_type)}</option>`).join('');
-  }
-}
-
-function evaluateAccess(memberId, policy){
-  const member=members.find(m=>m.id===memberId);
-  if(!member||!policy)return {ok:false,reason:'회원 또는 정책정보 없음'};
-  if(!policy.is_active)return {ok:false,reason:'정책 비활성'};
-  if(policy.access_type==='PUBLIC')return {ok:true,reason:'PUBLIC 콘텐츠'};
-
-  const plan=(memberPlans||[]).find(p=>p.member_id===memberId&&p.organization_code===policy.organization_code);
-  const orgLevel=orgLevelFor(memberId,policy.organization_code);
-
-  if(policy.access_type==='FREE_MEMBER'){
-    return {ok:true,reason:'로그인 회원'};
-  }
-  if(policy.required_plan==='PRO'){
-    if(!plan || plan.plan_code!=='PRO' || plan.status!=='active'){
-      return {ok:false,reason:`${policy.organization_code} PRO 필요`};
-    }
-    if(plan.expires_at && new Date(plan.expires_at).getTime()<Date.now()){
-      return {ok:false,reason:'PRO 기간 만료'};
-    }
-  }
-  if(policy.required_level){
-    if(!orgLevel || orgLevel.level_number<policy.required_level){
-      return {ok:false,reason:`${policy.organization_code} LV.${policy.required_level} 이상 필요`};
-    }
-  }
-  if(policy.access_type==='LEADER'){
-    return {ok:false,reason:'LEADER 권한은 다음 단계에서 자격/위촉정보와 연결 예정'};
-  }
-  return {ok:true,reason:'PLAN / LEVEL 조건 충족'};
-}
-
-if($('runAccessTest'))$('runAccessTest').onclick=()=>{
-  const memberId=$('accessMember').value;
-  const policy=contentPolicies.find(p=>String(p.id)===$('accessPolicy').value);
-  const result=evaluateAccess(memberId,policy);
-  const member=members.find(m=>m.id===memberId)||{};
-  $('accessResult').innerHTML=`<b>${esc(member.name||'회원')}</b><br>${result.ok?'✅ 접근 가능':'🔒 접근 불가'}<br>${esc(result.reason)}`;
-  $('accessResult').style.borderLeftColor=result.ok?'#16794f':'#a6333d';
-};
-
-
-
-
-async function loadActivityData(){
-  try{
-  const results=await Promise.all([
-    db.from('learning_records').select('*').order('last_viewed_at',{ascending:false}),
-    db.from('simulator_records').select('*').order('last_trained_at',{ascending:false}),
-    db.from('seminar_records').select('*').order('activity_date',{ascending:false}),
-    db.from('activity_points').select('*').order('created_at',{ascending:false})
-  ]);
-  const [lr,sr,sem,pts]=results;
-  if(lr.error) console.warn('learning_records',lr.error.message); else learningRecords=lr.data||[];
-  if(sr.error) console.warn('simulator_records',sr.error.message); else simulatorRecords=sr.data||[];
-  if(sem.error) console.warn('seminar_records',sem.error.message); else seminarRecords=sem.data||[];
-  if(pts.error) console.warn('activity_points',pts.error.message); else activityPoints=pts.data||[];
-  renderActivityCenter();
-  renderPointCenter();
-  }catch(err){
-    console.warn('GMS activity load skipped:', err?.message || err);
-  }
-}
-function minsToHuman(mins){
-  mins=Number(mins||0);
-  if(mins<60)return `${mins}분`;
-  const h=Math.floor(mins/60),m=mins%60;
-  return m?`${h}시간 ${m}분`:`${h}시간`;
-}
-function memberActivity(memberId){
-  const videos=learningRecords.filter(x=>x.member_id===memberId);
-  const sims=simulatorRecords.filter(x=>x.member_id===memberId);
-  const seminars=seminarRecords.filter(x=>x.member_id===memberId);
-  const points=activityPoints.filter(x=>x.member_id===memberId);
-  return {
-    videos,sims,seminars,points,
-    videoMinutes:videos.reduce((s,x)=>s+Number(x.watched_minutes||0),0),
-    simMinutes:sims.reduce((s,x)=>s+Number(x.training_minutes||0),0),
-    seminarMinutes:seminars.reduce((s,x)=>s+Number(x.education_minutes||0),0),
-    pointTotal:points.reduce((s,x)=>s+Number(x.points||0),0)
-  };
-}
-function renderActivityCenter(){
-  const videoMin=learningRecords.reduce((s,x)=>s+Number(x.watched_minutes||0),0);
-  const simMin=simulatorRecords.reduce((s,x)=>s+Number(x.training_minutes||0),0);
-  const pt=activityPoints.reduce((s,x)=>s+Number(x.points||0),0);
-  if($('videoHours'))$('videoHours').textContent=(videoMin/60).toFixed(videoMin%60?1:0)+'h';
-  if($('simHours'))$('simHours').textContent=(simMin/60).toFixed(simMin%60?1:0)+'h';
-  if($('seminarCount'))$('seminarCount').textContent=seminarRecords.length;
-  if($('pointTotal'))$('pointTotal').textContent=pt.toLocaleString('ko-KR');
-
-  const q=($('activitySearch')?.value||'').trim().toLowerCase();
-  const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
-  if($('activityMemberRows')){
-    $('activityMemberRows').innerHTML=list.map(m=>{
-      const a=memberActivity(m.id);
-      return `<tr>
-        <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
-        <td>${minsToHuman(a.videoMinutes)}</td>
-        <td>${minsToHuman(a.simMinutes)}</td>
-        <td>${a.seminars.length}건</td>
-        <td><b>${a.pointTotal.toLocaleString('ko-KR')}</b></td>
-        <td><button class="memberbtn activityDetail" data-id="${m.id}">상세</button></td>
-      </tr>`;
-    }).join('');
-    document.querySelectorAll('.activityDetail').forEach(b=>b.onclick=()=>openActivityMember(b.dataset.id));
-  }
-  renderRecentActivity();
-}
-if($('activitySearch'))$('activitySearch').oninput=renderActivityCenter;
-
-function renderRecentActivity(){
-  const memberMap=new Map(members.map(m=>[m.id,m]));
-  const events=[];
-  learningRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.last_viewed_at||x.updated_at||0).getTime(),kind:'영상',member_id:x.member_id,title:x.content_title,detail:minsToHuman(x.watched_minutes)}));
-  simulatorRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.last_trained_at||x.updated_at||0).getTime(),kind:'시뮬레이터',member_id:x.member_id,title:x.simulator_title,detail:minsToHuman(x.training_minutes)}));
-  seminarRecords.slice(0,8).forEach(x=>events.push({t:new Date(x.activity_date||x.created_at||0).getTime(),kind:'교육',member_id:x.member_id,title:x.activity_title,detail:x.completion_status||''}));
-  events.sort((a,b)=>b.t-a.t);
-  const box=$('recentActivity'); if(!box)return;
-  box.innerHTML=events.length?events.slice(0,10).map(e=>{
-    const m=memberMap.get(e.member_id)||{};
-    return `<div class="history"><b>${esc(e.kind)} · ${esc(e.title||'')}</b><br>${esc(m.name||'')} · ${esc(e.detail||'')}<br><span style="color:#6d7888">${e.t?new Date(e.t).toLocaleString('ko-KR'):'-'}</span></div>`;
-  }).join(''):'<div class="empty">아직 활동기록이 없습니다.</div>';
-}
-function openActivityMember(memberId){
-  const m=members.find(x=>x.id===memberId);if(!m)return;
-  const a=memberActivity(memberId);
-  $('activityMemberName').textContent=m.name||'이름 없음';
-  $('activityMemberEmail').textContent=m.email||'';
-  $('activitySummary').innerHTML=`영상 ${minsToHuman(a.videoMinutes)}<br>시뮬레이터 ${minsToHuman(a.simMinutes)}<br>교육·세미나 ${a.seminars.length}건 / ${minsToHuman(a.seminarMinutes)}<br>G-POINT ${a.pointTotal.toLocaleString('ko-KR')}`;
-  $('activityVideos').innerHTML=a.videos.length?a.videos.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.content_title||x.content_key)}</b><br>${minsToHuman(x.watched_minutes)} · 완료율 ${Number(x.progress_percent||0)}%</div>`).join(''):'<div class="empty">영상 기록 없음</div>';
-  $('activitySims').innerHTML=a.sims.length?a.sims.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.simulator_title||x.simulator_key)}</b><br>${minsToHuman(x.training_minutes)} · 실행 ${Number(x.session_count||0)}회</div>`).join(''):'<div class="empty">시뮬레이터 기록 없음</div>';
-  $('activitySeminars').innerHTML=a.seminars.length?a.seminars.map(x=>`<div class="history"><b>${esc(x.organization_code)} · ${esc(x.activity_title)}</b><br>${fmtDate(x.activity_date)} · ${esc(x.completion_status||'')}</div>`).join(''):'<div class="empty">교육·세미나 기록 없음</div>';
-  $('activityPoints').innerHTML=a.points.length?a.points.map(x=>`<div class="history"><b>+${Number(x.points||0)} POINT · ${esc(x.activity_type)}</b><br>${esc(x.description||'')}<br><span style="color:#6d7888">${new Date(x.created_at).toLocaleString('ko-KR')}</span></div>`).join(''):'<div class="empty">POINT 기록 없음</div>';
-  $('activityDrawer').classList.remove('hidden');
-}
-if($('activityClose'))$('activityClose').onclick=()=>$('activityDrawer').classList.add('hidden');
-
-function renderPointCenter(){
-  const totals={VIDEO:0,SIMULATOR:0,SEMINAR:0};
-  activityPoints.forEach(x=>{if(totals[x.activity_type]!==undefined)totals[x.activity_type]+=Number(x.points||0)});
-  const all=activityPoints.reduce((s,x)=>s+Number(x.points||0),0);
-  if($('gPointTotal'))$('gPointTotal').textContent=all.toLocaleString('ko-KR');
-  if($('gPointVideo'))$('gPointVideo').textContent=totals.VIDEO.toLocaleString('ko-KR');
-  if($('gPointSim'))$('gPointSim').textContent=totals.SIMULATOR.toLocaleString('ko-KR');
-  if($('gPointSeminar'))$('gPointSeminar').textContent=totals.SEMINAR.toLocaleString('ko-KR');
-  if($('gPointRows')){
-    $('gPointRows').innerHTML=members.map(m=>{
-      const pts=activityPoints.filter(x=>x.member_id===m.id);
-      const sum=t=>pts.filter(x=>x.activity_type===t).reduce((s,x)=>s+Number(x.points||0),0);
-      return `<tr><td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td><td><b>${pts.reduce((s,x)=>s+Number(x.points||0),0)}</b></td><td>${sum('VIDEO')}</td><td>${sum('SIMULATOR')}</td><td>${sum('SEMINAR')}</td></tr>`;
-    }).join('');
-  }
-}
-
-/* 테스트 입력: 실제 홈페이지 연결 전 DB 누적 흐름 검증 */
-if($('activityTestBtn'))$('activityTestBtn').onclick=()=>{
-  $('testActivityMember').innerHTML=members.map(m=>`<option value="${m.id}">${esc(m.name||'')} · ${esc(m.email||'')}</option>`).join('');
-  $('testActivityTitle').value='';
-  $('testActivityMinutes').value='10';
-  $('testActivityProgress').value='100';
-  $('testActivityMsg').textContent='';
-  $('activityTestModal').classList.remove('hidden');
-};
-if($('activityTestClose'))$('activityTestClose').onclick=()=>$('activityTestModal').classList.add('hidden');
-
-if($('saveTestActivity'))$('saveTestActivity').onclick=async()=>{
-  const member_id=$('testActivityMember').value;
-  const organization_code=$('testActivityOrg').value;
-  const type=$('testActivityType').value;
-  const title=$('testActivityTitle').value.trim();
-  const minutes=Math.max(1,Number($('testActivityMinutes').value||0));
-  const progress=Math.min(100,Math.max(0,Number($('testActivityProgress').value||0)));
-  if(!member_id||!title){$('testActivityMsg').textContent='회원과 콘텐츠/과정명을 입력해주세요.';return}
-
-  let error=null;
-  if(type==='VIDEO'){
-    const r=await db.rpc('gms_record_learning_activity',{
-      p_member_id:member_id,p_organization_code:organization_code,p_content_key:'TEST-'+Date.now(),
-      p_content_title:title,p_minutes:minutes,p_progress_percent:progress
-    }); error=r.error;
-  }else if(type==='SIMULATOR'){
-    const r=await db.rpc('gms_record_simulator_activity',{
-      p_member_id:member_id,p_organization_code:organization_code,p_simulator_key:'TEST-'+Date.now(),
-      p_simulator_title:title,p_minutes:minutes,p_level_or_mission:'TEST'
-    }); error=r.error;
-  }else{
-    const r=await db.rpc('gms_record_seminar_activity',{
-      p_member_id:member_id,p_organization_code:organization_code,p_activity_title:title,
-      p_minutes:minutes,p_completion_status:'completed'
-    }); error=r.error;
-  }
-  if(error){$('testActivityMsg').textContent='기록 실패: '+error.message;return}
-  $('activityTestModal').classList.add('hidden');
-  await loadActivityData().catch(err=>console.warn('activity init:',err?.message||err));
-};
-
-function showPage(id){
- document.querySelectorAll('.page').forEach(p=>{p.classList.add('hidden');p.style.display='none';});
- const page=document.getElementById('page-'+id);
- if(!page){
-   console.warn('GMS page not found:', id);
-   return;
- }
- page.classList.remove('hidden');
- page.style.display='block';
- if(location.hash !== '#'+id) history.replaceState({},document.title,'#'+id);
- document.querySelectorAll('[data-page]').forEach(a=>a.classList.toggle('active',a.dataset.page===id));
- document.querySelectorAll('.navitem').forEach(n=>{n.classList.remove('open');n.classList.remove('force-open')});
- document.body.classList.remove('menu-open');
- if(id==='global-members') loadGlobalApplications().catch(err=>console.warn('global applications page:',err?.message||err));
- window.scrollTo({top:0,behavior:'smooth'});
-}
-document.addEventListener('click',(e)=>{
- const topEl=e.target.closest('.navtop');
- if(topEl && window.innerWidth<=900){
-   e.preventDefault();
-   const item=topEl.parentElement;
-   const wasOpen=item.classList.contains('open');
-   document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('open'));
-   if(!wasOpen) item.classList.add('open');
-   return;
- }
- const pageEl=e.target.closest('[data-page]');
- if(pageEl){ e.preventDefault(); showPage(pageEl.dataset.page); }
-});
-const menuBtn=document.getElementById('menuBtn');
-if(menuBtn) menuBtn.onclick=()=>{
-  document.body.classList.toggle('menu-open');
-  menuBtn.textContent=document.body.classList.contains('menu-open')?'✕':'☰';
-  menuBtn.setAttribute('aria-expanded',document.body.classList.contains('menu-open')?'true':'false');
-};
-document.addEventListener('click',(e)=>{
- if(window.innerWidth>900 && !e.target.closest('.navitem')) document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('force-open'));
-});
-document.querySelectorAll('.navtop').forEach(n=>n.addEventListener('click',e=>{
- if(window.innerWidth>900){ e.preventDefault(); n.parentElement.classList.toggle('force-open'); }
-}));
-
-</script>
-<script>
-// 메인/회원 페이지의 중복 통계 숫자를 함께 동기화
-const originalRender = render;
-render = function(){
- originalRender();
- [['total','total2'],['white','white2'],['greenplus','greenplus2'],['nolevel','nolevel2']].forEach(([a,b])=>{
-   const x=document.getElementById(a),y=document.getElementById(b); if(x&&y)y.textContent=x.textContent;
- });
-};
-const oldShowApp=showApp;
-showApp=async function(session){
- document.getElementById('appNav').classList.remove('hidden');
- const hub=document.getElementById('adminHubTop'); if(hub)hub.classList.remove('hidden');
- await oldShowApp(session);
-};
-const oldShowLogin=showLogin;
-showLogin=async function(message=''){
- document.getElementById('appNav').classList.add('hidden');
- const hub=document.getElementById('adminHubTop'); if(hub)hub.classList.add('hidden');
- await oldShowLogin(message);
-};
-
-// GMS v2.4.0.8 Realtime
-try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
-window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
-window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
-</script>
-
-</body></html>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar" id="top">
+    <a class="brand" href="#top" aria-label="IPMA Gateway 홈">
+      <span class="brand-mark">I</span><span>IPMA GATEWAY</span>
+    </a>
+    <nav class="quick-nav" aria-label="주요 메뉴">
+      <a href="#top">HOME</a>
+      <a href="#police">경찰무도</a>
+      <a href="#taekwonkumdo">태권검도</a>
+      <a href="#drone">드론순찰대</a>
+      <a href="#network">NETWORK</a>
+      <a href="#enter">바로가기</a>
+    </nav>
+    <a class="gms-admin-btn" href="https://ipma.kr/gms-admin/" aria-label="GMS 통합회원 관리자 열기">⚙ GMS 관리자</a>
+    <button class="lang-btn" id="langBtn" type="button" aria-haspopup="dialog">🌐 <span id="langBtnText">한국어</span></button>
+    <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false" title="배경 사운드 켜기">SOUND ○</button>
+  </header>
+  <main>
+    <section class="hero" aria-label="시네마틱 갤러리">
+      <div class="slides" id="slides"></div>
+      <div class="hero-shade"></div>
+      <div class="hero-content">
+        <p class="eyebrow" id="heroEyebrow">IPMA GATEWAY</p>
+        <h1 id="heroTitle">ONE NETWORK. THREE MISSIONS.</h1>
+        <p class="hero-note" id="heroNote">경찰무도 · 태권검도 · 드론순찰대</p>
+      </div>
+      <div class="hero-controls">
+        <button id="prevBtn" type="button" aria-label="이전 이미지">←</button>
+        <div class="slide-count"><strong id="slideNow">01</strong><span>/</span><span id="slideTotal">12</span></div>
+        <button id="nextBtn" type="button" aria-label="다음 이미지">→</button>
+      </div>
+      <div class="progress"><i id="progressBar"></i></div>
+      <a class="scroll-cue" href="#network"><span>SCROLL</span><i></i></a>
+    </section>
+    <section class="network" id="network">
+      <div class="section-kicker">LIVE NETWORK BOARD</div><div class="ipma-version-chip">IPMA Gateway v1.3.1 · GMS ADMIN ACCESS</div>
+      <h2>숫자가 말해주는 <em>성장하는 네트워크</em></h2>
+      <p class="section-lead">규모를 설명하지 않습니다. 계속 변하는 숫자로 보여줍니다.</p>
+      <div class="counter-grid">
+        <article class="counter-card">
+          <span class="counter-label">COUNTRIES</span>
+          <strong class="counter glow" data-counter="countries">00</strong>
+          <small>GLOBAL NETWORK</small>
+        </article>
+        <article class="counter-card featured">
+          <span class="live-dot"><i></i> NETWORK MEMBERS</span>
+          <strong class="counter glow member-counter" data-counter="members">----</strong>
+          <small id="memberStatus">SUPABASE 연결 전</small>
+        </article>
+        <article class="counter-card">
+          <span class="counter-label">BRANCHES</span>
+          <strong class="counter glow" data-counter="branches">000+</strong>
+          <small>WORLDWIDE</small>
+        </article>
+      </div>
+      <div class="gms-org-dashboard" id="ipmaGmsOrgDashboard" aria-label="GMS 글로벌 네트워크 조직별 실시간 현황">
+        <article class="gms-org-card primary">
+          <span>GLOBAL NETWORK</span>
+          <strong id="ipmaNetAll">-</strong>
+          <small data-ipma-live-i18n="allDesc">전체 네트워크 공개회원</small>
+        </article>
+        <article class="gms-org-card featured-police">
+          <span>POLICE MARTIAL ARTS</span>
+          <strong id="ipmaNetIPMA">-</strong>
+          <small data-ipma-live-i18n="ipmaDesc">경찰무도 회원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>TAEKWONKUMDO</span>
+          <strong id="ipmaNetWTKF">-</strong>
+          <small data-ipma-live-i18n="wtkfDesc">태권검도 회원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>DRONE PATROL</span>
+          <strong id="ipmaNetIDP">-</strong>
+          <small data-ipma-live-i18n="idpDesc">IDP 공식 승인 대원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>GLOBAL MEMBERS</span>
+          <strong id="ipmaNetGlobal">-</strong>
+          <small data-ipma-live-i18n="globalDesc">세계회원 승인</small>
+        </article>
+        <article class="gms-org-card">
+          <span>COUNTRIES</span>
+          <strong id="ipmaNetCountries">51</strong>
+          <small data-ipma-live-i18n="countriesDesc">글로벌 네트워크 국가</small>
+        </article>
+      </div>
+      <div class="gms-org-note" data-ipma-live-i18n="note">※ 각 카드는 독립 지표이며 서로 합산하는 숫자가 아닙니다.</div>
+      <div class="member-live" id="gatewayLiveBoard" aria-live="polite">
+        <div class="member-live-head">
+          <span class="live-dot"><i></i> NEW MEMBER LIVE</span>
+          <small><span class="realtime-badge">REALTIME</span> GMS 승인 즉시 자동 반영</small>
+        </div>
+        <div class="member-live-meta"><b>오늘 신규회원 <strong id="gatewayTodayMembers">0</strong>명</b><span>·</span><b>세계회원 승인 <strong id="gatewayGlobalApproved">0</strong>명</b><span>·</span><b>가입국가 <strong id="gatewayGlobalCountries">0</strong>개국</b></div>
+        <div class="member-live-window"><div class="member-live-track" id="gatewayMemberFeed"><span class="member-live-item">새로운 회원이 승인되면 이곳에 실시간으로 표시됩니다.</span></div></div>
+      </div>
+      <div class="ipma-live3" id="ipmaActivityBoard">
+        <div class="ipma-live3-head">
+          <div>
+            <span class="section-kicker" data-ipma-live-i18n="activityKicker">POLICE MARTIAL ARTS · REALTIME ACTIVITY</span>
+            <h3 data-ipma-live-i18n="activityTitle">지금, 경찰무도 네트워크에서 일어나고 있습니다</h3>
+          </div>
+          <span class="ipma-live3-badge">● LIVE · GMS</span>
+        </div>
+        <div class="ipma-live3-grid">
+          <article class="ipma-live3-card">
+            <header><b>01</b><strong data-ipma-live-i18n="recentMembers">최근 경찰무도 회원 · 단증</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveMembers">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingMembers">경찰무도 최근 회원 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+          <article class="ipma-live3-card">
+            <header><b>02</b><strong data-ipma-live-i18n="branches">신규 도장 · 지부 소식</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveBranches">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingBranches">신규 도장·지부 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+          <article class="ipma-live3-card">
+            <header><b>03</b><strong data-ipma-live-i18n="appointments">임원 · 지도자 임명</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveAppointments">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingAppointments">임원·지도자 임명 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+        </div>
+      </div>
+      <div class="ticker" aria-label="네트워크 안내"><span>IPMA GLOBAL NETWORK</span><i></i><span>POLICE MARTIAL ARTS</span><i></i><span>TAEKWONKUMDO</span><i></i><span>DRONE PATROL</span></div>
+    </section>
+
+    <section class="world-section" id="police" data-bg="assets/images/02-police-detail.png">
+      <div class="world-copy left"><span>01</span><p>POLICE MARTIAL ARTS</p><h2>경찰무도</h2><small>기술 · 체력 · 정신력 · 현장 대응</small><button data-enter="police">사이트 입장 →</button></div>
+    </section>
+    <section class="world-section" id="taekwonkumdo" data-bg="assets/images/05-taekwonkumdo-action.png">
+      <div class="world-copy right"><span>02</span><p>WORLD TAEKWONKUMDO</p><h2>태권검도</h2><small>전통 · 정신 · 문화 · 미래세대</small><button data-enter="taekwonkumdo">사이트 입장 →</button></div>
+    </section>
+    <section class="world-section" id="drone" data-bg="assets/images/09-drone-safety.png">
+      <div class="world-copy left"><span>03</span><p>INTERNATIONAL DRONE PATROL</p><h2>드론순찰대</h2><small>첨단기술 · 감시 · 수색 · 구조 · 안전</small><button data-enter="drone">사이트 입장 →</button></div>
+    </section>
+    <section class="enter" id="enter">
+      <div class="section-kicker">CHOOSE YOUR GATE</div>
+      <h2>세 개의 세계, 하나의 관문</h2>
+      <div class="gate-grid">
+        <button class="gate-card" data-enter="police">
+          <img src="assets/logos/ipma-logo.jpg" alt="국제경찰무도연합회 로고" />
+          <span>POLICE MARTIAL ARTS</span><strong>경찰무도</strong><small>ENTER →</small>
+        </button>
+        <button class="gate-card" data-enter="taekwonkumdo">
+          <img src="assets/logos/wtkf-logo.png" alt="세계태권검도연맹 로고" />
+          <span>TAEKWONKUMDO</span><strong>태권검도</strong><small>ENTER →</small>
+        </button>
+        <button class="gate-card" data-enter="drone">
+          <img src="assets/logos/idp-logo.png" alt="국제드론순찰대 로고" />
+          <span>DRONE PATROL</span><strong>드론순찰대</strong><small>ENTER →</small>
+        </button>
+      </div>
+    </section>
+    <section class="finale">
+      <img src="assets/images/11-finale.png" alt="세 조직 글로벌 네트워크" />
+      <div class="finale-overlay"><span>TOGETHER</span><h2>ONE MISSION.<br>ONE NETWORK.<br>ONE FUTURE.</h2><a href="#top">BACK TO TOP ↑</a></div>
+    </section>
+  </main>
+
+  <footer><span>IPMA GATEWAY</span><small>Police Martial Arts · TaekwonKumdo · Drone Patrol</small><b id="version">v1.0.0</b></footer>
+  <dialog id="languageDialog" class="language-dialog"><button class="dialog-x" id="languageClose" aria-label="닫기">×</button><p class="lang-kicker">20 LANGUAGES · ONE GLOBAL NETWORK</p><h3>언어를 선택하세요</h3><p class="lang-help">주요 메뉴와 안내를 선택한 언어로 볼 수 있습니다. 교육 영상 자막은 순차적으로 추가됩니다.</p><div class="language-grid" id="languageGrid"></div></dialog>
+  <dialog id="linkDialog"><button class="dialog-x" id="dialogClose" aria-label="닫기">×</button><h3>사이트 연결 준비</h3><p>경찰무도 홈페이지의 최종 연결 주소를 <code>config.js</code>에 입력하면 이 버튼이 바로 작동합니다.</p><button id="dialogOk">확인</button></dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
