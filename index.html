@@ -46,7 +46,7 @@
     </section>
 
     <section class="network" id="network">
-      <div class="section-kicker">LIVE NETWORK BOARD</div>
+      <div class="section-kicker">LIVE NETWORK BOARD</div><div class="ipma-version-chip">IPMA Gateway v1.3.0 · GMS NETWORK LIVE</div>
       <h2>숫자가 말해주는 <em>성장하는 네트워크</em></h2>
       <p class="section-lead">규모를 설명하지 않습니다. 계속 변하는 숫자로 보여줍니다.</p>
       <div class="counter-grid">
@@ -66,6 +66,41 @@
           <small>WORLDWIDE</small>
         </article>
       </div>
+
+      <div class="gms-org-dashboard" id="ipmaGmsOrgDashboard" aria-label="GMS 글로벌 네트워크 조직별 실시간 현황">
+        <article class="gms-org-card primary">
+          <span>GLOBAL NETWORK</span>
+          <strong id="ipmaNetAll">-</strong>
+          <small data-ipma-live-i18n="allDesc">전체 네트워크 공개회원</small>
+        </article>
+        <article class="gms-org-card featured-police">
+          <span>POLICE MARTIAL ARTS</span>
+          <strong id="ipmaNetIPMA">-</strong>
+          <small data-ipma-live-i18n="ipmaDesc">경찰무도 회원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>TAEKWONKUMDO</span>
+          <strong id="ipmaNetWTKF">-</strong>
+          <small data-ipma-live-i18n="wtkfDesc">태권검도 회원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>DRONE PATROL</span>
+          <strong id="ipmaNetIDP">-</strong>
+          <small data-ipma-live-i18n="idpDesc">IDP 공식 승인 대원</small>
+        </article>
+        <article class="gms-org-card">
+          <span>GLOBAL MEMBERS</span>
+          <strong id="ipmaNetGlobal">-</strong>
+          <small data-ipma-live-i18n="globalDesc">세계회원 승인</small>
+        </article>
+        <article class="gms-org-card">
+          <span>COUNTRIES</span>
+          <strong id="ipmaNetCountries">51</strong>
+          <small data-ipma-live-i18n="countriesDesc">글로벌 네트워크 국가</small>
+        </article>
+      </div>
+      <div class="gms-org-note" data-ipma-live-i18n="note">※ 각 카드는 독립 지표이며 서로 합산하는 숫자가 아닙니다.</div>
+
       <div class="member-live" id="gatewayLiveBoard" aria-live="polite">
         <div class="member-live-head">
           <span class="live-dot"><i></i> NEW MEMBER LIVE</span>
@@ -74,6 +109,37 @@
         <div class="member-live-meta"><b>오늘 신규회원 <strong id="gatewayTodayMembers">0</strong>명</b><span>·</span><b>세계회원 승인 <strong id="gatewayGlobalApproved">0</strong>명</b><span>·</span><b>가입국가 <strong id="gatewayGlobalCountries">0</strong>개국</b></div>
         <div class="member-live-window"><div class="member-live-track" id="gatewayMemberFeed"><span class="member-live-item">새로운 회원이 승인되면 이곳에 실시간으로 표시됩니다.</span></div></div>
       </div>
+
+      <div class="ipma-live3" id="ipmaActivityBoard">
+        <div class="ipma-live3-head">
+          <div>
+            <span class="section-kicker" data-ipma-live-i18n="activityKicker">POLICE MARTIAL ARTS · REALTIME ACTIVITY</span>
+            <h3 data-ipma-live-i18n="activityTitle">지금, 경찰무도 네트워크에서 일어나고 있습니다</h3>
+          </div>
+          <span class="ipma-live3-badge">● LIVE · GMS</span>
+        </div>
+        <div class="ipma-live3-grid">
+          <article class="ipma-live3-card">
+            <header><b>01</b><strong data-ipma-live-i18n="recentMembers">최근 경찰무도 회원 · 단증</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveMembers">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingMembers">경찰무도 최근 회원 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+          <article class="ipma-live3-card">
+            <header><b>02</b><strong data-ipma-live-i18n="branches">신규 도장 · 지부 소식</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveBranches">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingBranches">신규 도장·지부 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+          <article class="ipma-live3-card">
+            <header><b>03</b><strong data-ipma-live-i18n="appointments">임원 · 지도자 임명</strong></header>
+            <div class="ipma-live3-window"><div class="ipma-live3-track" id="ipmaLiveAppointments">
+              <div class="ipma-live3-empty" data-ipma-live-i18n="loadingAppointments">임원·지도자 임명 활동을 불러오는 중입니다.</div>
+            </div></div>
+          </article>
+        </div>
+      </div>
+
       <div class="ticker" aria-label="네트워크 안내"><span>IPMA GLOBAL NETWORK</span><i></i><span>POLICE MARTIAL ARTS</span><i></i><span>TAEKWONKUMDO</span><i></i><span>DRONE PATROL</span></div>
     </section>
 
