@@ -63,3 +63,21 @@
 @media(max-width:1080px){.gms-org-dashboard{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:860px){.ipma-live3-grid{grid-template-columns:1fr}.ipma-live3-card{min-height:215px}}
 @media(max-width:620px){.gms-org-dashboard{grid-template-columns:repeat(2,1fr)}.gms-org-note{text-align:left}.ipma-live3-head{display:block}.ipma-live3-badge{display:inline-block;margin-top:10px}}
+
+
+/* v1.3.1 · GMS 관리자 상시 진입 버튼 */
+.gms-admin-btn{
+  flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;
+  min-height:38px;padding:0 13px;border:1px solid rgba(231,189,105,.58);
+  border-radius:999px;background:linear-gradient(180deg,rgba(231,189,105,.16),rgba(231,189,105,.07));
+  color:#ffe0a1;text-decoration:none;font-size:12px;font-weight:900;white-space:nowrap;
+  box-shadow:0 6px 22px rgba(0,0,0,.20);transition:.2s ease
+}
+.gms-admin-btn:hover{background:var(--gold);color:#171007;border-color:var(--gold);transform:translateY(-1px)}
+@media(max-width:860px){
+  .gms-admin-btn{font-size:11px;padding:0 10px;min-height:34px}
+}
+@media(max-width:560px){
+  .gms-admin-btn{font-size:0;min-width:36px;padding:0 9px}
+  .gms-admin-btn::after{content:"GMS";font-size:10px;font-weight:900;letter-spacing:.04em}
+}
