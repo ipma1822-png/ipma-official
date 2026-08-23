@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.0.9 | Global Membership System</title>
+<title>GMS v2.4.1.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -188,35 +188,29 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-.final-admin-card strong{font-size:16px}
-  .final-admin-card strong em{display:block;margin:4px 0 0}
-  .org-activity-scroll-window{max-height:260px}
-}
 
-/* v2.4.0.9 · PUBLIC FEED 목록만 천천히 위로 자동 스크롤 */
-.public-feed-scroll-window{
-  position:relative;
-  overflow:hidden;
-  max-height:360px;
+/* v2.4.1.0 safe dashboard additions */
+#gmsUnifiedMemberCards{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:14px 0 18px;
 }
-.public-feed-scroll-track{
-  display:flex;
-  flex-direction:column;
-  will-change:transform;
+#gmsUnifiedMemberCards .gms-u-card{
+  border:1px solid rgba(212,164,40,.48);border-radius:18px;padding:18px 16px;
+  background:rgba(255,255,255,.055);min-height:112px;box-sizing:border-box;
 }
-.public-feed-scroll-track.auto-scroll{
-  animation:gmsPublicFeedUp 38s linear infinite;
-}
-.public-feed-scroll-track.auto-scroll:hover{
-  animation-play-state:paused;
-}
-@keyframes gmsPublicFeedUp{
-  from{transform:translateY(0)}
-  to{transform:translateY(-50%)}
-}
+#gmsUnifiedMemberCards .gms-u-label{font-size:14px;opacity:.72;margin-bottom:8px}
+#gmsUnifiedMemberCards .gms-u-value{font-size:32px;font-weight:800;line-height:1.1}
+#gmsUnifiedMemberCards .gms-u-note{font-size:11px;opacity:.55;margin-top:8px}
 @media(max-width:900px){
-  .public-feed-scroll-window{max-height:390px}
+  #gmsUnifiedMemberCards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  #gmsUnifiedMemberCards .gms-u-card{min-height:118px}
+  #gmsUnifiedMemberCards .gms-u-value{font-size:30px}
+  #gmsUnifiedMemberCards .gms-u-card:first-child{grid-column:1/-1}
 }
+.public-feed-scroll-window{position:relative;overflow:hidden;max-height:390px}
+.public-feed-scroll-track{display:flex;flex-direction:column;will-change:transform}
+.public-feed-scroll-track.auto-scroll{animation:gmsFeedOnlyUp 42s linear infinite}
+.public-feed-scroll-track.auto-scroll:hover{animation-play-state:paused}
+@keyframes gmsFeedOnlyUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 </style>
 </head>
 <body>
@@ -224,7 +218,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.0.9</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.1.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -285,18 +279,12 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="stats" style="margin-top:16px">
    <div class="stat accent"><span>등록 회원</span><b id="legacyUnique">0</b></div>
    <div class="stat accent"><span>태권검도 회원</span><b id="wtkfLegacy">0</b></div>
-
-<div class="stat">
-  <span>드론순찰대 회원</span>
-  <b id="dashIdpMembers">0</b>
-</div>
-
    <div class="stat accent"><span>IPMA 회원</span><b id="ipmaLegacy">0</b></div>
    <div class="stat accent"><span>최근 30일 공개활동</span><b id="activity30">0</b></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div id="dashboardPublicFeed" class="publicfeed"><div class="empty">활동피드를 불러오는 중…</div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.0.9</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.1.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -1593,7 +1581,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.0.9 Realtime
+// GMS v2.4.1.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
@@ -1601,169 +1589,111 @@ window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('
 
 <script>
 
-(function setupGmsUnifiedTotal(){
-  function parseNum(t){
-    const m=String(t||'').replace(/,/g,'').match(/\d+/);
-    return m?Number(m[0]):0;
-  }
-  function findStatByLabel(label){
-    const nodes=[...document.querySelectorAll('.stat, .card, .panel, div')];
-    return nodes.find(el=>{
-      const txt=(el.textContent||'').replace(/\s+/g,' ').trim();
-      return txt.startsWith(label+' ') || txt===label || txt.includes(label);
-    });
-  }
-  function readValue(label){
-    const el=findStatByLabel(label);
-    if(!el) return 0;
-    const candidates=[...el.querySelectorAll('b,strong')];
-    for(const c of candidates){
-      const n=parseNum(c.textContent);
-      if(n || /0/.test(c.textContent)) return n;
-    }
-    return parseNum(el.textContent);
-  }
-  function setValue(label,value,newLabel){
-    const el=findStatByLabel(label);
-    if(!el) return;
-    const lab=[...el.querySelectorAll('span,small,div')].find(x=>(x.textContent||'').trim()===label);
-    if(lab && newLabel) lab.textContent=newLabel;
-    const numEl=[...el.querySelectorAll('b,strong')].find(x=>/\d/.test(x.textContent||''));
-    if(numEl) numEl.textContent=Number(value||0).toLocaleString('ko-KR');
-  }
-  function update(){
-    const registered=readValue('등록 회원');
-    const wtkf=readValue('태권검도 회원');
-    const ipma=readValue('IPMA 회원');
-    const sum=registered+wtkf+ipma;
-    setValue('전체 회원',sum,'전체회원');
-  }
-  const mo=new MutationObserver(()=>setTimeout(update,100));
-  mo.observe(document.body,{childList:true,subtree:true,characterData:true});
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(update,500));
-  else setTimeout(update,500);
-})();
+(function GMS_SAFE_2410(){
+  const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+  const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
 
-</script>
-<script>
+  function n(v){ const x=Number(v); return Number.isFinite(x)&&x>=0?x:0; }
+  function fmt(v){ return n(v).toLocaleString('ko-KR'); }
 
-(function setupGmsIdpMemberCount(){
-  async function loadIdpCount(){
-    const el=document.getElementById('dashIdpMembers');
-    if(!el) return;
+  function client(){
     try{
-      if(typeof window.supabase==='undefined') return;
-      // Reuse an existing client if the page exposes one; otherwise create from the same GMS project.
-      const db=(window.gmssb||window.sb||window.supabaseClient||
-        window.supabase.createClient('https://ojxarsfaewehwjidwgac.supabase.co','sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0'));
-      const {data,error}=await db.rpc('gms_get_public_stats',{p_organization_code:'IDP'});
-      if(error) throw error;
-      const s=Array.isArray(data)?(data[0]||{}):(data||{});
-      const total=Number(s.legacy_members||0)+Number(s.global_approved||0);
-      el.textContent=total.toLocaleString('ko-KR');
-    }catch(e){
-      console.warn('IDP member count load failed',e);
+      if(window.gmssb) return window.gmssb;
+      if(window.sb && typeof window.sb.rpc==='function') return window.sb;
+      if(window.supabaseClient && typeof window.supabaseClient.rpc==='function') return window.supabaseClient;
+      if(window.supabase && typeof window.supabase.createClient==='function')
+        return window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    }catch(e){}
+    return null;
+  }
+
+  async function rpcStats(code){
+    const db=client(); if(!db) throw new Error('Supabase client unavailable');
+    const {data,error}=await db.rpc('gms_get_public_stats',{p_organization_code:code});
+    if(error) throw error;
+    return Array.isArray(data)?(data[0]||{}):(data||{});
+  }
+
+  function statCount(s){
+    // Prefer the explicit total/public count returned by the RPC.
+    const keys=['total_members','public_members','member_count','members','legacy_members'];
+    for(const k of keys){
+      if(s && s[k]!==undefined && s[k]!==null && Number.isFinite(Number(s[k]))) return n(s[k]);
     }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',()=>setTimeout(loadIdpCount,700));
-  else setTimeout(loadIdpCount,700);
-
-  // Refresh when GMS public activity changes if realtime is available.
-  setInterval(loadIdpCount,60000);
-})();
-
-</script>
-<script>
-
-(function setupPublicFeedOnlyScroll(){
-  function text(el){return (el?.textContent||'').replace(/\s+/g,' ').trim();}
-
-  function findPublicFeedPanel(){
-    const candidates=[...document.querySelectorAll('section,article,div')];
-    return candidates.find(el=>{
-      const t=text(el);
-      if(!t) return false;
-      const hasFeedTitle=/PUBLIC FEED|실시간 조직 활동/i.test(t);
-      if(!hasFeedTitle) return false;
-      // Must actually contain new-member/activity cards
-      return !!el.querySelector('.activity-item,.feed-item,.public-feed-item,[data-activity-item]');
-    });
+    return 0;
   }
 
-  function getItems(panel){
-    let items=[...panel.querySelectorAll('.activity-item,.feed-item,.public-feed-item,[data-activity-item]')];
-    // Keep only top-level repeated cards, not nested children
-    return items.filter((el,i,arr)=>!arr.some((other,j)=>j!==i && other.contains(el)));
-  }
-
-  function activate(){
-    const panel=findPublicFeedPanel();
-    if(!panel) return;
-
-    // If previous run already created a precise feed scroll, refresh safely
-    let win=panel.querySelector(':scope .public-feed-scroll-window');
-    if(win) return;
-
-    const items=getItems(panel);
-    if(items.length<1) return;
-
-    // Find their common parent. We wrap only the repeated feed cards.
-    let parent=items[0].parentElement;
-    if(!parent) return;
-    if(!items.every(x=>x.parentElement===parent)) return;
-
-    const wrapper=document.createElement('div');
-    wrapper.className='public-feed-scroll-window';
-    const track=document.createElement('div');
-    track.className='public-feed-scroll-track';
-
-    parent.insertBefore(wrapper, items[0]);
-    wrapper.appendChild(track);
-    items.forEach(item=>track.appendChild(item));
-
-    // Duplicate only the feed cards, never title/header/footer/page
-    const originals=[...track.children];
-    originals.forEach(item=>track.appendChild(item.cloneNode(true)));
-
-    if(originals.length>=2){
-      track.classList.add('auto-scroll');
+  function registeredCount(s){
+    const keys=['legacy_members','registered_members','member_count','total_members'];
+    for(const k of keys){
+      if(s && s[k]!==undefined && s[k]!==null && Number.isFinite(Number(s[k]))) return n(s[k]);
     }
+    return 0;
   }
 
-  function resetAndActivate(){
-    // If feed is re-rendered by realtime, unwrap only our prior feed wrapper then rebuild
-    document.querySelectorAll('.public-feed-scroll-window').forEach(win=>{
-      const track=win.querySelector('.public-feed-scroll-track');
-      if(track){
-        const children=[...track.children];
-        const half=Math.ceil(children.length/2);
-        const originals=children.slice(0,half);
-        const parent=win.parentElement;
-        originals.forEach(n=>parent.insertBefore(n,win));
+  function insertUnifiedCards(vals){
+    let host=document.getElementById('gmsUnifiedMemberCards');
+    if(!host){
+      host=document.createElement('div');
+      host.id='gmsUnifiedMemberCards';
+      // Put immediately before the existing dashboard stat grid if possible.
+      const target=[...document.querySelectorAll('div,section')].find(el=>{
+        const t=(el.textContent||'').replace(/\s+/g,' ');
+        return t.includes('등록 회원') && t.includes('태권검도 회원') && t.includes('PRO 활성');
+      });
+      if(target && target.parentElement) target.parentElement.insertBefore(host,target);
+      else{
+        const main=document.querySelector('main')||document.body;
+        main.insertBefore(host,main.firstChild);
       }
-      win.remove();
-    });
-    setTimeout(activate,120);
+    }
+    const cards=[
+      ['전체회원', vals.total, '4개 회원군 합계'],
+      ['등록 회원', vals.registered, 'GMS 등록 회원'],
+      ['태권검도 회원', vals.wtkf, 'WTKF'],
+      ['IPMA 회원', vals.ipma, '경찰무도'],
+      ['드론순찰대 회원', vals.idp, 'IDP']
+    ];
+    host.innerHTML=cards.map(c=>`<div class="gms-u-card"><div class="gms-u-label">${c[0]}</div><div class="gms-u-value">${fmt(c[1])}</div><div class="gms-u-note">${c[2]}</div></div>`).join('');
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',()=>setTimeout(activate,900));
-  }else{
-    setTimeout(activate,900);
+  async function loadUnified(){
+    try{
+      const [all,wtkf,ipma,idp]=await Promise.all([
+        rpcStats(null),rpcStats('WTKF'),rpcStats('IPMA'),rpcStats('IDP')
+      ]);
+      const registered=registeredCount(all);
+      const w=statCount(wtkf), i=statCount(ipma), d=statCount(idp);
+      insertUnifiedCards({registered,wtkf:w,ipma:i,idp:d,total:registered+w+i+d});
+    }catch(e){
+      console.warn('Unified member counters:',e);
+    }
   }
 
-  // Realtime feed updates: debounce and rebuild only PUBLIC FEED cards
-  let timer=null;
-  const mo=new MutationObserver(muts=>{
-    const meaningful=muts.some(m=>{
-      const target=m.target.nodeType===1?m.target:m.target.parentElement;
-      return target && /PUBLIC FEED|실시간 조직 활동|신규회원/i.test(text(target.closest('section,article,div')));
+  function feedPanel(){
+    return [...document.querySelectorAll('section,article,div')].find(el=>{
+      const t=(el.textContent||'').replace(/\s+/g,' ').trim();
+      return /PUBLIC FEED|실시간 조직 활동/i.test(t) &&
+             el.querySelector('.activity-item,.feed-item,.public-feed-item,[data-activity-item]');
     });
-    if(!meaningful) return;
-    clearTimeout(timer);
-    timer=setTimeout(resetAndActivate,450);
-  });
-  mo.observe(document.body,{childList:true,subtree:true});
+  }
+  function startFeedScroll(){
+    const panel=feedPanel(); if(!panel || panel.querySelector('.public-feed-scroll-window')) return;
+    let items=[...panel.querySelectorAll('.activity-item,.feed-item,.public-feed-item,[data-activity-item]')];
+    items=items.filter((el,i,a)=>!a.some((o,j)=>j!==i&&o.contains(el)));
+    if(items.length<2) return;
+    const parent=items[0].parentElement;
+    if(!parent || !items.every(x=>x.parentElement===parent)) return;
+    const win=document.createElement('div'), track=document.createElement('div');
+    win.className='public-feed-scroll-window'; track.className='public-feed-scroll-track auto-scroll';
+    parent.insertBefore(win,items[0]); win.appendChild(track);
+    items.forEach(x=>track.appendChild(x));
+    [...items].forEach(x=>track.appendChild(x.cloneNode(true)));
+  }
+
+  function boot(){ loadUnified(); setTimeout(startFeedScroll,900); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+  setInterval(loadUnified,60000);
 })();
 
 </script>
