@@ -183,10 +183,68 @@
       opacity:.95;
     }
     footer .hr{margin:12px auto 0; max-width:560px; height:1px; background: var(--line);}
+
+    /* IPMA ASSOCIATION v2.4.0 · GMS LIVE */
+    .assoc-version{
+      display:inline-flex;align-items:center;margin:14px 0 0;padding:7px 11px;
+      border:1px solid rgba(216,177,90,.50);border-radius:999px;
+      background:rgba(216,177,90,.08);color:#f0cc73;font-size:11px;font-weight:900;
+      letter-spacing:.06em
+    }
+    .assoc-live{
+      margin-top:14px;border:1px solid var(--line);border-radius:var(--radius2);
+      background:linear-gradient(180deg,rgba(9,18,33,.96),rgba(14,25,44,.93));
+      box-shadow:var(--shadow);overflow:hidden
+    }
+    .assoc-live-head{
+      display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+      padding:20px 18px 14px;border-bottom:1px solid var(--line)
+    }
+    .assoc-live-head small{display:block;color:var(--gold);font-weight:900;letter-spacing:.13em}
+    .assoc-live-head h3{margin:6px 0 0;font-size:21px}
+    .assoc-live-status{
+      flex:0 0 auto;padding:11px 13px;border:1px solid rgba(216,177,90,.32);
+      border-radius:14px;background:rgba(255,255,255,.025);text-align:right
+    }
+    .assoc-live-status span{display:block;font-size:10px;color:var(--muted)}
+    .assoc-live-status b{display:block;margin-top:4px;font-size:11px;color:#7ddc94}
+    .assoc-count-grid{
+      display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 18px 8px
+    }
+    .assoc-count{
+      min-width:0;padding:14px 12px;border-radius:15px;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015))
+    }
+    .assoc-count.primary{border-color:rgba(216,177,90,.50);background:linear-gradient(180deg,rgba(216,177,90,.09),rgba(255,255,255,.02))}
+    .assoc-count label{display:block;color:var(--gold);font-size:9px;font-weight:900;letter-spacing:.08em}
+    .assoc-count strong{display:block;margin:8px 0 4px;font-size:28px;line-height:1;color:#fff}
+    .assoc-count small{display:block;color:var(--muted);font-size:9px;line-height:1.35}
+    .assoc-count-note{padding:0 18px 13px;text-align:right;color:#72819b;font-size:9px}
+    .assoc-live3-head{display:flex;align-items:end;justify-content:space-between;gap:14px;padding:12px 18px}
+    .assoc-live3-head h4{margin:5px 0 0;font-size:18px}
+    .assoc-live-badge{border:1px solid rgba(110,210,139,.38);color:#78da91;background:rgba(110,210,139,.07);border-radius:999px;padding:6px 10px;font-size:9px;font-weight:900}
+    .assoc-live3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 18px 18px}
+    .assoc-live3-card{overflow:hidden;border:1px solid var(--line);border-radius:15px;background:rgba(5,12,22,.42);min-height:205px}
+    .assoc-live3-card header{display:flex;gap:9px;align-items:center;padding:12px 13px;background:rgba(40,61,94,.58);border-bottom:1px solid rgba(216,177,90,.22)}
+    .assoc-live3-card header b{color:#f0c85f}.assoc-live3-card header strong{font-size:12px}
+    .assoc-live-window{height:154px;overflow:hidden}
+    .assoc-live-track{display:flex;flex-direction:column;will-change:transform}
+    .assoc-live-track.moving{animation:assocScroll 17s linear infinite}
+    .assoc-live-track:hover{animation-play-state:paused}
+    .assoc-live-item{min-height:52px;display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+    .assoc-live-flag{font-size:17px}.assoc-live-main{min-width:0}
+    .assoc-live-name{display:block;font-size:10px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .assoc-live-detail{display:block;margin-top:3px;color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .assoc-live-date{font-size:8px;color:#74819a;white-space:nowrap}
+    .assoc-live-empty{height:154px;display:flex;align-items:center;justify-content:center;text-align:center;color:#74819a;font-size:10px;padding:16px}
+    @keyframes assocScroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+    @media(max-width:900px){.assoc-count-grid{grid-template-columns:repeat(3,1fr)}.assoc-live3-grid{grid-template-columns:1fr}.assoc-live-head{align-items:flex-start;flex-direction:column}}
+    @media(max-width:560px){.assoc-count-grid{grid-template-columns:repeat(2,1fr)}.assoc-count-note{text-align:left}}
+
   </style>
 <link href="../assets/css/ipma-upgrade.css?v=2.0" rel="stylesheet"/><link rel="stylesheet" href="../assets/css/ipma-20lang.css?v=2.3.0"/>
 </head>
-<body class="ipma-upgraded"><header class="ipma-mega-header"><div class="ipma-mega-inner"><a class="ipma-mega-brand" href="../"><img alt="IPMA 로고" src="https://static.wixstatic.com/media/abf917_77f3c11d34c64c9eb18c4da00cfad109~mv2.jpg"/><div><strong>국제경찰무도연합회</strong><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></div></a><button aria-label="메뉴" class="ipma-menu-toggle">☰</button><nav class="ipma-mega-nav"><div class="ipma-nav-item"><a class="ipma-nav-main" href="../about/">연합회</a><div class="ipma-dropdown"><b>연합회 안내</b><a href="../about/">연합회 소개</a><a href="../leadership/">임원소개</a><a href="../branches/">국내·해외 지부</a><a href="../partners/">산하·협력기관</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../programs/">교육·프로그램</a><div class="ipma-dropdown"><b>교육 및 활동</b><a href="../programs/">교육 프로그램</a><a href="../events/">행사·세미나</a><a href="../certification/">인증 안내</a><a href="../verification/">공식 조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../branches/">조직·네트워크</a><div class="ipma-dropdown"><b>조직과 협력</b><a href="../leadership/">임원·지도자</a><a href="../branches/">지부 네트워크</a><a href="../partners/">협력기관</a><a href="../contact/">신청·문의</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../resources/">자료실</a><div class="ipma-dropdown"><b>공식 자료</b><a href="../resources/">자료실</a><a href="../documents/">공식 문서</a><a href="../media/">영상자료</a><a href="../verification/">인증·조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../media/">미디어</a><div class="ipma-dropdown"><b>활동과 영상</b><a href="../media/">영상교육관</a><a href="../media/">활동 미디어</a><a href="../events/">행사 안내</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../verification/">조회·인증</a><div class="ipma-dropdown"><b>공식 확인</b><a href="../verification/">자격·인증 조회</a><a href="../certification/">인증 안내</a><a href="../programs/">프로그램</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../contact/">참여·문의</a><div class="ipma-dropdown"><b>참여 안내</b><a href="../contact/">가입·제휴 문의</a><a href="../branches/">지부 안내</a><a href="../partners/">협력기관</a><a href="../events/">행사·세미나</a></div></div></nav></div></header>
+<body class="ipma-upgraded"><header class="ipma-mega-header"><div class="ipma-mega-inner"><a class="ipma-mega-brand" href="../about/"><img alt="IPMA 로고" src="https://static.wixstatic.com/media/abf917_77f3c11d34c64c9eb18c4da00cfad109~mv2.jpg"/><div><strong>국제경찰무도연합회</strong><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></div></a><button aria-label="메뉴" class="ipma-menu-toggle">☰</button><nav class="ipma-mega-nav"><div class="ipma-nav-item"><a class="ipma-nav-main" href="../about/">연합회</a><div class="ipma-dropdown"><b>연합회 안내</b><a href="../about/">연합회 소개</a><a href="../leadership/">임원소개</a><a href="../branches/">국내·해외 지부</a><a href="../partners/">산하·협력기관</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../programs/">교육·프로그램</a><div class="ipma-dropdown"><b>교육 및 활동</b><a href="../programs/">교육 프로그램</a><a href="../events/">행사·세미나</a><a href="../certification/">인증 안내</a><a href="../verification/">공식 조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../branches/">조직·네트워크</a><div class="ipma-dropdown"><b>조직과 협력</b><a href="../leadership/">임원·지도자</a><a href="../branches/">지부 네트워크</a><a href="../partners/">협력기관</a><a href="../contact/">신청·문의</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../resources/">자료실</a><div class="ipma-dropdown"><b>공식 자료</b><a href="../resources/">자료실</a><a href="../documents/">공식 문서</a><a href="../media/">영상자료</a><a href="../verification/">인증·조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../media/">미디어</a><div class="ipma-dropdown"><b>활동과 영상</b><a href="../media/">영상교육관</a><a href="../media/">활동 미디어</a><a href="../events/">행사 안내</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../verification/">조회·인증</a><div class="ipma-dropdown"><b>공식 확인</b><a href="../verification/">자격·인증 조회</a><a href="../certification/">인증 안내</a><a href="../programs/">프로그램</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../contact/">참여·문의</a><div class="ipma-dropdown"><b>참여 안내</b><a href="../contact/">가입·제휴 문의</a><a href="../branches/">지부 안내</a><a href="../partners/">협력기관</a><a href="../events/">행사·세미나</a></div></div></nav></div></header>
 <div class="wrap">
 <div class="topbar">
 <div class="brand">
@@ -198,7 +256,7 @@
 </div>
 <a class="homeBtn" href="../">
 <span class="dot"></span>
-        홈으로
+        IPMA 대문으로
       </a>
 </div>
 <!-- Hero -->
@@ -213,8 +271,52 @@
 <div class="pill"><b>비영리 사단법인</b></div>
 <div class="pill"><b>514-82-12414호</b></div>
 </div>
+<div class="assoc-version">IPMA ASSOCIATION v2.4.0 · GMS NETWORK LIVE</div>
 <!-- ✅ EDIT ZONE 끝 -->
 </section>
+
+<section class="assoc-live" id="associationGmsLive">
+  <div class="assoc-live-head">
+    <div>
+      <small>IPMA GLOBAL NETWORK · REALTIME</small>
+      <h3>연합회 실시간 글로벌 네트워크</h3>
+    </div>
+    <div class="assoc-live-status">
+      <span>실시간 연결 상태</span>
+      <b id="assocGmsStatus">GMS 연결 확인 중</b>
+    </div>
+  </div>
+
+  <div class="assoc-count-grid">
+    <div class="assoc-count primary"><label>GLOBAL NETWORK</label><strong id="assocAll">-</strong><small>전체 네트워크 공개회원</small></div>
+    <div class="assoc-count primary"><label>POLICE MARTIAL ARTS</label><strong id="assocIPMA">-</strong><small>경찰무도 회원</small></div>
+    <div class="assoc-count"><label>TAEKWONKUMDO</label><strong id="assocWTKF">-</strong><small>태권검도 회원</small></div>
+    <div class="assoc-count"><label>DRONE PATROL</label><strong id="assocIDP">-</strong><small>IDP 공식 승인 대원</small></div>
+    <div class="assoc-count"><label>GLOBAL MEMBERS</label><strong id="assocGlobal">-</strong><small>세계회원 승인</small></div>
+    <div class="assoc-count"><label>COUNTRIES</label><strong>51</strong><small>글로벌 네트워크 국가</small></div>
+  </div>
+  <div class="assoc-count-note">※ 각 카드는 독립 지표이며 서로 합산하는 숫자가 아닙니다.</div>
+
+  <div class="assoc-live3-head">
+    <div><small>POLICE MARTIAL ARTS · LIVE ACTIVITY</small><h4>지금, 경찰무도에서 일어나고 있습니다</h4></div>
+    <span class="assoc-live-badge">● LIVE · GMS</span>
+  </div>
+  <div class="assoc-live3-grid">
+    <article class="assoc-live3-card">
+      <header><b>01</b><strong>최근 경찰무도 회원 · 단증</strong></header>
+      <div class="assoc-live-window"><div class="assoc-live-track" id="assocMembers"><div class="assoc-live-empty">최근 회원 활동을 불러오는 중입니다.</div></div></div>
+    </article>
+    <article class="assoc-live3-card">
+      <header><b>02</b><strong>신규 도장 · 지부 소식</strong></header>
+      <div class="assoc-live-window"><div class="assoc-live-track" id="assocBranches"><div class="assoc-live-empty">도장·지부 활동을 불러오는 중입니다.</div></div></div>
+    </article>
+    <article class="assoc-live3-card">
+      <header><b>03</b><strong>임원 · 지도자 임명</strong></header>
+      <div class="assoc-live-window"><div class="assoc-live-track" id="assocAppointments"><div class="assoc-live-empty">임원·지도자 활동을 불러오는 중입니다.</div></div></div>
+    </article>
+  </div>
+</section>
+
 <div class="grid">
 <!-- Overview -->
 <section class="card">
@@ -365,5 +467,62 @@
   </script>
 <div aria-modal="true" class="ipma-modal" role="dialog"><div class="ipma-modal-box"><button aria-label="닫기" class="ipma-modal-close">×</button><div class="ipma-modal-frame"></div></div></div><script src="../assets/js/ipma-upgrade.js?v=2.0"></script><script src="../assets/js/cross-site-network.js"></script>
 <script src="../assets/js/ipma-20lang.js?v=2.3.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function(){
+  const SUPA_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+  const SUPA_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
+  if(!window.supabase) return;
+  const db=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+  const num=v=>Number(v||0);
+  const one=v=>Array.isArray(v)?(v[0]||{}):(v||{});
+  const total=s=>num(one(s).legacy_members)+num(one(s).global_approved);
+  const put=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=num(v).toLocaleString('ko-KR')+'명'};
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const flag=c=>{c=String(c||'').toUpperCase();return /^[A-Z]{2}$/.test(c)?String.fromCodePoint(...[...c].map(x=>127397+x.charCodeAt())):'🌐'};
+  const date=v=>{try{return new Date(v).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}).replace(/\.\s*$/,'')}catch(e){return ''}};
+
+  async function stats(){
+    const [a,p,w,d]=await Promise.all([
+      db.rpc('gms_get_public_stats',{p_organization_code:null}),
+      db.rpc('gms_get_public_stats',{p_organization_code:'IPMA'}),
+      db.rpc('gms_get_public_stats',{p_organization_code:'WTKF'}),
+      db.rpc('gms_get_public_stats',{p_organization_code:'IDP'})
+    ]);
+    if(a.error||p.error||w.error||d.error) throw new Error('stats');
+    const A=one(a.data),P=one(p.data),W=one(w.data),D=one(d.data);
+    const all=num(A.public_members_total)||(num(A.legacy_unique_people)+num(A.online_members_total));
+    put('assocAll',all); put('assocIPMA',total(P)); put('assocWTKF',total(W)); put('assocIDP',total(D)); put('assocGlobal',A.global_approved);
+    const st=document.getElementById('assocGmsStatus'); if(st) st.textContent='● REALTIME · GMS 정상 연결';
+  }
+
+  function render(id,rows,empty){
+    const el=document.getElementById(id); if(!el)return;
+    const list=(rows||[]).slice(0,6);
+    if(!list.length){el.className='assoc-live-track';el.innerHTML='<div class="assoc-live-empty">'+empty+'</div>';return}
+    const items=list.map(r=>'<div class="assoc-live-item"><span class="assoc-live-flag">'+flag(r.country_code)+'</span><span class="assoc-live-main"><span class="assoc-live-name">'+esc(r.subject_masked||'IPMA')+'</span><span class="assoc-live-detail">'+esc(r.detail||r.event_type||'Activity')+'</span></span><span class="assoc-live-date">'+date(r.occurred_at)+'</span></div>').join('');
+    el.innerHTML=items+items; el.className='assoc-live-track moving';
+  }
+
+  async function activity(){
+    const r=await db.rpc('gms_get_public_activity',{p_organization_code:'IPMA',p_limit:40});
+    if(r.error||!Array.isArray(r.data)) return;
+    const rows=r.data;
+    render('assocMembers',rows.filter(x=>['new_member','certificate'].includes(x.event_type)),'새로운 경찰무도 회원·단증 활동이 등록되면 자동 표시됩니다.');
+    render('assocBranches',rows.filter(x=>['new_branch','notice'].includes(x.event_type)),'새로운 도장·지부 소식이 등록되면 자동 표시됩니다.');
+    render('assocAppointments',rows.filter(x=>x.event_type==='appointment'),'새로운 임원·지도자 임명이 등록되면 자동 표시됩니다.');
+  }
+
+  async function refresh(){try{await Promise.all([stats(),activity()])}catch(e){const st=document.getElementById('assocGmsStatus');if(st)st.textContent='GMS 연결 확인 필요'}}
+  refresh();
+  try{
+    db.channel('ipma-association-live-v240')
+      .on('postgres_changes',{event:'*',schema:'public',table:'gms_public_activity'},refresh)
+      .subscribe();
+  }catch(e){}
+})();
+</script>
+
 </body>
 </html>
