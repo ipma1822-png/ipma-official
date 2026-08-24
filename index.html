@@ -91,10 +91,11 @@
           <strong id="ipmaNetIDP">-</strong>
           <small data-ipma-live-i18n="idpDesc">IDP 공식 승인 대원</small>
         </article>
-        <article class="gms-org-card">
+        <article class="gms-org-card global-members-card" id="globalMembersCard" role="button" tabindex="0" title="세계회원 명단 보기">
           <span>GLOBAL MEMBERS</span>
           <strong id="ipmaNetGlobal">-</strong>
-          <small data-ipma-live-i18n="globalDesc">세계회원 승인</small>
+          <small data-ipma-live-i18n="globalDesc">세계회원 · 해외지부 회원</small>
+          <em class="global-members-open">MEMBER LIST ↗</em>
         </article>
         <article class="gms-org-card">
           <span>COUNTRIES</span>
@@ -179,6 +180,14 @@
   <footer><span>IPMA GATEWAY</span><small>Police Martial Arts · TaekwonKumdo · Drone Patrol</small><b id="version">v1.0.0</b></footer>
   <dialog id="languageDialog" class="language-dialog"><button class="dialog-x" id="languageClose" aria-label="닫기">×</button><p class="lang-kicker">20 LANGUAGES · ONE GLOBAL NETWORK</p><h3>언어를 선택하세요</h3><p class="lang-help">주요 메뉴와 안내를 선택한 언어로 볼 수 있습니다. 교육 영상 자막은 순차적으로 추가됩니다.</p><div class="language-grid" id="languageGrid"></div></dialog>
   <dialog id="linkDialog"><button class="dialog-x" id="dialogClose" aria-label="닫기">×</button><h3>사이트 연결 준비</h3><p>경찰무도 홈페이지의 최종 연결 주소를 <code>config.js</code>에 입력하면 이 버튼이 바로 작동합니다.</p><button id="dialogOk">확인</button></dialog>
+  <dialog id="globalMembersDialog" class="global-members-dialog">
+    <button class="dialog-x" id="globalMembersClose" aria-label="닫기">×</button>
+    <p class="global-members-kicker">IPMA · GLOBAL MEMBERSHIP</p>
+    <h3>세계회원 명단</h3>
+    <p class="global-members-help">세계회원 승인자와 기존 해외지부 등록회원을 하나의 명단으로 보여줍니다. 중복 이름은 한 명으로 집계합니다.</p>
+    <div class="global-members-summary"><b id="globalMembersTotal">0명</b><span id="globalMembersCountries">0개국</span></div>
+    <div class="global-members-list" id="globalMembersList"><div class="global-members-loading">세계회원 명단을 불러오는 중입니다.</div></div>
+  </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>

@@ -90,7 +90,7 @@
       if(status)status.textContent='LIVE · SUPABASE';
       const today=document.getElementById('gatewayTodayMembers'),ga=document.getElementById('gatewayGlobalApproved'),gc=document.getElementById('gatewayGlobalCountries');
       if(today)today.textContent=Number(A.new_members_today||0).toLocaleString('ko-KR');
-      if(ga)ga.textContent=Number(A.global_approved||0).toLocaleString('ko-KR');
+      if(ga)ga.textContent=Number(A.global_members_total ?? A.global_approved ?? 0).toLocaleString('ko-KR');
       if(gc)gc.textContent=Number(A.global_countries||A.network_countries||0).toLocaleString('ko-KR');
       return;
     }
@@ -106,7 +106,7 @@
       const count=Number(data.public_members_total||0); el.textContent='0';countTo(el,count);status.textContent='LIVE · GMS';
       const today=document.getElementById('gatewayTodayMembers'),ga=document.getElementById('gatewayGlobalApproved'),gc=document.getElementById('gatewayGlobalCountries');
       if(today)today.textContent=Number(data.new_members_today||0).toLocaleString('ko-KR');
-      if(ga)ga.textContent=Number(data.global_approved||0).toLocaleString('ko-KR');
+      if(ga)ga.textContent=Number(data.global_members_total ?? data.global_approved ?? 0).toLocaleString('ko-KR');
       if(gc)gc.textContent=Number(data.global_countries||0).toLocaleString('ko-KR');
       return;
     }
@@ -184,7 +184,7 @@
       setLiveNumber('ipmaNetIPMA',Number(S.ipma_members_total||0));
       setLiveNumber('ipmaNetWTKF',Number(S.wtkf_members_total||0));
       setLiveNumber('ipmaNetIDP',Number(S.idp_members_total||0));
-      setLiveNumber('ipmaNetGlobal',Number(S.global_approved||0));
+      setLiveNumber('ipmaNetGlobal',Number(S.global_members_total ?? S.global_approved ?? 0));
       const c=document.getElementById('ipmaNetCountries');
       if(c)c.textContent=Number(S.network_countries||cfg.stats?.countries||51).toLocaleString('ko-KR')+'개국';
     }catch(e){console.warn('GMS org dashboard',e)}
@@ -217,6 +217,26 @@
   loadOrgDashboard(); loadIpmaActivities();
 
   loadGatewayMemberFeed(); initGmsRealtime();
+
+  // v1.3.6: GLOBAL MEMBERS 카드에서 세계회원 + 기존 해외지부 회원 명단 표시
+  const globalMembersDialog=document.getElementById('globalMembersDialog');
+  const globalMembersCard=document.getElementById('globalMembersCard');
+  async function openGlobalMembers(){
+    if(!globalMembersDialog)return;
+    const list=document.getElementById('globalMembersList');
+    if(list)list.innerHTML='<div class="global-members-loading">세계회원 명단을 불러오는 중입니다.</div>';
+    globalMembersDialog.showModal();
+    const {data,error}=await gmsRpc('gms_get_global_member_directory_v2',{});
+    if(error||!Array.isArray(data)){if(list)list.innerHTML='<div class="global-members-loading">세계회원 명단 연결을 확인해 주세요.</div>';return}
+    const countries=new Set(data.map(x=>String(x.country||'').trim().toLowerCase()).filter(Boolean));
+    const total=document.getElementById('globalMembersTotal'), country=document.getElementById('globalMembersCountries');
+    if(total)total.textContent=data.length.toLocaleString('ko-KR')+'명';
+    if(country)country.textContent=countries.size.toLocaleString('ko-KR')+'개국';
+    if(list)list.innerHTML=data.length?data.map(x=>`<div class="global-member-row"><b>${escapeHtml(x.display_name||'Global Member')}</b><span>${escapeHtml(x.country||'-')}</span><small class="global-member-branch">${escapeHtml(x.city_branch||'GLOBAL MEMBER')}${x.branch_no?` <i class="branch-no">No.${escapeHtml(x.branch_no)}</i>`:''}</small></div>`).join(''):'<div class="global-members-loading">등록된 세계회원이 없습니다.</div>';
+  }
+  if(globalMembersCard){globalMembersCard.onclick=openGlobalMembers;globalMembersCard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openGlobalMembers()}}}
+  const globalMembersClose=document.getElementById('globalMembersClose');
+  if(globalMembersClose)globalMembersClose.onclick=()=>globalMembersDialog?.close();
 
   const dialog=document.getElementById('linkDialog');
   function enterSite(key){const url=cfg.links?.[key];if(url){const u=new URL(url,location.href);u.searchParams.set('lang',currentLang);window.location.href=u.toString()}else{dialog.showModal()}}
