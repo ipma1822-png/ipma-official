@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="stats" style="margin-top:16px">
    <div class="stat accent"><span>등록 회원</span><b id="legacyUnique">0</b></div>
    <div class="stat accent"><span>태권검도 회원</span><b id="wtkfLegacy">0</b></div>
-   <div class="stat accent"><span>경찰무도 단증 발급</span><b id="ipmaLegacy">0</b></div>
+   <div class="stat accent"><span>IPMA공인유단</span><b id="ipmaLegacy">0</b></div>
    <div class="stat accent"><span>최근 30일 공개활동</span><b id="activity30">0</b></div>
   </div>
   <div class="grid2">
@@ -746,7 +746,7 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  if($('legacyUnique'))$('legacyUnique').textContent=n(all.data?.legacy_unique_people);
  if($('wtkfLegacy'))$('wtkfLegacy').textContent=n(wtkf.data?.legacy_members);
- if($('ipmaLegacy'))$('ipmaLegacy').textContent='1,052호';
+ if($('ipmaLegacy'))$('ipmaLegacy').textContent='1,052명';
  if($('activity30'))$('activity30').textContent=n(all.data?.activity_30d);
  if($('globalApproved'))$('globalApproved').textContent=n(all.data?.global_approved);
  if($('globalPending'))$('globalPending').textContent=n(all.data?.global_pending);
