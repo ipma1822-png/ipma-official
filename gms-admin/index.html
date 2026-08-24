@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.3.0 | Global Membership System</title>
+<title>GMS v2.5.4.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -39,7 +39,7 @@
 main{width:min(1450px,calc(100% - 28px));margin:auto;padding:26px 0 56px}
 .login{max-width:620px;margin:8vh auto;background:#fff;border:1px solid var(--line);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
 .login p{color:#5f6b7a;line-height:1.65}.msg{min-height:22px;color:#9a2c36;font-size:13px;margin-top:10px;white-space:pre-line}.authstate{font-size:12px;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:10px;margin-top:12px;color:#566173}
-.pagehead{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:18px}.pagehead h1{margin:0;font-size:34px}.pagehead p{margin:7px 0 0;color:var(--muted);line-height:1.55}
+.pagehead{display:grid;grid-template-columns:minmax(285px,.9fr) minmax(330px,1.2fr) auto;gap:28px;align-items:center;margin-bottom:18px}.pagehead>div:nth-of-type(2){justify-self:center}.pagehead>.btn{justify-self:end}.pagehead h1{margin:0;font-size:34px}.pagehead p{margin:7px 0 0;color:var(--muted);line-height:1.55}
 .eyebrow{font-size:11px;color:#9a742f;font-weight:900;letter-spacing:.15em;margin-bottom:7px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:15px;padding:17px;box-shadow:0 8px 18px #07172b05}.stat span{color:var(--muted);font-size:12px}.stat b{display:block;font-size:29px;margin-top:5px}
 .grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;margin-top:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
@@ -201,22 +201,39 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.3.0 · MASTER ADMINISTRATOR profile + realtime organization activity */
+/* v2.5.4.0 · MASTER ADMINISTRATOR — compact headquarters profile */
 .final-admin-card{
-  margin:0 0 14px;padding:10px 14px 10px 10px;border:1px solid rgba(215,173,80,.58);
-  border-radius:16px;background:linear-gradient(135deg,#08192e,#102f50 72%,#173f68);
-  box-shadow:0 12px 30px rgba(7,23,43,.16),inset 0 0 0 1px rgba(255,255,255,.025);
-  display:flex;align-items:center;gap:13px;min-width:330px;position:relative;overflow:hidden
+  margin:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none;
+  display:flex; align-items:center; gap:10px; min-width:285px; position:relative; overflow:visible;
 }
-.final-admin-card:after{content:"";position:absolute;right:-28px;top:-48px;width:120px;height:120px;border:1px solid rgba(215,173,80,.18);border-radius:50%}
-.master-photo-wrap{width:66px;height:78px;border-radius:12px;padding:2px;background:linear-gradient(145deg,#f1d27b,#9f6d1d);box-shadow:0 6px 16px rgba(0,0,0,.22);flex:0 0 auto;position:relative;z-index:1}
-.master-photo{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 18%;border-radius:10px;border:2px solid #0b1f36;background:#0b1f36}
-.master-profile-copy{min-width:0;position:relative;z-index:1}
-.final-admin-kicker{display:block;color:#e2bc61;font-size:9px;font-weight:900;letter-spacing:.15em;margin-bottom:5px}
-.final-admin-card strong{display:block;color:#fff;font-size:17px;line-height:1.15;white-space:nowrap}
-.final-admin-card strong em{font-style:normal;color:#e7c46a;font-size:10px;margin-left:6px;letter-spacing:.04em}
-.final-admin-card small{display:block;margin-top:5px;color:#adbed0;font-size:9px;line-height:1.35}
-.master-command{display:inline-block;margin-top:6px;padding:3px 7px;border-radius:999px;border:1px solid rgba(215,173,80,.32);color:#d9bc76;font-size:8px;font-weight:900;letter-spacing:.11em;background:rgba(255,255,255,.035)}
+.final-admin-card:after{display:none}
+.master-photo-wrap{
+  width:58px; height:70px; border-radius:9px; padding:2px;
+  background:linear-gradient(145deg,#e6c36e,#9d721f); box-shadow:0 5px 14px rgba(7,23,43,.14);
+  flex:0 0 auto; position:relative; z-index:1;
+}
+.master-photo{
+  width:100%; height:100%; display:block; object-fit:cover; object-position:50% 18%;
+  border-radius:7px; border:1px solid rgba(7,23,43,.45); background:#fff;
+}
+.master-profile-copy{min-width:0;position:relative;z-index:1;text-align:left}
+.final-admin-kicker{
+  display:block;color:#b8872d;font-size:8px;font-weight:900;letter-spacing:.16em;margin-bottom:4px
+}
+.final-admin-card strong{
+  display:block;color:#273549;font-size:14px;line-height:1.15;white-space:nowrap
+}
+.final-admin-card strong em{
+  font-style:normal;color:#c09239;font-size:9px;margin-left:5px;letter-spacing:.035em
+}
+.final-admin-card small{
+  display:block;margin-top:4px;color:#8a96a6;font-size:8px;line-height:1.35
+}
+.master-command{
+  display:inline-block;margin-top:5px;padding:2px 6px;border-radius:999px;
+  border:1px solid rgba(185,139,52,.38);color:#b18430;font-size:7px;font-weight:900;
+  letter-spacing:.10em;background:rgba(215,173,80,.04)
+}
 .org-activity-scroll-window{
   position:relative;overflow:hidden;max-height:310px;
 }
@@ -234,15 +251,24 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   to{transform:translateY(-50%)}
 }
 @media(max-width:900px){
-  .final-admin-card{padding:9px 11px 9px 9px;min-width:0;width:100%;gap:10px}
-  .master-photo-wrap{width:58px;height:70px}
-  .final-admin-card strong{font-size:15px}
-  .final-admin-card strong em{display:block;margin:3px 0 0;font-size:9px}
+  .final-admin-card{min-width:0;width:100%;gap:9px}
+  .master-photo-wrap{width:54px;height:65px}
+  .final-admin-card strong{font-size:13px}
+  .final-admin-card strong em{display:block;margin:2px 0 0;font-size:8px}
   .org-activity-scroll-window{max-height:260px}
 }
 
 
-/* v2.5.3.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
+
+@media(max-width:1050px){
+  .pagehead{grid-template-columns:minmax(250px,.85fr) minmax(300px,1.15fr) auto;gap:18px}
+}
+@media(max-width:760px){
+  .pagehead{grid-template-columns:1fr;gap:14px;align-items:start}
+  .pagehead>div:nth-of-type(2){justify-self:start}
+  .pagehead>.btn{justify-self:start}
+}
+/* v2.5.4.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
 .gateway-board{position:relative;overflow:hidden;margin:0 0 18px;padding:54px 34px 28px;border-radius:22px;background:radial-gradient(circle at 50% 18%,rgba(22,70,112,.34),transparent 38%),#05070a;color:#fff;text-align:center;box-shadow:0 20px 55px rgba(7,23,43,.22)}
 .gateway-board:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}.gateway-board>*{position:relative;z-index:1}
 .gateway-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#e7bd69;margin-bottom:12px}.gateway-version{display:inline-block;border:1px solid rgba(231,189,105,.48);border-radius:999px;padding:6px 11px;color:#e7bd69;font-size:9px;font-weight:900;letter-spacing:.05em;background:rgba(231,189,105,.04)}
@@ -260,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.3.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.4.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -836,7 +862,7 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  const withUnit=(v,unit='명')=>n(v)+unit;
  try{
-   // v2.5.3.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
+   // v2.5.4.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
    const [gateway,feed]=await Promise.all([
      db.rpc('gms_get_gateway_stats_v1',{}),
      db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
@@ -1932,7 +1958,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.3.0 Realtime
+// GMS v2.5.4.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
