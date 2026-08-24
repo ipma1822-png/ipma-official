@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.2.3 | Global Membership System</title>
+<title>GMS v2.5.0.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -54,6 +54,19 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .card{border:1px solid var(--line);border-radius:13px;padding:15px;margin-top:13px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:5px}.field select,.field textarea{width:100%;padding:11px;border:1px solid #cbd5df;border-radius:8px}.field textarea{min-height:90px;resize:vertical}.history{font-size:12px;line-height:1.6;border-bottom:1px solid #edf0f4;padding:9px 0}.empty{color:var(--muted);padding:20px}
 .footer{text-align:center;color:#8792a1;font-size:11px;padding:24px 0}
 .publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
+
+
+/* v2.5.0.0 · six-organization member control + bulk level change */
+.org-filter-bar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.org-filter-btn{border:1px solid #cfd8e3;background:#fff;color:#32465f;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900;cursor:pointer}
+.org-filter-btn.active{background:#123b63;color:#fff;border-color:#123b63}
+.bulkbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px;background:#f8fafc;border-bottom:1px solid var(--line)}
+.bulkcount{font-size:12px;color:#5f6b7a;font-weight:800}
+.membercheck{width:18px;height:18px;cursor:pointer}
+.org-mini{display:block;font-size:10px;color:#6d7888;margin-top:3px;font-weight:600}
+.bulk-org-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.bulk-org-item{display:flex;align-items:center;gap:8px;border:1px solid #dce3eb;border-radius:9px;padding:10px;background:#fafbfd;font-size:12px;font-weight:800}
+@media(max-width:700px){.bulk-org-grid{grid-template-columns:1fr}.org-filter-btn{padding:7px 9px;font-size:11px}}
 
 @media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.grid3,.phasegrid{grid-template-columns:1fr 1fr}.quick{grid-template-columns:1fr 1fr}}
 
@@ -188,7 +201,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.4.2.3 · realtime organization activity slow upward scroll */
+/* v2.5.0.0 · realtime organization activity slow upward scroll */
 .final-admin-card{
   margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
   border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
@@ -225,9 +238,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <body>
 <header class="top">
  <div class="topin">
-  <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
+  <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.2.3</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.0.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -239,10 +252,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <nav id="appNav" class="navbar hidden">
  <div class="navin">
   <div class="navitem"><a href="#dashboard" class="navtop" data-page="dashboard" onclick="showPage('dashboard'); return false;">운영본부</a>
-   <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>3개 조직의 회원·등급·사업을 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
+   <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>6개 조직의 회원·등급·유료상태를 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
   </div>
   <div class="navitem"><a href="#members" class="navtop" data-page="members" onclick="showPage('members'); return false;">회원관리</a>
-   <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); return false;">통합 회원관리<small>전체회원 · 세계회원 신청 · 조직 · 등급 · 이력 통합관리</small></a><a href="#members" data-page="members" onclick="showPage('members'); return false;">전체회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">신규회원</a><a href="#members" data-page="members" onclick="showPage('members'); return false;">무료회원</a><a href="#membership-plan" data-page="membership-plan" onclick="showPage('membership-plan'); return false;">유료회원 / PLAN</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">PLAN 관리</a><a href="#levels" data-page="levels" onclick="showPage('levels'); return false;">9단계 회원등급</a><a href="#member-card" data-page="member-card" onclick="showPage('member-card'); return false;">디지털 회원카드</a></div>
+   <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">통합 회원관리<small>6개 조직 · 전체회원 · 등급 · 유료상태 · 일괄변경</small></a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">전체회원</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('GLOBAL'); return false;">Global</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('WTKF'); return false;">태권검도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IPMA'); return false;">경찰무도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IDP'); return false;">드론순찰대</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('NEWS24'); return false;">Global News24</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ACTS'); return false;">ACTS</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">유료상태 / PLAN</a></div>
   </div>
   <div class="navitem"><a href="#finance" class="navtop" data-page="finance" onclick="showPage('finance'); return false;">회비·수익</a>
    <div class="mega"><a href="#finance" class="wide" data-page="finance" onclick="showPage('finance'); return false;">회비·입금 통합관리<small>계좌입금 → 관리자 확인 → 서비스 활성화</small></a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금대기</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">입금완료</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">만료예정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">연회비 설정</a><a href="#finance" data-page="finance" onclick="showPage('finance'); return false;">서비스 상품</a></div>
@@ -291,7 +304,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.2.3</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.5.0.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -319,7 +332,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div>
 
  <div id="page-members" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT · SINGLE MASTER</div><h1>통합 회원관리</h1><p>WTKF · IPMA · IDP · 세계회원까지 한 곳에서 검색·승인·등급관리합니다. 회원 원장은 하나만 사용합니다.</p></div></div>
+  <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT · SINGLE MASTER</div><h1>통합 회원관리</h1><p>Global · 태권검도 · 경찰무도 · 드론순찰대 · Global News24 · ACTS를 한 곳에서 검색하고, 조직별 회원상태·LEVEL·유료상태를 독립 관리합니다.</p></div></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total2">-</b></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
   <div class="panel" style="margin-top:16px">
    <div class="panelhead"><div><b>+ 회원 등록</b><div style="font-size:12px;color:#667085;margin-top:4px">과거 명부·누락 회원을 직접 등록합니다. 세계회원 승인 숫자에는 포함되지 않습니다.</div></div></div>
@@ -328,13 +341,17 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <input id="adminMemberName" class="search" placeholder="이름 *">
      <input id="adminMemberPhone" class="search" placeholder="전화번호">
      <input id="adminMemberEmail" class="search" type="email" placeholder="이메일 *">
-     <select id="adminMemberOrg" class="search"><option value="GENERAL">통합회원</option><option value="WTKF">태권검도</option><option value="IPMA">경찰무도</option><option value="IDP">드론순찰대</option></select>
+     <select id="adminMemberOrg" class="search"><option value="GENERAL">통합회원</option><option value="GLOBAL">Global</option><option value="WTKF">태권검도</option><option value="IPMA">경찰무도</option><option value="IDP">드론순찰대</option><option value="NEWS24">Global News24</option><option value="ACTS">ACTS</option></select>
      <input id="adminMemberNote" class="search" placeholder="비고 (예: 2018년 기존명부)">
     </div>
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px"><button id="adminMemberAddBtn" class="btn gold">회원 등록</button><span id="adminMemberMsg" style="font-size:13px;color:#667085"></span></div>
    </div>
   </div>
-  <div class="panel" style="margin-top:16px"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div><div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>GLOBAL</th><th>태권검도</th><th>경찰무도</th><th>드론순찰대</th><th>상태</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
+  <div class="panel" style="margin-top:16px">
+   <div class="panelhead"><div><b>회원 목록</b><div id="memberFilterLabel" style="font-size:11px;color:#6d7888;margin-top:4px">전체회원</div></div><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div>
+   <div class="bulkbar"><div class="org-filter-bar" id="memberOrgFilters"><button class="org-filter-btn active" data-org="ALL">전체회원</button><button class="org-filter-btn" data-org="GLOBAL">Global</button><button class="org-filter-btn" data-org="WTKF">태권검도</button><button class="org-filter-btn" data-org="IPMA">경찰무도</button><button class="org-filter-btn" data-org="IDP">드론순찰대</button><button class="org-filter-btn" data-org="NEWS24">Global News24</button><button class="org-filter-btn" data-org="ACTS">ACTS</button></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="bulkSelectedCount" class="bulkcount">선택 0명</span><button id="selectVisibleBtn" class="btn" style="padding:8px 11px">현재목록 전체선택</button><button id="clearSelectedBtn" class="btn" style="padding:8px 11px;background:#667085">선택해제</button><button id="bulkLevelBtn" class="btn gold" style="padding:8px 11px">일괄등급변경</button></div></div>
+   <div class="scroll"><table><thead><tr><th style="width:42px"><input id="memberCheckAll" class="membercheck" type="checkbox" title="현재 목록 전체선택"></th><th>회원</th><th>이메일</th><th>Global</th><th>태권검도</th><th>경찰무도</th><th>드론순찰대</th><th>News24</th><th>ACTS</th><th>상태</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </div>
 <div id="globalApplicationsSection" style="margin-top:24px">
  <div class="pagehead"><div><div class="eyebrow">GLOBAL MEMBERSHIP · 20 LANGUAGES · CRM</div><h1>세계회원 신청·승인</h1><p>세계회원도 별도 회원목록으로 분리하지 않습니다. 신청을 승인하면 통합 회원 원장에 반영되고, 여기서는 신청·국가·언어·관심조직을 관리합니다.</p></div><a class="btn gold" href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼 ↗</a></div>
  <div class="stats"><div class="stat"><span>전체 국제신청</span><b id="gaTotal">0</b></div><div class="stat"><span>오늘 신청</span><b id="gaToday">0</b></div><div class="stat"><span>승인대기</span><b id="gaPending">0</b></div><div class="stat"><span>승인완료</span><b id="gaApproved">0</b></div><div class="stat"><span>회신완료</span><b id="gaReplied">0</b></div><div class="stat"><span>가입 국가</span><b id="gaCountries">0</b></div></div>
@@ -354,12 +371,12 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
  
 <div id="page-org-levels" class="page hidden">
-  <div class="pagehead"><div><div class="eyebrow">ORGANIZATION LEVEL</div><h1>조직별 회원등급</h1><p>통합 LEVEL과 별도로 WTKF · IPMA · IDP의 성장등급을 각각 관리합니다.</p></div></div>
-  <div class="notice">예: GLOBAL LV.5 GOLD / WTKF LV.5 GOLD / IPMA LV.3 BLUE / IDP LV.1 WHITE 처럼 한 회원의 조직별 성장상태를 분리해서 관리합니다.</div>
+  <div class="pagehead"><div><div class="eyebrow">ORGANIZATION LEVEL</div><h1>조직별 회원등급</h1><p>Global을 포함한 6개 조직의 성장등급을 각각 관리합니다. Global News24와 ACTS도 같은 화면에서 조정할 수 있습니다.</p></div></div>
+  <div class="notice">한 회원에게 Global / 태권검도 / 경찰무도 / 드론순찰대 / Global News24 / ACTS의 LEVEL과 상태를 서로 다르게 지정할 수 있습니다.</div>
   <div class="panel" style="margin-top:16px">
     <div class="panelhead"><b>회원별 조직 LEVEL</b><input id="orgLevelSearch" class="search" placeholder="이름 또는 이메일 검색"></div>
     <div class="scroll"><table>
-      <thead><tr><th>회원</th><th>WTKF</th><th>IPMA</th><th>IDP</th><th>GLOBAL</th><th>관리</th></tr></thead>
+      <thead><tr><th>회원</th><th>Global</th><th>태권검도</th><th>경찰무도</th><th>드론순찰대</th><th>News24</th><th>ACTS</th><th>관리</th></tr></thead>
       <tbody id="orgLevelRows"></tbody>
     </table></div>
   </div>
@@ -368,7 +385,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 <div id="orgLevelModal" class="drawer hidden"><div class="drawerbox">
   <div class="drawerhead"><div><small>ORGANIZATION LEVEL CONTROL</small><h2 id="orgLevelMemberName" style="margin:5px 0"></h2><div id="orgLevelMemberEmail" style="color:#6d7888"></div></div><button id="orgLevelClose" class="x">✕</button></div>
   <div class="card">
-    <div class="field"><label>조직</label><select id="orgLevelOrg"><option value="WTKF">WTKF 태권검도</option><option value="IPMA">IPMA 경찰무도</option><option value="IDP">IDP 드론순찰대</option></select></div>
+    <div class="field"><label>조직</label><select id="orgLevelOrg"><option value="GLOBAL">GLOBAL 통합회원</option><option value="WTKF">WTKF 태권검도</option><option value="IPMA">IPMA 경찰무도</option><option value="IDP">IDP 드론순찰대</option><option value="NEWS24">Global News24</option><option value="ACTS">ACTS 선교연합</option></select></div>
     <div class="field" style="margin-top:10px"><label>새 조직 LEVEL</label><select id="orgLevelNew"></select></div>
     <div class="field" style="margin-top:10px"><label>변경 사유</label><textarea id="orgLevelReason" placeholder="예: IPMA 지도자교육 이수 및 활동실적 반영"></textarea></div>
     <button id="orgLevelApply" class="btn gold" style="width:100%;margin-top:12px">조직 LEVEL 변경</button>
@@ -387,7 +404,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
     <div>
       <div class="eyebrow">MEMBER PLAN CONTROL</div>
       <h1>회원 PLAN 관리</h1>
-      <p>WTKF · IPMA · IDP의 FREE / PRO 상태와 시작일·만료일을 관리합니다.</p>
+      <p>6개 조직의 FREE / PRO 상태와 시작일·만료일을 독립 관리합니다.</p>
     </div>
   </div>
   <div class="stats">
@@ -450,7 +467,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <div class="card">
     <div class="field"><label>회원</label><select id="paymentMember"></select></div>
     <div class="row" style="margin-top:10px">
-      <div class="field"><label>조직</label><select id="paymentOrg"><option>WTKF</option><option>IPMA</option><option>IDP</option></select></div>
+      <div class="field"><label>조직</label><select id="paymentOrg"><option value="GLOBAL">GLOBAL</option><option value="WTKF">WTKF</option><option value="IPMA">IPMA</option><option value="IDP">IDP</option><option value="NEWS24">Global News24</option><option value="ACTS">ACTS</option></select></div>
       <div class="field"><label>PLAN</label><select id="paymentPlan"><option value="PRO">PRO</option></select></div>
     </div>
     <div class="row" style="margin-top:10px">
@@ -560,7 +577,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
 <div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
 
- <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · WTKF/IPMA/IDP PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
+ <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · 6개 조직 PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
 
  
 <div id="page-content-access" class="page hidden">
@@ -585,8 +602,28 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.2.3</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.0.0</b></div>
 </main>
+
+
+<div id="bulkLevelModal" class="drawer hidden"><div class="drawerbox">
+ <div class="drawerhead"><div><small>BULK ORGANIZATION LEVEL CONTROL</small><h2 style="margin:5px 0">일괄등급변경</h2><div style="color:#6d7888"><b id="bulkModalCount">0명</b>에게 여러 조직 LEVEL을 한 번에 적용합니다.</div></div><button id="bulkLevelClose" class="x">✕</button></div>
+ <div class="card">
+  <b>적용 조직 선택</b>
+  <div class="bulk-org-grid">
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="GLOBAL"> Global</label>
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="WTKF"> 태권검도</label>
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="IPMA"> 경찰무도</label>
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="IDP"> 드론순찰대</label>
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="NEWS24"> Global News24</label>
+   <label class="bulk-org-item"><input type="checkbox" class="bulkOrgCheck" value="ACTS"> ACTS</label>
+  </div>
+  <div class="row" style="margin-top:12px"><div class="field"><label>새 등급</label><select id="bulkNewLevel"></select></div><div class="field"><label>상태</label><select id="bulkNewStatus"><option value="active">active</option><option value="hold">hold</option></select></div></div>
+  <div class="field" style="margin-top:10px"><label>일괄 변경 사유</label><textarea id="bulkReason" placeholder="예: 기존 해외지부 세계회원 일괄등록 · 가입단계 Level 1"></textarea></div>
+  <button id="bulkApplyBtn" class="btn gold" style="width:100%;margin-top:12px">선택 회원 · 선택 조직에 일괄 적용</button>
+  <div id="bulkLevelMsg" class="msg"></div>
+ </div>
+</div></div>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
  <div class="drawerhead"><div><small>MEMBER LEVEL CONTROL</small><h2 id="dname" style="margin:5px 0"></h2><div id="demail" style="color:#6d7888"></div></div><button id="close" class="x">✕</button></div>
@@ -603,6 +640,8 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
       <option value="WTKF">WTKF · 태권검도</option>
       <option value="IPMA">IPMA · 경찰무도</option>
       <option value="IDP">IDP · 드론순찰대</option>
+      <option value="NEWS24">Global News24</option>
+      <option value="ACTS">ACTS · 선교연합</option>
     </select>
   </div>
   <div class="card" style="background:#f8fafc;margin-top:10px">
@@ -641,13 +680,17 @@ const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
   }
 });
 const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
+const ORGS=[['GLOBAL','Global'],['WTKF','태권검도'],['IPMA','경찰무도'],['IDP','드론순찰대'],['NEWS24','Global News24'],['ACTS','ACTS']];
 let members=[], selected=null, booted=false;
+let memberOrgFilter='ALL';
+const bulkSelected=new Set();
 let globalApplications=[];
 const $=id=>document.getElementById(id);
 let learningRecords=[], simulatorRecords=[], seminarRecords=[], activityPoints=[];
 
 LEVELS.forEach(([n,c])=>{
- const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('newLevel').appendChild(o)
+ const o=document.createElement('option');o.value=n;o.textContent=`LV.${n} ${c.replace('_',' ')}`;$('newLevel').appendChild(o);
+ const b=document.createElement('option');b.value=n;b.textContent=`LV.${n} ${c.replace('_',' ')}`;if($('bulkNewLevel'))$('bulkNewLevel').appendChild(b);
 });
 
 function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
@@ -782,7 +825,7 @@ async function loadPublicDashboard(){
 
 
 async function loadGlobalApplications(){
- // v2.4.2.3: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
+ // v2.5.0.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
  const {data,error}=await db.rpc('gms_admin_list_global_applications');
  if(error){
    console.error('global applications rpc:', error);
@@ -855,25 +898,64 @@ async function registerAdminMember(){
 }
 if($('adminMemberAddBtn')) $('adminMemberAddBtn').onclick=registerAdminMember;
 
+function memberHasOrg(m,org){
+ if(org==='ALL')return true;
+ if(org==='GLOBAL')return !!m.level;
+ return !!orgLevelFor(m.id,org);
+}
+function setMemberOrgFilter(org='ALL'){
+ memberOrgFilter=ORGS.some(x=>x[0]===org)||org==='ALL'?org:'ALL';
+ document.querySelectorAll('.org-filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.org===memberOrgFilter));
+ const label=memberOrgFilter==='ALL'?'전체회원':(ORGS.find(x=>x[0]===memberOrgFilter)?.[1]||memberOrgFilter);
+ if($('memberFilterLabel'))$('memberFilterLabel').textContent=label+' 회원';
+ render();
+}
+function filteredMembers(){
+ const q=($('search')?.value||'').trim().toLowerCase();
+ return members.filter(m=>(!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q))&&memberHasOrg(m,memberOrgFilter));
+}
+function levelPlanHtml(m,org){
+ const lv=org==='GLOBAL'?m.level:orgLevelFor(m.id,org);
+ const plan=(memberPlans||[]).find(p=>p.member_id===m.id&&p.organization_code===org);
+ const l=lv?`LV.${lv.level_number} ${esc(lv.level_code.replace('_',' '))}`:'미지정';
+ const p=plan?.plan_code||'FREE';
+ return `${l}<span class="org-mini">${esc(p)} · ${esc(lv?.status||plan?.status||'active')}</span>`;
+}
+function updateBulkCount(){
+ if($('bulkSelectedCount'))$('bulkSelectedCount').textContent=`선택 ${bulkSelected.size}명`;
+ if($('bulkModalCount'))$('bulkModalCount').textContent=`${bulkSelected.size}명`;
+}
 function render(){
- const q=$('search').value.trim().toLowerCase();
- const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
+ const list=filteredMembers();
  $('total').textContent=members.length;
  $('white').textContent=members.filter(m=>m.level?.level_number===1).length;
  $('greenplus').textContent=members.filter(m=>(m.level?.level_number||0)>=2).length;
  $('nolevel').textContent=members.filter(m=>!m.level).length;
  $('rows').innerHTML=list.map(m=>`<tr>
+ <td><input class="membercheck memberRowCheck" type="checkbox" data-id="${m.id}" ${bulkSelected.has(m.id)?'checked':''}></td>
  <td><b>${esc(m.name||'')}</b></td><td>${esc(m.email||'')}</td>
- <td class="level">${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</td>
- <td class="level">${esc(orgLevelText(m.id,'WTKF'))}</td>
- <td class="level">${esc(orgLevelText(m.id,'IPMA'))}</td>
- <td class="level">${esc(orgLevelText(m.id,'IDP'))}</td>
+ <td class="level">${levelPlanHtml(m,'GLOBAL')}</td>
+ <td class="level">${levelPlanHtml(m,'WTKF')}</td>
+ <td class="level">${levelPlanHtml(m,'IPMA')}</td>
+ <td class="level">${levelPlanHtml(m,'IDP')}</td>
+ <td class="level">${levelPlanHtml(m,'NEWS24')}</td>
+ <td class="level">${levelPlanHtml(m,'ACTS')}</td>
  <td>${esc(m.status||m.level?.status||'active')}</td>
- <td><button class="memberbtn" data-id="${m.id}">등급관리</button></td></tr>`).join('');
+ <td><button class="memberbtn" data-id="${m.id}">등급관리</button></td></tr>`).join('') || '<tr><td colspan="11" class="empty">조건에 맞는 회원이 없습니다.</td></tr>';
  document.querySelectorAll('.memberbtn').forEach(b=>b.onclick=()=>openMember(b.dataset.id));
+ document.querySelectorAll('.memberRowCheck').forEach(c=>c.onchange=()=>{c.checked?bulkSelected.add(c.dataset.id):bulkSelected.delete(c.dataset.id);updateBulkCount()});
+ const allChecked=list.length>0&&list.every(m=>bulkSelected.has(m.id));
+ if($('memberCheckAll'))$('memberCheckAll').checked=allChecked;
+ updateBulkCount();
 }
 function esc(v){return String(v??'').replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
 $('search').oninput=render;
+document.querySelectorAll('.org-filter-btn').forEach(b=>b.onclick=()=>setMemberOrgFilter(b.dataset.org));
+if($('memberCheckAll'))$('memberCheckAll').onchange=()=>{filteredMembers().forEach(m=>$('memberCheckAll').checked?bulkSelected.add(m.id):bulkSelected.delete(m.id));render()};
+if($('selectVisibleBtn'))$('selectVisibleBtn').onclick=()=>{filteredMembers().forEach(m=>bulkSelected.add(m.id));render()};
+if($('clearSelectedBtn'))$('clearSelectedBtn').onclick=()=>{bulkSelected.clear();render()};
+if($('bulkLevelBtn'))$('bulkLevelBtn').onclick=()=>{if(!bulkSelected.size){alert('일괄 변경할 회원을 먼저 선택해주세요.');return}$('bulkReason').value='';$('bulkLevelMsg').textContent='';document.querySelectorAll('.bulkOrgCheck').forEach(c=>c.checked=false);$('bulkLevelModal').classList.remove('hidden');updateBulkCount()};
+if($('bulkLevelClose'))$('bulkLevelClose').onclick=()=>$('bulkLevelModal').classList.add('hidden');
 
 async function openMember(id){
  selected=members.find(m=>m.id===id);if(!selected)return;
@@ -1026,6 +1108,50 @@ $('changeBtn').onclick=async()=>{
  $('changeBtn').disabled=false;
 }
 
+
+async function applyBulkLevels(){
+ const ids=[...bulkSelected];
+ const orgs=[...document.querySelectorAll('.bulkOrgCheck:checked')].map(c=>c.value);
+ const n=Number($('bulkNewLevel').value); const found=LEVELS.find(x=>Number(x[0])===n);
+ const status=$('bulkNewStatus').value; const reason=$('bulkReason').value.trim();
+ if(!ids.length){$('bulkLevelMsg').textContent='선택된 회원이 없습니다.';return}
+ if(!orgs.length){$('bulkLevelMsg').textContent='적용할 조직을 하나 이상 선택해주세요.';return}
+ if(!reason){$('bulkLevelMsg').textContent='변경 사유를 입력해주세요.';return}
+ if(!confirm(`${ids.length}명 × ${orgs.length}개 조직에 LV.${n}을 적용할까요?`))return;
+ const code=found[1]; const {data:{user}}=await db.auth.getUser();
+ $('bulkApplyBtn').disabled=true; let done=0, skipped=0, failed=[];
+ $('bulkLevelMsg').textContent='일괄 변경 처리 중…';
+ for(const member_id of ids){
+   for(const organization_code of orgs){
+     try{
+       if(organization_code==='GLOBAL'){
+         const m=members.find(x=>x.id===member_id); const current=m?.level||null;
+         if(current && Number(current.level_number)===n && (current.status||'active')===status){skipped++;continue}
+         if(current){
+           const h=await db.from('member_level_history').insert({member_id,from_level_number:current.level_number,from_level_code:current.level_code,to_level_number:n,to_level_code:code,reason,changed_by:user?.id||null}); if(h.error)throw h.error;
+           const u=await db.from('member_levels').update({level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null}).eq('member_id',member_id); if(u.error)throw u.error;
+         }else{
+           const i=await db.from('member_levels').insert({member_id,level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null}); if(i.error)throw i.error;
+         }
+       }else{
+         const current=orgLevelFor(member_id,organization_code);
+         if(current && Number(current.level_number)===n && (current.status||'active')===status){skipped++;continue}
+         if(current){
+           const h=await db.from('organization_member_level_history').insert({member_id,organization_code,from_level_number:current.level_number,from_level_code:current.level_code,to_level_number:n,to_level_code:code,reason,changed_by:user?.id||null}); if(h.error)throw h.error;
+         }
+         const u=await db.from('organization_member_levels').upsert({member_id,organization_code,level_number:n,level_code:code,status,changed_reason:reason,changed_by:user?.id||null},{onConflict:'member_id,organization_code'}); if(u.error)throw u.error;
+       }
+       done++;
+     }catch(err){ failed.push(`${member_id}/${organization_code}: ${err?.message||err}`); }
+   }
+ }
+ await refreshMembersOnly(); await loadOrganizationLevels(); await loadFinance(); render();
+ $('bulkApplyBtn').disabled=false;
+ $('bulkLevelMsg').textContent=`완료 ${done}건 · 동일값 건너뜀 ${skipped}건 · 실패 ${failed.length}건`+(failed.length?`\n${failed.slice(0,5).join('\n')}`:'');
+ if(!failed.length){setTimeout(()=>{$('bulkLevelModal').classList.add('hidden')},900)}
+}
+if($('bulkApplyBtn'))$('bulkApplyBtn').onclick=applyBulkLevels;
+
 // OAuth 복귀 이벤트 + 최초 진입 모두 처리
 db.auth.onAuthStateChange(async(event,session)=>{
  if(event==='SIGNED_IN' && session){
@@ -1082,7 +1208,7 @@ function renderFinance(){
 
 async function loadMemberPlans(memberId){
   const list=memberPlans.filter(p=>p.member_id===memberId);
-  const orgs=['WTKF','IPMA','IDP'];
+  const orgs=['GLOBAL','WTKF','IPMA','IDP','NEWS24','ACTS'];
   $('memberPlans').innerHTML=orgs.map(org=>{
     const p=list.find(x=>x.organization_code===org);
     if(!p)return `<div class="history"><b>${org}</b> · FREE</div>`;
@@ -1253,10 +1379,12 @@ function renderOrganizationLevels(){
   const list=members.filter(m=>!q||`${m.name||''} ${m.email||''}`.toLowerCase().includes(q));
   body.innerHTML=list.map(m=>`<tr>
     <td><b>${esc(m.name||'')}</b><br><small>${esc(m.email||'')}</small></td>
+    <td>${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</td>
     <td>${orgLevelText(m.id,'WTKF')}</td>
     <td>${orgLevelText(m.id,'IPMA')}</td>
     <td>${orgLevelText(m.id,'IDP')}</td>
-    <td><b>${m.level?`LV.${m.level.level_number} ${esc(m.level.level_code.replace('_',' '))}`:'미지정'}</b></td>
+    <td>${orgLevelText(m.id,'NEWS24')}</td>
+    <td>${orgLevelText(m.id,'ACTS')}</td>
     <td><button class="memberbtn orgLevelManage" data-id="${m.id}">조직등급</button></td>
   </tr>`).join('');
   document.querySelectorAll('.orgLevelManage').forEach(b=>b.onclick=()=>openOrgLevel(b.dataset.id));
@@ -1284,24 +1412,28 @@ if($('orgLevelApply'))$('orgLevelApply').onclick=async()=>{
   const level_code=LEVELS.find(x=>Number(x[0])===level_number)[1];
   const reason=$('orgLevelReason').value.trim();
   if(!reason){$('orgLevelMsg').textContent='변경 사유를 입력해주세요.';return}
-  const current=orgLevelFor(member_id,organization_code);
   const {data:{user}}=await db.auth.getUser();
-
-  if(current){
-    const {error:hErr}=await db.from('organization_member_level_history').insert({
-      member_id,organization_code,
-      from_level_number:current.level_number,from_level_code:current.level_code,
-      to_level_number:level_number,to_level_code:level_code,
-      reason,changed_by:user?.id||null
-    });
-    if(hErr){$('orgLevelMsg').textContent='이력 저장 실패: '+hErr.message;return}
+  if(organization_code==='GLOBAL'){
+    const m=members.find(x=>x.id===member_id); const current=m?.level||null;
+    if(current){
+      const {error:hErr}=await db.from('member_level_history').insert({member_id,from_level_number:current.level_number,from_level_code:current.level_code,to_level_number:level_number,to_level_code:level_code,reason,changed_by:user?.id||null});
+      if(hErr){$('orgLevelMsg').textContent='GLOBAL 이력 저장 실패: '+hErr.message;return}
+      const {error}=await db.from('member_levels').update({level_number,level_code,status:'active',changed_reason:reason,changed_by:user?.id||null}).eq('member_id',member_id);
+      if(error){$('orgLevelMsg').textContent='GLOBAL LEVEL 변경 실패: '+error.message;return}
+    }else{
+      const {error}=await db.from('member_levels').insert({member_id,level_number,level_code,status:'active',changed_reason:reason,changed_by:user?.id||null});
+      if(error){$('orgLevelMsg').textContent='GLOBAL LEVEL 지정 실패: '+error.message;return}
+    }
+    await refreshMembersOnly();
+  }else{
+    const current=orgLevelFor(member_id,organization_code);
+    if(current){
+      const {error:hErr}=await db.from('organization_member_level_history').insert({member_id,organization_code,from_level_number:current.level_number,from_level_code:current.level_code,to_level_number:level_number,to_level_code:level_code,reason,changed_by:user?.id||null});
+      if(hErr){$('orgLevelMsg').textContent='이력 저장 실패: '+hErr.message;return}
+    }
+    const {error}=await db.from('organization_member_levels').upsert({member_id,organization_code,level_number,level_code,status:'active',changed_reason:reason,changed_by:user?.id||null},{onConflict:'member_id,organization_code'});
+    if(error){$('orgLevelMsg').textContent='조직 LEVEL 변경 실패: '+error.message;return}
   }
-
-  const {error}=await db.from('organization_member_levels').upsert({
-    member_id,organization_code,level_number,level_code,status:'active',
-    changed_reason:reason,changed_by:user?.id||null
-  },{onConflict:'member_id,organization_code'});
-  if(error){$('orgLevelMsg').textContent='조직 LEVEL 변경 실패: '+error.message;return}
   $('orgLevelMsg').textContent='조직 LEVEL 변경 완료';
   await loadOrganizationLevels();
   await loadMemberOrgLevels(member_id);
@@ -1342,7 +1474,7 @@ if($('drawerOrg'))$('drawerOrg').onchange=updateDrawerOrgSummary;
 
 async function loadMemberOrgLevels(memberId){
   if(!$('orgLevels'))return;
-  const orgs=['WTKF','IPMA','IDP'];
+  const orgs=['WTKF','IPMA','IDP','NEWS24','ACTS'];
   $('orgLevels').innerHTML=orgs.map(org=>{
     const lv=orgLevelFor(memberId,org);
     return `<div class="history"><b>${org}</b> · ${lv?`LV.${lv.level_number} ${esc(lv.level_code.replace('_',' '))}`:'미지정'}
@@ -1746,7 +1878,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.2.3 Realtime
+// GMS v2.5.0.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
