@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.2.2 | Global Membership System</title>
+<title>GMS v2.4.2.3 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -188,7 +188,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.4.2.2 · realtime organization activity slow upward scroll */
+/* v2.4.2.3 · realtime organization activity slow upward scroll */
 .final-admin-card{
   margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
   border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
@@ -227,7 +227,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.2.2</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.2.3</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -291,7 +291,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.2.2</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.2.3</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -585,7 +585,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.2.2</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.2.3</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -599,6 +599,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <b>조직별 LEVEL 변경</b>
   <div class="field" style="margin-top:12px"><label>조직 선택</label>
     <select id="drawerOrg">
+      <option value="GLOBAL">GLOBAL · 통합등급</option>
       <option value="WTKF">WTKF · 태권검도</option>
       <option value="IPMA">IPMA · 경찰무도</option>
       <option value="IDP">IDP · 드론순찰대</option>
@@ -781,7 +782,7 @@ async function loadPublicDashboard(){
 
 
 async function loadGlobalApplications(){
- // v2.4.2.2: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
+ // v2.4.2.3: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
  const {data,error}=await db.rpc('gms_admin_list_global_applications');
  if(error){
    console.error('global applications rpc:', error);
@@ -894,20 +895,95 @@ $('changeBtn').onclick=async()=>{
  if(!selected)return;
  const organization_code=$('drawerOrg').value;
  const n=Number($('newLevel').value);
- const code=LEVELS.find(x=>Number(x[0])===n)[1];
+ const found=LEVELS.find(x=>Number(x[0])===n);
+ if(!found){$('changeMsg').textContent='등급 값이 올바르지 않습니다.';return}
+ const code=found[1];
  const reason=$('reason').value.trim();
  const status=$('newStatus').value;
  if(!reason){$('changeMsg').textContent='변경 사유를 입력해주세요.';return}
 
- const currentOrg=orgLevelFor(selected.id,organization_code);
- if(currentOrg && n===Number(currentOrg.level_number) && status===currentOrg.status){
-   $('changeMsg').textContent='현재 조직 등급/상태와 동일합니다.';return
+ const {data:{user}}=await db.auth.getUser();
+ $('changeBtn').disabled=true;
+
+ // GLOBAL 통합등급
+ if(organization_code==='GLOBAL'){
+   const current=selected.level||null;
+
+   if(current && n===Number(current.level_number) && status===(current.status||'active')){
+     $('changeMsg').textContent='현재 GLOBAL 등급/상태와 동일합니다.';
+     $('changeBtn').disabled=false;
+     return;
+   }
+
+   $('changeMsg').textContent=current?'GLOBAL LEVEL 변경 처리 중…':'최초 GLOBAL LEVEL 지정 중…';
+
+   if(current){
+     const {error:hErr}=await db.from('member_level_history').insert({
+       member_id:selected.id,
+       from_level_number:current.level_number,
+       from_level_code:current.level_code,
+       to_level_number:n,
+       to_level_code:code,
+       reason,
+       changed_by:user?.id||null
+     });
+     if(hErr){
+       $('changeMsg').textContent='GLOBAL 이력 저장 실패: '+hErr.message;
+       $('changeBtn').disabled=false;
+       return;
+     }
+
+     const {error:uErr}=await db.from('member_levels').update({
+       level_number:n,
+       level_code:code,
+       status,
+       changed_reason:reason,
+       changed_by:user?.id||null
+     }).eq('member_id',selected.id);
+
+     if(uErr){
+       $('changeMsg').textContent='GLOBAL LEVEL 변경 실패: '+uErr.message;
+       $('changeBtn').disabled=false;
+       return;
+     }
+   }else{
+     const {error:iErr}=await db.from('member_levels').insert({
+       member_id:selected.id,
+       level_number:n,
+       level_code:code,
+       status,
+       changed_reason:reason,
+       changed_by:user?.id||null
+     });
+
+     if(iErr){
+       $('changeMsg').textContent='GLOBAL LEVEL 최초 지정 실패: '+iErr.message;
+       $('changeBtn').disabled=false;
+       return;
+     }
+   }
+
+   $('changeMsg').textContent=current?'GLOBAL LEVEL 변경이 완료되었습니다.':'최초 GLOBAL LEVEL 지정이 완료되었습니다.';
+   await refreshMembersOnly();
+   selected=members.find(m=>m.id===selected.id)||selected;
+   $('current').textContent=selected.level?`LV.${selected.level.level_number} ${selected.level.level_code.replace('_',' ')}`:'등급 미지정';
+   await loadHistory();
+   updateDrawerOrgSummary();
+   render();
+   $('changeBtn').disabled=false;
+   return;
  }
 
- $('changeBtn').disabled=true;$('changeMsg').textContent=currentOrg?'변경 처리 중…':'최초 조직등급 지정 중…';
- const {data:{user}}=await db.auth.getUser();
+ // WTKF / IPMA / IDP 조직별 등급
+ const currentOrg=orgLevelFor(selected.id,organization_code);
+ if(currentOrg && n===Number(currentOrg.level_number) && status===currentOrg.status){
+   $('changeMsg').textContent='현재 조직 등급/상태와 동일합니다.';
+   $('changeBtn').disabled=false;
+   return;
+ }
 
- // 기존 조직등급이 있을 때만 변경 이력을 남깁니다. 최초 지정은 upsert로 바로 생성합니다.
+ $('changeMsg').textContent=currentOrg?'변경 처리 중…':'최초 조직등급 지정 중…';
+
  if(currentOrg){
    const {error:hErr}=await db.from('organization_member_level_history').insert({
      member_id:selected.id,
@@ -919,7 +995,11 @@ $('changeBtn').onclick=async()=>{
      reason,
      changed_by:user?.id||null
    });
-   if(hErr){$('changeMsg').textContent='조직등급 이력 저장 실패: '+hErr.message;$('changeBtn').disabled=false;return}
+   if(hErr){
+     $('changeMsg').textContent='조직등급 이력 저장 실패: '+hErr.message;
+     $('changeBtn').disabled=false;
+     return;
+   }
  }
 
  const {error:uErr}=await db.from('organization_member_levels').upsert({
@@ -932,7 +1012,11 @@ $('changeBtn').onclick=async()=>{
    changed_by:user?.id||null
  },{onConflict:'member_id,organization_code'});
 
- if(uErr){$('changeMsg').textContent='조직등급 저장 실패: '+uErr.message;$('changeBtn').disabled=false;return}
+ if(uErr){
+   $('changeMsg').textContent='조직등급 저장 실패: '+uErr.message;
+   $('changeBtn').disabled=false;
+   return;
+ }
 
  $('changeMsg').textContent=currentOrg?'조직 LEVEL 변경이 완료되었습니다.':'최초 조직 LEVEL 지정이 완료되었습니다.';
  await loadOrganizationLevels();
@@ -940,7 +1024,7 @@ $('changeBtn').onclick=async()=>{
  updateDrawerOrgSummary();
  render();
  $('changeBtn').disabled=false;
-};
+}
 
 // OAuth 복귀 이벤트 + 최초 진입 모두 처리
 db.auth.onAuthStateChange(async(event,session)=>{
@@ -1226,7 +1310,22 @@ if($('orgLevelApply'))$('orgLevelApply').onclick=async()=>{
 
 function updateDrawerOrgSummary(){
  if(!selected)return;
- const org=$('drawerOrg')?.value||'WTKF';
+ const org=$('drawerOrg')?.value||'GLOBAL';
+
+ if(org==='GLOBAL'){
+   const lv=selected.level||null;
+   $('drawerOrgCurrent').textContent=lv?`LV.${lv.level_number} ${lv.level_code.replace('_',' ')}`:'미지정';
+   $('drawerOrgPlan').textContent='GLOBAL · 전체 조직 활동 종합 참고등급';
+   if(lv){
+     $('newLevel').value=String(lv.level_number);
+     $('newStatus').value=lv.status||'active';
+   }else{
+     $('newLevel').value='1';
+     $('newStatus').value='active';
+   }
+   return;
+ }
+
  const lv=orgLevelFor(selected.id,org);
  const plan=(memberPlans||[]).find(p=>p.member_id===selected.id&&p.organization_code===org);
  $('drawerOrgCurrent').textContent=lv?`LV.${lv.level_number} ${lv.level_code.replace('_',' ')}`:'미지정';
@@ -1647,7 +1746,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.2.2 Realtime
+// GMS v2.4.2.3 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
