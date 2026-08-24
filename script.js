@@ -54,7 +54,7 @@
     requestAnimationFrame(step);
   }
   let countersStarted=false;
-  function runCounters(){if(countersStarted)return;countersStarted=true;countTo(document.querySelector('[data-counter="countries"]'),cfg.stats?.countries||51);countTo(document.querySelector('[data-counter="branches"]'),cfg.stats?.branches||150,'+');loadMembers();}
+  function runCounters(){if(countersStarted)return;countersStarted=true;loadTopCounters();}
   let gmsClient=null;
   async function gmsRpc(name,args={}){
     const sb=cfg.supabase||{};
@@ -63,6 +63,29 @@
       const res=await fetch(`${sb.url}/rest/v1/rpc/${name}`,{method:'POST',headers:{apikey:sb.anonKey,Authorization:`Bearer ${sb.anonKey}`,'Content-Type':'application/json'},body:JSON.stringify(args)});
       const data=await res.json().catch(()=>null); if(!res.ok)throw new Error(data?.message||`HTTP ${res.status}`); return {data,error:null};
     }catch(error){return {data:null,error}}
+  }
+  async function loadTopCounters(){
+    const {data,error}=await gmsRpc('gms_get_public_stats',{p_organization_code:null});
+    const A=statObj(data);
+    const countryEl=document.querySelector('[data-counter="countries"]');
+    const branchEl=document.querySelector('[data-counter="branches"]');
+    const memberEl=document.querySelector('[data-counter="members"]');
+    const status=document.getElementById('memberStatus');
+    if(!error&&A){
+      if(countryEl){countryEl.textContent='0';countTo(countryEl,Number(A.network_countries||cfg.stats?.countries||51));}
+      if(branchEl){branchEl.textContent='0';countTo(branchEl,Number(A.network_branches||cfg.stats?.branches||150),'+');}
+      if(memberEl){memberEl.textContent='0';countTo(memberEl,Number(A.public_members_total||0));}
+      if(status)status.textContent='LIVE · SUPABASE';
+      const today=document.getElementById('gatewayTodayMembers'),ga=document.getElementById('gatewayGlobalApproved'),gc=document.getElementById('gatewayGlobalCountries');
+      if(today)today.textContent=Number(A.new_members_today||0).toLocaleString('ko-KR');
+      if(ga)ga.textContent=Number(A.global_approved||0).toLocaleString('ko-KR');
+      if(gc)gc.textContent=Number(A.global_countries||A.network_countries||0).toLocaleString('ko-KR');
+      return;
+    }
+    if(countryEl)countTo(countryEl,cfg.stats?.countries||51);
+    if(branchEl)countTo(branchEl,cfg.stats?.branches||150,'+');
+    if(memberEl){memberEl.textContent='—';}
+    if(status)status.textContent='GMS 연결 확인 필요';
   }
   async function loadMembers(){
     const el=document.querySelector('[data-counter="members"]'), status=document.getElementById('memberStatus');
@@ -126,8 +149,9 @@
   function statObj(v){ return Array.isArray(v) ? (v[0]||{}) : (v||{}); }
   function statOrgTotal(s){
     s=statObj(s);
+    if(s.organization_members_total!=null) return Number(s.organization_members_total||0);
     const legacy=Number(s.legacy_members||0);
-    const approved=Number(s.global_approved ?? s.approved_applications ?? 0);
+    const approved=Number(s.approved_applications||0);
     return legacy+approved;
   }
   function setLiveNumber(id,value,suffix='명'){
@@ -150,7 +174,7 @@
       setLiveNumber('ipmaNetWTKF',statOrgTotal(W));
       setLiveNumber('ipmaNetIDP',statOrgTotal(D));
       setLiveNumber('ipmaNetGlobal',Number(A.global_approved ?? A.approved_applications ?? 0));
-      const c=document.getElementById('ipmaNetCountries'); if(c)c.textContent=String(cfg.stats?.countries||51);
+      const c=document.getElementById('ipmaNetCountries'); if(c)c.textContent=Number(A.network_countries||cfg.stats?.countries||51).toLocaleString('ko-KR')+'개국';
     }catch(e){console.warn('GMS org dashboard',e)}
   }
 
