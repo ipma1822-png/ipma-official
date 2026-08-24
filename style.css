@@ -81,3 +81,33 @@
   .gms-admin-btn{font-size:0;min-width:36px;padding:0 9px}
   .gms-admin-btn::after{content:"GMS";font-size:10px;font-weight:900;letter-spacing:.04em}
 }
+
+/* IPMA Gateway mobile Korean heading wrap fix - 2026-08-24 */
+.network h2,
+.network .section-lead {
+  word-break: keep-all;
+  overflow-wrap: normal;
+  text-wrap: balance;
+  text-align: center;
+}
+
+@media (max-width: 860px) {
+  .network h2 {
+    font-size: clamp(31px, 9.2vw, 42px);
+    line-height: 1.28;
+    letter-spacing: -0.045em;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .network h2 em {
+    display: block;
+    white-space: nowrap;
+  }
+  .network .section-lead {
+    max-width: 330px;
+    margin: 22px auto 0;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+}
