@@ -271,7 +271,7 @@
 <div class="pill"><b>비영리 사단법인</b></div>
 <div class="pill"><b>514-82-12414호</b></div>
 </div>
-<div class="assoc-version">IPMA ASSOCIATION v2.4.2 · 20 LANGUAGES · GMS NETWORK LIVE</div>
+<div class="assoc-version">IPMA ASSOCIATION v2.4.3 · 20 LANGUAGES · GMS NETWORK LIVE</div>
 <!-- ✅ EDIT ZONE 끝 -->
 </section>
 
@@ -478,24 +478,24 @@
   const db=window.supabase.createClient(SUPA_URL,SUPA_KEY);
   const num=v=>Number(v||0);
   const one=v=>Array.isArray(v)?(v[0]||{}):(v||{});
-  const total=s=>num(one(s).legacy_members)+num(one(s).global_approved);
   const put=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=num(v).toLocaleString('ko-KR')+'명'};
   const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const flag=c=>{c=String(c||'').toUpperCase();return /^[A-Z]{2}$/.test(c)?String.fromCodePoint(...[...c].map(x=>127397+x.charCodeAt())):'🌐'};
   const date=v=>{try{return new Date(v).toLocaleDateString('ko-KR',{month:'2-digit',day:'2-digit'}).replace(/\.\s*$/,'')}catch(e){return ''}};
 
   async function stats(){
-    const [a,p,w,d]=await Promise.all([
-      db.rpc('gms_get_public_stats',{p_organization_code:null}),
-      db.rpc('gms_get_public_stats',{p_organization_code:'IPMA'}),
-      db.rpc('gms_get_public_stats',{p_organization_code:'WTKF'}),
-      db.rpc('gms_get_public_stats',{p_organization_code:'IDP'})
-    ]);
-    if(a.error||p.error||w.error||d.error) throw new Error('stats');
-    const A=one(a.data),P=one(p.data),W=one(w.data),D=one(d.data);
-    const all=num(A.public_members_total)||(num(A.legacy_unique_people)+num(A.online_members_total));
-    put('assocAll',all); put('assocIPMA',total(P)); put('assocWTKF',total(W)); put('assocIDP',total(D)); put('assocGlobal',A.global_approved);
-    const st=document.getElementById('assocGmsStatus'); if(st) st.textContent='● REALTIME · GMS 정상 연결';
+    const r=await db.rpc('gms_get_gateway_stats_v1',{});
+    if(r.error||!r.data) throw new Error('stats');
+    const S=one(r.data);
+
+    put('assocAll',S.public_members_total);
+    put('assocIPMA',S.ipma_members_total);
+    put('assocWTKF',S.wtkf_members_total);
+    put('assocIDP',S.idp_members_total);
+    put('assocGlobal',S.global_approved);
+
+    const st=document.getElementById('assocGmsStatus');
+    if(st) st.textContent='● REALTIME · GMS 정상 연결';
   }
 
   function render(id,rows,empty){
