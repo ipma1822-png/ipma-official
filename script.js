@@ -46,10 +46,8 @@
 
   document.querySelectorAll('.world-section[data-bg]').forEach(el=>el.style.setProperty('--world-bg',`url('${el.dataset.bg}')`));
 
-  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{if(ent.isIntersecting){runCounters();numberObserver.disconnect();}}),{threshold:.01,rootMargin:'0px 0px -10% 0px'});
-  const networkSection=document.querySelector('.network');
-  if(networkSection) numberObserver.observe(networkSection);
-  else runCounters();
+  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{if(ent.isIntersecting){runCounters();numberObserver.disconnect();}}),{threshold:.35});
+  numberObserver.observe(document.querySelector('.network'));
   function countTo(el,target,suffix=''){
     const dur=1800,start=performance.now();
     function step(t){const p=Math.min(1,(t-start)/dur),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(target*ease).toLocaleString('ko-KR')+suffix;if(p<1)requestAnimationFrame(step)}
@@ -202,7 +200,7 @@
     currentLang=code; localStorage.setItem('ipma_language',code); document.documentElement.lang=code; document.documentElement.dir=code==='ar'?'rtl':'ltr';
     const L=I18N[code]||I18N.en, meta=LANGUAGES.find(x=>x.code===code); langBtnText.textContent=meta.name;
     const nav=document.querySelectorAll('.quick-nav a'); if(nav.length>=6){nav[1].textContent=L[0];nav[2].textContent=L[1];nav[3].textContent=L[2];nav[5].textContent=L[3];}
-    const h=document.querySelector('.network h2'); h.innerHTML=L[4]; document.querySelector('.section-lead').textContent=L[5];
+    const h=document.querySelector('.network h2'), lead=document.querySelector('.section-lead'); if(code==='ko'){h.innerHTML='<span class="network-title-line">숫자가 말해주는</span> <span class="network-title-line network-title-accent">성장하는 네트워크</span>';lead.innerHTML='<span>규모를 설명하지 않습니다.</span> <span>계속 변하는 숫자로 보여줍니다.</span>';}else{h.textContent=L[4];lead.textContent=L[5];}
     const worlds=document.querySelectorAll('.world-copy'); worlds[0].querySelector('h2').textContent=L[0]; worlds[0].querySelector('small').textContent=L[6]; worlds[1].querySelector('h2').textContent=L[1]; worlds[1].querySelector('small').textContent=L[7]; worlds[2].querySelector('h2').textContent=L[2]; worlds[2].querySelector('small').textContent=L[8]; worlds.forEach(w=>w.querySelector('button').textContent=L[9]);
     document.querySelector('.enter h2').textContent=L[10]; const gs=document.querySelectorAll('.gate-card strong'); if(gs.length===3){gs[0].textContent=L[0];gs[1].textContent=L[1];gs[2].textContent=L[2];}
     document.querySelectorAll('.language-option').forEach(x=>x.classList.toggle('active',x.dataset.lang===code));

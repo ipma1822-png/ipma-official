@@ -82,32 +82,63 @@
   .gms-admin-btn::after{content:"GMS";font-size:10px;font-weight:900;letter-spacing:.04em}
 }
 
-/* IPMA Gateway mobile Korean heading wrap fix - 2026-08-24 */
-.network h2,
-.network .section-lead {
-  word-break: keep-all;
-  overflow-wrap: normal;
-  text-wrap: balance;
-  text-align: center;
-}
 
-@media (max-width: 860px) {
-  .network h2 {
-    font-size: clamp(31px, 9.2vw, 42px);
-    line-height: 1.28;
-    letter-spacing: -0.045em;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+/* v1.3.2 · Mobile Korean title wrapping fix */
+.network .network-title{
+  text-align:center;
+  word-break:keep-all;
+  overflow-wrap:normal;
+  line-break:strict;
+}
+.network .network-title-line{
+  display:inline-block;
+  white-space:nowrap;
+}
+.network .network-title-accent{
+  color:var(--gold);
+}
+.network .section-lead{
+  max-width:900px;
+  margin:18px auto 0;
+  text-align:center;
+  word-break:keep-all;
+  overflow-wrap:normal;
+  line-height:1.7;
+}
+.network .section-lead span{
+  display:inline-block;
+  white-space:nowrap;
+}
+@media(max-width:620px){
+  .network .network-title{
+    font-size:clamp(30px,9.2vw,42px);
+    line-height:1.22;
+    letter-spacing:-.045em;
+    padding:0 2px;
   }
-  .network h2 em {
-    display: block;
-    white-space: nowrap;
+  .network .network-title-line{
+    display:block;
+    width:max-content;
+    max-width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    white-space:nowrap;
   }
-  .network .section-lead {
-    max-width: 330px;
-    margin: 22px auto 0;
-    font-size: 16px;
-    line-height: 1.75;
+  .network .network-title-line + .network-title-line{
+    margin-top:4px;
+  }
+  .network .section-lead{
+    max-width:94%;
+    font-size:15px;
+    line-height:1.65;
+    padding:0 2px;
+  }
+  .network .section-lead span{
+    display:block;
+    width:max-content;
+    max-width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    white-space:nowrap;
   }
 }
