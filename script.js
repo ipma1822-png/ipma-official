@@ -46,8 +46,10 @@
 
   document.querySelectorAll('.world-section[data-bg]').forEach(el=>el.style.setProperty('--world-bg',`url('${el.dataset.bg}')`));
 
-  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{if(ent.isIntersecting){runCounters();numberObserver.disconnect();}}),{threshold:.35});
-  numberObserver.observe(document.querySelector('.network'));
+  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{if(ent.isIntersecting){runCounters();numberObserver.disconnect();}}),{threshold:.01,rootMargin:'0px 0px -10% 0px'});
+  const networkSection=document.querySelector('.network');
+  if(networkSection) numberObserver.observe(networkSection);
+  else runCounters();
   function countTo(el,target,suffix=''){
     const dur=1800,start=performance.now();
     function step(t){const p=Math.min(1,(t-start)/dur),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(target*ease).toLocaleString('ko-KR')+suffix;if(p<1)requestAnimationFrame(step)}
