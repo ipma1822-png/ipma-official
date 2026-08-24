@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.0.0 | Global Membership System</title>
+<title>GMS v2.5.1.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -56,7 +56,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
 
 
-/* v2.5.0.0 · six-organization member control + bulk level change */
+/* v2.5.1.0 · six-organization member control + bulk level change */
 .org-filter-bar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .org-filter-btn{border:1px solid #cfd8e3;background:#fff;color:#32465f;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900;cursor:pointer}
 .org-filter-btn.active{background:#123b63;color:#fff;border-color:#123b63}
@@ -201,7 +201,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.0.0 · realtime organization activity slow upward scroll */
+/* v2.5.1.0 · realtime organization activity slow upward scroll */
 .final-admin-card{
   margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
   border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
@@ -240,7 +240,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.0.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.1.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -253,6 +253,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="navin">
   <div class="navitem"><a href="#dashboard" class="navtop" data-page="dashboard" onclick="showPage('dashboard'); return false;">운영본부</a>
    <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>6개 조직의 회원·등급·유료상태를 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
+  </div>
+  <div class="navitem"><a href="/admin/network-notice-admin.html" class="navtop">📢 통합공지</a>
+   <div class="mega"><a href="/admin/network-notice-admin.html" class="wide">통합공지 발행센터<small>태권검도 · 경찰무도 · 드론순찰대 · ACTS 대상 선택 발행</small></a><a href="/admin/network-notice-admin.html">총재 메시지·공지 작성</a></div>
   </div>
   <div class="navitem"><a href="#members" class="navtop" data-page="members" onclick="showPage('members'); return false;">회원관리</a>
    <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">통합 회원관리<small>6개 조직 · 전체회원 · 등급 · 유료상태 · 일괄변경</small></a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">전체회원</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('GLOBAL'); return false;">Global</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('WTKF'); return false;">태권검도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IPMA'); return false;">경찰무도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IDP'); return false;">드론순찰대</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('NEWS24'); return false;">Global News24</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ACTS'); return false;">ACTS</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">유료상태 / PLAN</a></div>
@@ -304,7 +307,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.5.0.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.5.1.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -316,6 +319,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <a href="#certificates" class="qcard" data-page="certificates" onclick="showPage('certificates'); return false;"><span class="qicon">▣</span><b>자격·지도자</b><small>자격증·지도자과정·검정현황 관리</small></a>
      <a href="#organization" class="qcard" data-page="organization" onclick="showPage('organization'); return false;"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
      <a href="#members" class="qcard" data-page="members" onclick="showPage('members'); setTimeout(()=>document.getElementById('globalApplicationsSection')?.scrollIntoView({behavior:'smooth'}),120); return false;"><span class="qicon">🌍</span><b>세계회원 신청·승인</b><small>통합 회원관리 안에서 국가·언어별 신청 확인 및 승인</small></a>
+     <a class="qcard" href="/admin/network-notice-admin.html"><span class="qicon">📢</span><b>통합공지 발행센터</b><small>4개 조직을 선택해 총재 메시지·통합공지를 한 번에 발행</small></a>
      <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
@@ -602,7 +606,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.0.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.1.0</b></div>
 </main>
 
 
@@ -825,7 +829,7 @@ async function loadPublicDashboard(){
 
 
 async function loadGlobalApplications(){
- // v2.5.0.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
+ // v2.5.1.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
  const {data,error}=await db.rpc('gms_admin_list_global_applications');
  if(error){
    console.error('global applications rpc:', error);
@@ -1878,7 +1882,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.0.0 Realtime
+// GMS v2.5.1.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
