@@ -46,15 +46,27 @@
 
   document.querySelectorAll('.world-section[data-bg]').forEach(el=>el.style.setProperty('--world-bg',`url('${el.dataset.bg}')`));
 
-  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{if(ent.isIntersecting){runCounters();numberObserver.disconnect();}}),{threshold:.35});
-  numberObserver.observe(document.querySelector('.network'));
+  // v1.3.4: 모바일에서는 NETWORK 섹션이 화면보다 길어 threshold .35에 도달하지 못할 수 있음.
+  // 카운터 데이터는 즉시 불러오고, observer는 보조 수단으로만 사용한다.
+  const networkSection=document.querySelector('.network');
+  const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{
+    if(ent.isIntersecting){runCounters();numberObserver.disconnect();}
+  }),{threshold:.01});
+  if(networkSection) numberObserver.observe(networkSection);
   function countTo(el,target,suffix=''){
     const dur=1800,start=performance.now();
     function step(t){const p=Math.min(1,(t-start)/dur),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(target*ease).toLocaleString('ko-KR')+suffix;if(p<1)requestAnimationFrame(step)}
     requestAnimationFrame(step);
   }
   let countersStarted=false;
-  function runCounters(){if(countersStarted)return;countersStarted=true;loadTopCounters();}
+  function runCounters(){
+    if(countersStarted)return;
+    countersStarted=true;
+    loadTopCounters();
+    loadOrgDashboard();
+  }
+  // PC/모바일 공통: 페이지가 열리면 바로 Supabase 숫자를 요청한다.
+  runCounters();
   let gmsClient=null;
   async function gmsRpc(name,args={}){
     const sb=cfg.supabase||{};
