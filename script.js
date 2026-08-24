@@ -46,7 +46,7 @@
 
   document.querySelectorAll('.world-section[data-bg]').forEach(el=>el.style.setProperty('--world-bg',`url('${el.dataset.bg}')`));
 
-  // v1.3.4: 모바일에서는 NETWORK 섹션이 화면보다 길어 threshold .35에 도달하지 못할 수 있음.
+  // v1.3.5: 모바일에서는 NETWORK 섹션이 화면보다 길어 threshold .35에 도달하지 못할 수 있음.
   // 카운터 데이터는 즉시 불러오고, observer는 보조 수단으로만 사용한다.
   const networkSection=document.querySelector('.network');
   const numberObserver = new IntersectionObserver(entries=>entries.forEach(ent=>{
@@ -77,7 +77,7 @@
     }catch(error){return {data:null,error}}
   }
   async function loadTopCounters(){
-    const {data,error}=await gmsRpc('gms_get_public_stats',{p_organization_code:null});
+    const {data,error}=await gmsRpc('gms_get_gateway_stats_v1',{});
     const A=statObj(data);
     const countryEl=document.querySelector('[data-counter="countries"]');
     const branchEl=document.querySelector('[data-counter="branches"]');
@@ -172,21 +172,21 @@
   }
   async function loadOrgDashboard(){
     try{
-      const [all,ipma,wtkf,idp]=await Promise.all([
-        gmsRpc('gms_get_public_stats',{p_organization_code:null}),
-        gmsRpc('gms_get_public_stats',{p_organization_code:'IPMA'}),
-        gmsRpc('gms_get_public_stats',{p_organization_code:'WTKF'}),
-        gmsRpc('gms_get_public_stats',{p_organization_code:'IDP'})
-      ]);
-      if(all.error||ipma.error||wtkf.error||idp.error) return;
-      const A=statObj(all.data), P=statObj(ipma.data), W=statObj(wtkf.data), D=statObj(idp.data);
-      const total=Number(A.public_members_total||0) || (Number(A.legacy_unique_people||0)+Number(A.online_members_total||0));
-      setLiveNumber('ipmaNetAll',total);
-      setLiveNumber('ipmaNetIPMA',statOrgTotal(P));
-      setLiveNumber('ipmaNetWTKF',statOrgTotal(W));
-      setLiveNumber('ipmaNetIDP',statOrgTotal(D));
-      setLiveNumber('ipmaNetGlobal',Number(A.global_approved ?? A.approved_applications ?? 0));
-      const c=document.getElementById('ipmaNetCountries'); if(c)c.textContent=Number(A.network_countries||cfg.stats?.countries||51).toLocaleString('ko-KR')+'개국';
+      // v1.3.5: 조직별 4번 RPC 대신 전용 통계 RPC 1번만 호출
+      // WTKF/IDP 신규 일괄등록 회원을 공개 카운터에 즉시 반영한다.
+      const {data,error}=await gmsRpc('gms_get_gateway_stats_v1',{});
+      if(error||!data){
+        console.warn('GMS gateway stats',error);
+        return;
+      }
+      const S=statObj(data);
+      setLiveNumber('ipmaNetAll',Number(S.public_members_total||0));
+      setLiveNumber('ipmaNetIPMA',Number(S.ipma_members_total||0));
+      setLiveNumber('ipmaNetWTKF',Number(S.wtkf_members_total||0));
+      setLiveNumber('ipmaNetIDP',Number(S.idp_members_total||0));
+      setLiveNumber('ipmaNetGlobal',Number(S.global_approved||0));
+      const c=document.getElementById('ipmaNetCountries');
+      if(c)c.textContent=Number(S.network_countries||cfg.stats?.countries||51).toLocaleString('ko-KR')+'개국';
     }catch(e){console.warn('GMS org dashboard',e)}
   }
 

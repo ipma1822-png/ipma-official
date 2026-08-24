@@ -1,5 +1,5 @@
 window.GATEWAY_CONFIG = {
-  version: "1.3.4",
+  version: "1.3.5",
   stats: {
     countries: 51,
     branches: 150,
