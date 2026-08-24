@@ -31,7 +31,7 @@
   display:inline-flex;margin:10px 0 8px;padding:7px 11px;border:1px solid rgba(226,190,100,.48);
   border-radius:999px;color:#f0cf76;background:rgba(226,190,100,.08);font-size:11px;font-weight:900;letter-spacing:.06em
 }
-.gms-org-dashboard{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:22px 0 8px}
+.gms-org-dashboard{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin:22px 0 8px}
 .gms-org-card{min-width:0;padding:17px 15px;border:1px solid rgba(255,255,255,.10);border-radius:16px;background:linear-gradient(180deg,#121b28,#0d141e)}
 .gms-org-card.primary,.gms-org-card.featured-police{border-color:rgba(221,182,84,.52);background:linear-gradient(180deg,#18283d,#101a27)}
 .gms-org-card.featured-police{box-shadow:0 0 28px rgba(221,182,84,.08)}
