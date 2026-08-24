@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.1.0 | Global Membership System</title>
+<title>GMS v2.5.2.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -56,7 +56,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .publicfeed{display:grid;gap:8px}.feedrow{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid #e8edf3;border-radius:11px;background:#fbfcfe}.feedtype{flex:0 0 auto;font-size:10px;font-weight:900;border-radius:99px;padding:5px 8px;background:#edf3f8;color:#31506d}.feedrow b{font-size:13px}.feedrow small{display:block;color:#7c8795;margin-top:3px}.stat.accent{border-top:3px solid var(--gold)}
 
 
-/* v2.5.1.0 · six-organization member control + bulk level change */
+/* v2.5.2.0 · six-organization member control + bulk level change */
 .org-filter-bar{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .org-filter-btn{border:1px solid #cfd8e3;background:#fff;color:#32465f;border-radius:999px;padding:8px 11px;font-size:12px;font-weight:900;cursor:pointer}
 .org-filter-btn.active{background:#123b63;color:#fff;border-color:#123b63}
@@ -201,16 +201,22 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.1.0 · realtime organization activity slow upward scroll */
+/* v2.5.2.0 · MASTER ADMINISTRATOR profile + realtime organization activity */
 .final-admin-card{
-  margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
-  border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
-  box-shadow:0 10px 28px rgba(7,23,43,.12)
+  margin:0 0 14px;padding:10px 14px 10px 10px;border:1px solid rgba(215,173,80,.58);
+  border-radius:16px;background:linear-gradient(135deg,#08192e,#102f50 72%,#173f68);
+  box-shadow:0 12px 30px rgba(7,23,43,.16),inset 0 0 0 1px rgba(255,255,255,.025);
+  display:flex;align-items:center;gap:13px;min-width:330px;position:relative;overflow:hidden
 }
-.final-admin-kicker{display:block;color:#cda64e;font-size:10px;font-weight:900;letter-spacing:.14em;margin-bottom:5px}
-.final-admin-card strong{display:block;color:#fff;font-size:18px;line-height:1.2}
-.final-admin-card strong em{font-style:normal;color:#e7c46a;font-size:12px;margin-left:7px;letter-spacing:.04em}
-.final-admin-card small{display:block;margin-top:5px;color:#9aabc0;font-size:10px}
+.final-admin-card:after{content:"";position:absolute;right:-28px;top:-48px;width:120px;height:120px;border:1px solid rgba(215,173,80,.18);border-radius:50%}
+.master-photo-wrap{width:66px;height:78px;border-radius:12px;padding:2px;background:linear-gradient(145deg,#f1d27b,#9f6d1d);box-shadow:0 6px 16px rgba(0,0,0,.22);flex:0 0 auto;position:relative;z-index:1}
+.master-photo{width:100%;height:100%;display:block;object-fit:cover;object-position:50% 18%;border-radius:10px;border:2px solid #0b1f36;background:#0b1f36}
+.master-profile-copy{min-width:0;position:relative;z-index:1}
+.final-admin-kicker{display:block;color:#e2bc61;font-size:9px;font-weight:900;letter-spacing:.15em;margin-bottom:5px}
+.final-admin-card strong{display:block;color:#fff;font-size:17px;line-height:1.15;white-space:nowrap}
+.final-admin-card strong em{font-style:normal;color:#e7c46a;font-size:10px;margin-left:6px;letter-spacing:.04em}
+.final-admin-card small{display:block;margin-top:5px;color:#adbed0;font-size:9px;line-height:1.35}
+.master-command{display:inline-block;margin-top:6px;padding:3px 7px;border-radius:999px;border:1px solid rgba(215,173,80,.32);color:#d9bc76;font-size:8px;font-weight:900;letter-spacing:.11em;background:rgba(255,255,255,.035)}
 .org-activity-scroll-window{
   position:relative;overflow:hidden;max-height:310px;
 }
@@ -228,9 +234,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   to{transform:translateY(-50%)}
 }
 @media(max-width:900px){
-  .final-admin-card{padding:12px 14px}
-  .final-admin-card strong{font-size:16px}
-  .final-admin-card strong em{display:block;margin:4px 0 0}
+  .final-admin-card{padding:9px 11px 9px 9px;min-width:0;width:100%;gap:10px}
+  .master-photo-wrap{width:58px;height:70px}
+  .final-admin-card strong{font-size:15px}
+  .final-admin-card strong em{display:block;margin:3px 0 0;font-size:9px}
   .org-activity-scroll-window{max-height:260px}
 }
 </style>
@@ -240,7 +247,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.1.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.2.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -292,10 +299,14 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div id="page-dashboard" class="page">
   <div class="pagehead">
 
-<div class="final-admin-card" aria-label="최종 관리자">
-  <span class="final-admin-kicker">MASTER ADMINISTRATOR</span>
-  <strong>전성권 <em>JEON SEONG KWEON</em></strong>
-  <small>GMS · Global Membership System</small>
+<div class="final-admin-card" aria-label="최종 관리자 전성권">
+  <div class="master-photo-wrap"><img class="master-photo" src="assets/master-jeon-seong-kweon.jpg" alt="Master Administrator 전성권"></div>
+  <div class="master-profile-copy">
+    <span class="final-admin-kicker">MASTER ADMINISTRATOR</span>
+    <strong>전성권 <em>JEON SEONG KWEON</em></strong>
+    <small>Founder · Master Administrator<br>GMS · Global Membership System</small>
+    <span class="master-command">MASTER CONTROL · GLOBAL NETWORK</span>
+  </div>
 </div>
 <div><div class="eyebrow">GMS HEADQUARTERS</div><h1>통합 운영본부</h1><p id="adminInfo">관리자 로그인 완료</p></div><button class="btn gold" data-page="members" onclick="showPage('members'); return false;">회원관리 바로가기</button></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total">0</b></div><div class="stat"><span>WHITE</span><b id="white">0</b></div><div class="stat"><span>GREEN+</span><b id="greenplus">0</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel">0</b></div><div class="stat"><span>PRO 활성</span><b id="proCount">0</b></div><div class="stat"><span>입금대기</span><b id="pendingPay">0</b></div></div>
@@ -307,7 +318,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.5.1.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.5.2.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -606,7 +617,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.1.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.2.0</b></div>
 </main>
 
 
@@ -829,7 +840,7 @@ async function loadPublicDashboard(){
 
 
 async function loadGlobalApplications(){
- // v2.5.1.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
+ // v2.5.2.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
  const {data,error}=await db.rpc('gms_admin_list_global_applications');
  if(error){
    console.error('global applications rpc:', error);
@@ -1882,7 +1893,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.1.0 Realtime
+// GMS v2.5.2.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
