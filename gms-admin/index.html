@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.4.1.0 | Global Membership System</title>
+<title>GMS v2.4.2.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -188,7 +188,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.4.1.0 · realtime organization activity slow upward scroll */
+/* v2.4.2.0 · realtime organization activity slow upward scroll */
 .final-admin-card{
   margin:0 0 14px;padding:14px 16px;border:1px solid rgba(197,158,64,.42);
   border-radius:14px;background:linear-gradient(135deg,#0d1f36,#132844);
@@ -227,7 +227,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.1.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.4.2.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -291,7 +291,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>실시간 조직 활동</b><span class="badge live">PUBLIC FEED</span></div><div class="panelbody"><div class="org-activity-scroll-window"><div id="dashboardPublicFeed" class="publicfeed org-activity-scroll-track"><div class="empty">활동피드를 불러오는 중…</div></div></div></div></div>
-   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.1.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
+   <div class="panel"><div class="panelhead"><b>공개 통계 연결상태</b><span class="badge next">GMS v2.4.2.0</span></div><div class="panelbody"><div id="publicStatsStatus" class="notice">Supabase 공개통계 연결을 확인하는 중입니다.</div><p style="font-size:12px;color:#657181;line-height:1.7">회원자료 일괄등록은 신규가입 피드에 표시하지 않습니다. 앞으로 승인된 신규회원·지부와 관리자 공개 소식만 표시합니다.</p></div></div>
   </div>
   <div class="grid2">
    <div class="panel"><div class="panelhead"><b>빠른 업무</b><span class="badge live">LEVEL LIVE</span></div><div class="panelbody">
@@ -321,6 +321,19 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div id="page-members" class="page hidden">
   <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT · SINGLE MASTER</div><h1>통합 회원관리</h1><p>WTKF · IPMA · IDP · 세계회원까지 한 곳에서 검색·승인·등급관리합니다. 회원 원장은 하나만 사용합니다.</p></div></div>
   <div class="stats"><div class="stat"><span>전체 회원</span><b id="total2">-</b></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
+  <div class="panel" style="margin-top:16px">
+   <div class="panelhead"><div><b>+ 관리자 회원등록</b><div style="font-size:12px;color:#667085;margin-top:4px">과거 명부·누락 회원을 본부에서 직접 등록합니다. 세계회원 승인 숫자에는 포함되지 않습니다.</div></div></div>
+   <div class="panelbody">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px">
+     <input id="adminMemberName" class="search" placeholder="이름 *">
+     <input id="adminMemberPhone" class="search" placeholder="전화번호">
+     <input id="adminMemberEmail" class="search" type="email" placeholder="이메일 *">
+     <select id="adminMemberOrg" class="search"><option value="GENERAL">통합회원</option><option value="WTKF">태권검도</option><option value="IPMA">경찰무도</option><option value="IDP">드론순찰대</option></select>
+     <input id="adminMemberNote" class="search" placeholder="비고 (예: 2018년 기존명부)">
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px"><button id="adminMemberAddBtn" class="btn gold">회원 등록</button><span id="adminMemberMsg" style="font-size:13px;color:#667085"></span></div>
+   </div>
+  </div>
   <div class="panel" style="margin-top:16px"><div class="panelhead"><b>회원 목록</b><input id="search" class="search" placeholder="이름 또는 이메일 검색"></div><div class="scroll"><table><thead><tr><th>회원</th><th>이메일</th><th>현재등급</th><th>상태</th><th>변경사유</th><th>관리</th></tr></thead><tbody id="rows"></tbody></table></div></div>
 <div id="globalApplicationsSection" style="margin-top:24px">
  <div class="pagehead"><div><div class="eyebrow">GLOBAL MEMBERSHIP · 20 LANGUAGES · CRM</div><h1>세계회원 신청·승인</h1><p>세계회원도 별도 회원목록으로 분리하지 않습니다. 신청을 승인하면 통합 회원 원장에 반영되고, 여기서는 신청·국가·언어·관심조직을 관리합니다.</p></div><a class="btn gold" href="https://ipma.kr/global-join/" target="_blank">20개 언어 가입폼 ↗</a></div>
@@ -572,7 +585,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.1.0</b></div>
+<div class="footer">GMS · Global Membership System — WTKF · IPMA · IDP · <b>v2.4.2.0</b></div>
 </main>
 
 <div id="drawer" class="drawer hidden"><div class="drawerbox">
@@ -768,7 +781,7 @@ async function loadPublicDashboard(){
 
 
 async function loadGlobalApplications(){
- // v2.4.1.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
+ // v2.4.2.0: 세계회원 신청함을 통합 회원관리 화면 안에서 운영합니다.
  const {data,error}=await db.rpc('gms_admin_list_global_applications');
  if(error){
    console.error('global applications rpc:', error);
@@ -820,6 +833,26 @@ function renderGlobalApplications(){
 async function setGlobalStatus(id,status){ const {error}=await db.rpc('gms_review_global_application',{p_id:id,p_status:status}); if(error){alert('상태 변경 실패: '+error.message);return} await loadGlobalApplications(); if(status==='approved') await refreshMembersOnly(); await loadPublicDashboard(); }
 function openGlobalReply(id){const x=globalApplications.find(a=>a.id===id);if(!x)return;const lang=x.preferred_language||'en',tpl=GLOBAL_REPLY[lang]||GLOBAL_REPLY.en;const org=(x.organizations||[]).join(', ');const body=`${x.name||''} 님\n\n${tpl[1]}\n\nOrganization: ${org}\nGlobal Membership: https://ipma.kr/global-join/\nIPMA: https://ipma.kr/\n\nWorld Headquarters`;location.href=`mailto:${encodeURIComponent(x.email||'')}?subject=${encodeURIComponent(tpl[0])}&body=${encodeURIComponent(body)}`;}
 async function markGlobalReplied(id){const {error}=await db.rpc('gms_mark_global_replied',{p_id:id});if(error){alert('회신완료 처리 실패: '+error.message);return}await loadGlobalApplications();}
+
+async function registerAdminMember(){
+ const name=String($('adminMemberName')?.value||'').trim();
+ const phone=String($('adminMemberPhone')?.value||'').trim();
+ const email=String($('adminMemberEmail')?.value||'').trim().toLowerCase();
+ const organization=String($('adminMemberOrg')?.value||'GENERAL');
+ const note=String($('adminMemberNote')?.value||'').trim();
+ const msg=$('adminMemberMsg'), btn=$('adminMemberAddBtn');
+ if(!name||!email){msg.textContent='이름과 이메일은 필수입니다.';return}
+ if(!email.includes('@')){msg.textContent='이메일 형식을 확인해 주세요.';return}
+ if(!confirm(`${name} 회원을 ${organization} 조직으로 관리자 등록할까요?`)) return;
+ btn.disabled=true; msg.textContent='등록 중…';
+ const {data,error}=await db.rpc('gms_admin_register_member',{p_name:name,p_email:email,p_phone:phone||null,p_organization_code:organization,p_note:note||null});
+ if(error){msg.textContent='등록 실패: '+error.message;btn.disabled=false;return}
+ msg.textContent=`등록 완료 · ${name} · ${organization}`;
+ ['adminMemberName','adminMemberPhone','adminMemberEmail','adminMemberNote'].forEach(id=>{if($(id))$(id).value=''});
+ $('adminMemberOrg').value='GENERAL';
+ await refreshMembersOnly(); await loadPublicDashboard().catch(()=>{}); btn.disabled=false;
+}
+if($('adminMemberAddBtn')) $('adminMemberAddBtn').onclick=registerAdminMember;
 
 function render(){
  const q=$('search').value.trim().toLowerCase();
@@ -1602,7 +1635,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.4.1.0 Realtime
+// GMS v2.4.2.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
