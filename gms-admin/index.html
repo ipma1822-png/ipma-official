@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.5.0 | Global Membership System</title>
+<title>GMS v2.5.6.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -201,7 +201,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.5.0 · MASTER ADMINISTRATOR — compact headquarters profile */
+/* v2.5.6.0 · MASTER ADMINISTRATOR — compact headquarters profile */
 .final-admin-card{
   margin:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none;
   display:flex; align-items:center; gap:10px; min-width:285px; position:relative; overflow:visible;
@@ -268,7 +268,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .pagehead>div:nth-of-type(2){justify-self:start}
   .pagehead>.btn{justify-self:start}
 }
-/* v2.5.5.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
+/* v2.5.6.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
 .gateway-board{position:relative;overflow:hidden;margin:0 0 18px;padding:54px 34px 28px;border-radius:22px;background:radial-gradient(circle at 50% 18%,rgba(22,70,112,.34),transparent 38%),#05070a;color:#fff;text-align:center;box-shadow:0 20px 55px rgba(7,23,43,.22)}
 .gateway-board:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}.gateway-board>*{position:relative;z-index:1}
 .gateway-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#e7bd69;margin-bottom:12px}.gateway-version{display:inline-block;border:1px solid rgba(231,189,105,.48);border-radius:999px;padding:6px 11px;color:#e7bd69;font-size:9px;font-weight:900;letter-spacing:.05em;background:rgba(231,189,105,.04)}
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.5.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.6.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -863,7 +863,7 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  const withUnit=(v,unit='명')=>n(v)+unit;
  try{
-   // v2.5.5.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
+   // v2.5.6.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
    const [gateway,feed]=await Promise.all([
      db.rpc('gms_get_gateway_stats_v1',{}),
      db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
@@ -1961,7 +1961,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.5.0 Realtime
+// GMS v2.5.6.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
