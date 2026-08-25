@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.4.0 | Global Membership System</title>
+<title>GMS v2.5.5.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -201,7 +201,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.4.0 · MASTER ADMINISTRATOR — compact headquarters profile */
+/* v2.5.5.0 · MASTER ADMINISTRATOR — compact headquarters profile */
 .final-admin-card{
   margin:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none;
   display:flex; align-items:center; gap:10px; min-width:285px; position:relative; overflow:visible;
@@ -268,7 +268,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .pagehead>div:nth-of-type(2){justify-self:start}
   .pagehead>.btn{justify-self:start}
 }
-/* v2.5.4.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
+/* v2.5.5.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
 .gateway-board{position:relative;overflow:hidden;margin:0 0 18px;padding:54px 34px 28px;border-radius:22px;background:radial-gradient(circle at 50% 18%,rgba(22,70,112,.34),transparent 38%),#05070a;color:#fff;text-align:center;box-shadow:0 20px 55px rgba(7,23,43,.22)}
 .gateway-board:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}.gateway-board>*{position:relative;z-index:1}
 .gateway-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#e7bd69;margin-bottom:12px}.gateway-version{display:inline-block;border:1px solid rgba(231,189,105,.48);border-radius:999px;padding:6px 11px;color:#e7bd69;font-size:9px;font-weight:900;letter-spacing:.05em;background:rgba(231,189,105,.04)}
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.4.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.5.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -402,7 +402,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 
  <div id="page-members" class="page hidden">
   <div class="pagehead"><div><div class="eyebrow">MEMBER MANAGEMENT · SINGLE MASTER</div><h1>통합 회원관리</h1><p>Global · 태권검도 · 경찰무도 · 드론순찰대 · Global News24 · ACTS를 한 곳에서 검색하고, 조직별 회원상태·LEVEL·유료상태를 독립 관리합니다.</p></div></div>
-  <div class="stats"><div class="stat"><span>전체 회원</span><b id="total2">-</b></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
+  <div class="stats"><div class="stat"><span>전체 네트워크 회원</span><b id="total2">-</b><small style="display:block;margin-top:4px;color:#8190a6;font-size:10px">대문과 동일 기준</small></div><div class="stat"><span>WHITE</span><b id="white2">-</b></div><div class="stat"><span>GREEN+</span><b id="greenplus2">-</b></div><div class="stat"><span>등급 미지정</span><b id="nolevel2">-</b></div></div>
   <div class="panel" style="margin-top:16px">
    <div class="panelhead"><div><b>+ 회원 등록</b><div style="font-size:12px;color:#667085;margin-top:4px">과거 명부·누락 회원을 직접 등록합니다. 세계회원 승인 숫자에는 포함되지 않습니다.</div></div></div>
    <div class="panelbody">
@@ -751,6 +751,7 @@ const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
 const LEVELS=[['1','WHITE'],['2','GREEN'],['3','BLUE'],['4','SILVER'],['5','GOLD'],['6','PLATINUM'],['7','DIAMOND'],['8','CROWN'],['9','ROYAL_CROWN']];
 const ORGS=[['GLOBAL','Global'],['WTKF','태권검도'],['IPMA','경찰무도'],['IDP','드론순찰대'],['NEWS24','Global News24'],['ACTS','ACTS']];
 let members=[], selected=null, booted=false;
+let gatewayPublicMembersTotal=null; // Gateway/대문과 동일한 전체 네트워크 회원 수
 let memberOrgFilter='ALL';
 const bulkSelected=new Set();
 let globalApplications=[];
@@ -862,7 +863,7 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  const withUnit=(v,unit='명')=>n(v)+unit;
  try{
-   // v2.5.4.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
+   // v2.5.5.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
    const [gateway,feed]=await Promise.all([
      db.rpc('gms_get_gateway_stats_v1',{}),
      db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
@@ -874,6 +875,7 @@ async function loadPublicDashboard(){
    }
    const S=Array.isArray(gateway.data)?(gateway.data[0]||{}):(gateway.data||{});
    const all=Number(S.public_members_total||0);
+   gatewayPublicMembersTotal=all;
    const wtkf=Number(S.wtkf_members_total||0);
    const ipma=Number(S.ipma_members_total||0);
    const idp=Number(S.idp_members_total||0);
@@ -889,6 +891,7 @@ async function loadPublicDashboard(){
    if($('gmsNetCountries'))$('gmsNetCountries').textContent=n(countries)+'개국';
    if(status)status.innerHTML=`<b>IPMA Gateway와 동일한 통계 기준으로 실시간 연결</b> · ${n(all)}명`;
    const totalEl=$('total'); if(totalEl)totalEl.textContent=n(all);
+   const total2El=$('total2'); if(total2El)total2El.textContent=n(all);
    const box=$('dashboardPublicFeed');
    if(box){
      if(feed.error){box.innerHTML=`<span class="gateway-feed-item">${esc(feed.error.message)}</span>`;}
@@ -1007,7 +1010,7 @@ function updateBulkCount(){
 }
 function render(){
  const list=filteredMembers();
- $('total').textContent=members.length;
+ $('total').textContent=(gatewayPublicMembersTotal!==null ? Number(gatewayPublicMembersTotal).toLocaleString('ko-KR') : members.length.toLocaleString('ko-KR'));
  $('white').textContent=members.filter(m=>m.level?.level_number===1).length;
  $('greenplus').textContent=members.filter(m=>(m.level?.level_number||0)>=2).length;
  $('nolevel').textContent=members.filter(m=>!m.level).length;
@@ -1958,7 +1961,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.4.0 Realtime
+// GMS v2.5.5.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
