@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.6.0 | Global Membership System</title>
+<title>GMS v2.5.7.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -201,7 +201,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 }
 .pagehead h1{font-size:28px}.row{grid-template-columns:1fr}.brand b{font-size:17px}.brand span{font-size:8px}.topin{min-height:68px}}
 
-/* v2.5.6.0 · MASTER ADMINISTRATOR — compact headquarters profile */
+/* v2.5.7.0 · MASTER ADMINISTRATOR — compact headquarters profile */
 .final-admin-card{
   margin:0; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none;
   display:flex; align-items:center; gap:10px; min-width:285px; position:relative; overflow:visible;
@@ -268,7 +268,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .pagehead>div:nth-of-type(2){justify-self:start}
   .pagehead>.btn{justify-self:start}
 }
-/* v2.5.6.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
+/* v2.5.7.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
 .gateway-board{position:relative;overflow:hidden;margin:0 0 18px;padding:54px 34px 28px;border-radius:22px;background:radial-gradient(circle at 50% 18%,rgba(22,70,112,.34),transparent 38%),#05070a;color:#fff;text-align:center;box-shadow:0 20px 55px rgba(7,23,43,.22)}
 .gateway-board:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}.gateway-board>*{position:relative;z-index:1}
 .gateway-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#e7bd69;margin-bottom:12px}.gateway-version{display:inline-block;border:1px solid rgba(231,189,105,.48);border-radius:999px;padding:6px 11px;color:#e7bd69;font-size:9px;font-weight:900;letter-spacing:.05em;background:rgba(231,189,105,.04)}
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.6.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.7.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -302,6 +302,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="navitem"><a href="/admin/network-notice-admin.html" class="navtop">📢 통합공지</a>
    <div class="mega"><a href="/admin/network-notice-admin.html" class="wide">통합공지 발행센터<small>태권검도 · 경찰무도 · 드론순찰대 · ACTS 대상 선택 발행</small></a><a href="/admin/network-notice-admin.html">총재 메시지·공지 작성</a></div>
+  </div>
+  <div class="navitem"><a href="/admin/resources-admin/" class="navtop">📁 자료실</a>
+   <div class="mega"><a href="/admin/resources-admin/" class="wide">IPMA 회원등급 자료실 관리<small>GMS LEVEL 1~9 연동 · 비공개 원본 업로드 · 권한별 다운로드</small></a><a href="/admin/resources-admin/">자료 등록·삭제</a><a href="/resources/">회원용 자료실 보기</a><a href="/admin/SUPABASE-IPMA-LEVEL-RESOURCE-LIBRARY-v1.sql">설치 SQL 파일</a></div>
   </div>
   <div class="navitem"><a href="#members" class="navtop" data-page="members" onclick="showPage('members'); return false;">회원관리</a>
    <div class="mega"><a href="#members" class="wide" data-page="members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">통합 회원관리<small>6개 조직 · 전체회원 · 등급 · 유료상태 · 일괄변경</small></a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ALL'); return false;">전체회원</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('GLOBAL'); return false;">Global</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('WTKF'); return false;">태권검도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IPMA'); return false;">경찰무도</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('IDP'); return false;">드론순찰대</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('NEWS24'); return false;">Global News24</a><a href="#members" onclick="showPage('members'); setMemberOrgFilter('ACTS'); return false;">ACTS</a><a href="#org-levels" data-page="org-levels" onclick="showPage('org-levels'); return false;">조직별 LEVEL</a><a href="#plan-admin" data-page="plan-admin" onclick="showPage('plan-admin'); return false;">유료상태 / PLAN</a></div>
@@ -385,6 +388,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <a href="#organization" class="qcard" data-page="organization" onclick="showPage('organization'); return false;"><span class="qicon">⌂</span><b>임원·지부관리</b><small>위촉·지부장·조직현황 통합 관리</small></a>
      <a href="#members" class="qcard" data-page="members" onclick="showPage('members'); setTimeout(()=>document.getElementById('globalApplicationsSection')?.scrollIntoView({behavior:'smooth'}),120); return false;"><span class="qicon">🌍</span><b>세계회원 신청·승인</b><small>통합 회원관리 안에서 국가·언어별 신청 확인 및 승인</small></a>
      <a class="qcard" href="/admin/network-notice-admin.html"><span class="qicon">📢</span><b>통합공지 발행센터</b><small>4개 조직을 선택해 총재 메시지·통합공지를 한 번에 발행</small></a>
+     <a class="qcard" href="/admin/resources-admin/"><span class="qicon">📁</span><b>LEVEL 자료실 관리</b><small>IPMA 자료 업로드 · LEVEL 1~9 권한 · 원본파일 관리</small></a>
      <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
@@ -863,7 +867,7 @@ async function loadPublicDashboard(){
  const n=v=>Number(v||0).toLocaleString('ko-KR');
  const withUnit=(v,unit='명')=>n(v)+unit;
  try{
-   // v2.5.6.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
+   // v2.5.7.0: IPMA Gateway와 동일한 단일 RPC를 사용해 숫자 기준을 완전히 통일한다.
    const [gateway,feed]=await Promise.all([
      db.rpc('gms_get_gateway_stats_v1',{}),
      db.rpc('gms_get_public_activity',{p_organization_code:null,p_limit:12})
@@ -1961,7 +1965,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.6.0 Realtime
+// GMS v2.5.7.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
