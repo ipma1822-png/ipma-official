@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.7.0 | Global Membership System</title>
+<title>GMS v2.5.8.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -268,7 +268,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   .pagehead>div:nth-of-type(2){justify-self:start}
   .pagehead>.btn{justify-self:start}
 }
-/* v2.5.7.0 · GATEWAY BOARD SYNC — 공개 대문과 동일한 통계 기준/분위기 */
+/* v2.5.8.0 · IDP CONTROL CENTER — 공개 대문과 동일한 통계 기준/분위기 */
 .gateway-board{position:relative;overflow:hidden;margin:0 0 18px;padding:54px 34px 28px;border-radius:22px;background:radial-gradient(circle at 50% 18%,rgba(22,70,112,.34),transparent 38%),#05070a;color:#fff;text-align:center;box-shadow:0 20px 55px rgba(7,23,43,.22)}
 .gateway-board:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}.gateway-board>*{position:relative;z-index:1}
 .gateway-kicker{font-size:10px;font-weight:900;letter-spacing:.28em;color:#e7bd69;margin-bottom:12px}.gateway-version{display:inline-block;border:1px solid rgba(231,189,105,.48);border-radius:999px;padding:6px 11px;color:#e7bd69;font-size:9px;font-weight:900;letter-spacing:.05em;background:rgba(231,189,105,.04)}
@@ -286,7 +286,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.7.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.8.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -299,6 +299,9 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="navin">
   <div class="navitem"><a href="#dashboard" class="navtop" data-page="dashboard" onclick="showPage('dashboard'); return false;">운영본부</a>
    <div class="mega"><a href="#dashboard" class="wide" data-page="dashboard" onclick="showPage('dashboard'); return false;">GMS 통합 대시보드<small>6개 조직의 회원·등급·유료상태를 한눈에 관리</small></a><a href="https://ipma.kr/admin-hub/">전체 홈페이지·관리자 바로가기</a><a href="#roadmap" data-page="roadmap" onclick="showPage('roadmap'); return false;">개발 로드맵</a><a href="#settings" data-page="settings" onclick="showPage('settings'); return false;">운영 설정</a></div>
+  </div>
+  <div class="navitem"><a href="#idp-control" class="navtop" data-page="idp-control" onclick="showPage('idp-control'); return false;">🚁 IDP 통합관제</a>
+   <div class="mega"><a href="#idp-control" class="wide" data-page="idp-control" onclick="showPage('idp-control'); return false;">국제드론순찰대 통합관제센터<small>공식센터 · 대원 · YOUTH · 봉사 · 전문트랙 · 공공사업</small></a><a href="https://idp.ai.kr/admin/idp-centers.html" target="_blank">공식센터 승인</a><a href="https://idp.ai.kr/admin/idp-volunteer.html" target="_blank">봉사·1365</a><a href="https://idp.ai.kr/admin/idp-specialists.html" target="_blank">MARTIAL·DRONE</a><a href="https://idp.ai.kr/admin/idp-public-business.html" target="_blank">2027 공공사업</a></div>
   </div>
   <div class="navitem"><a href="/admin/network-notice-admin.html" class="navtop">📢 통합공지</a>
    <div class="mega"><a href="/admin/network-notice-admin.html" class="wide">통합공지 발행센터<small>태권검도 · 경찰무도 · 드론순찰대 · ACTS 대상 선택 발행</small></a><a href="/admin/network-notice-admin.html">총재 메시지·공지 작성</a></div>
@@ -389,6 +392,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
      <a href="#members" class="qcard" data-page="members" onclick="showPage('members'); setTimeout(()=>document.getElementById('globalApplicationsSection')?.scrollIntoView({behavior:'smooth'}),120); return false;"><span class="qicon">🌍</span><b>세계회원 신청·승인</b><small>통합 회원관리 안에서 국가·언어별 신청 확인 및 승인</small></a>
      <a class="qcard" href="/admin/network-notice-admin.html"><span class="qicon">📢</span><b>통합공지 발행센터</b><small>4개 조직을 선택해 총재 메시지·통합공지를 한 번에 발행</small></a>
      <a class="qcard" href="/admin/resources-admin/"><span class="qicon">📁</span><b>LEVEL 자료실 관리</b><small>IPMA 자료 업로드 · LEVEL 1~9 권한 · 원본파일 관리</small></a>
+     <a href="#idp-control" class="qcard" data-page="idp-control" onclick="showPage('idp-control'); return false;"><span class="qicon">🚁</span><b>IDP 통합관제센터</b><small>공식센터 승인부터 봉사·YOUTH·전문트랙·공공사업까지 한 곳에서</small></a>
      <a class="qcard" href="https://ipma.kr/admin-hub/"><span class="qicon">↗</span><b>MASTER ADMIN HUB</b><small>전체 홈페이지와 기존 관리자 화면으로 빠르게 이동</small></a>
     </div>
    </div></div>
@@ -648,6 +652,20 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div id="page-organization" class="page hidden"><div class="pagehead"><div><div class="eyebrow">APPOINTMENT & BRANCH</div><h1>임원·지부관리</h1><p>회원정보를 기반으로 임원위촉과 지부활동을 관리합니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 9</span><h3>임원위촉</h3><p>직책·임기·위촉일·상태·이력을 관리.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>지부관리</h3><p>3개 조직의 국내외 지부정보와 지부장 연결.</p></div><div class="phase"><span class="badge next">STEP 9</span><h3>조직공헌</h3><p>지부활동·행사·교육실적을 LEVEL/G-POINT에 반영.</p></div></div></div>
 
 
+<div id="page-idp-control" class="page hidden">
+ <div class="pagehead"><div><div class="eyebrow">IDP · SINGLE ADMIN GATEWAY</div><h1>국제드론순찰대 통합관제센터</h1><p>GMS 최고관리자 화면에서 IDP의 주요 운영업무를 한 곳에서 관리하기 위한 전용 관제영역입니다.</p></div></div>
+ <div class="notice"><b>통합 원칙</b><br>GMS 로그인 1회 → IDP 공식센터 · 대원 · YOUTH · 봉사/1365 · MARTIAL/DRONE · 전국통계/공공사업 관리. 현재 패치는 통합관제 진입부를 먼저 설치하며, IDP 최신 소스와 결합하면 각 업무를 이 화면 안의 직접 승인 방식으로 전환합니다.</div>
+ <div class="phasegrid" style="margin-top:16px">
+  <div class="phase"><span class="badge live">CENTER</span><h3>공식센터 신청·승인</h3><p>지역 1센터 지정, 신청심사, 승인·지정기간·활동실적.</p><a class="btn gold" href="https://idp.ai.kr/admin/idp-centers.html" target="_blank">공식센터 관리 열기</a></div>
+  <div class="phase"><span class="badge live">MEMBER</span><h3>대원·지부·조직</h3><p>IDP 대원 승인, 대원번호, 시·도지부 및 조직관리.</p><a class="btn" href="https://idp.ai.kr/admin/" target="_blank">IDP 관리자 열기</a></div>
+  <div class="phase"><span class="badge live">YOUTH</span><h3>KIDS · JUNIOR · YOUTH</h3><p>소속센터, LEVEL, XP, 배지와 청소년 성장관리.</p><a class="btn" href="https://idp.ai.kr/admin/" target="_blank">YOUTH 관리 열기</a></div>
+  <div class="phase"><span class="badge live">SERVICE</span><h3>봉사 · QR · 1365</h3><p>봉사활동, QR 출결, 승인시간, 증빙과 1365 상태관리.</p><a class="btn" href="https://idp.ai.kr/admin/idp-volunteer.html" target="_blank">봉사·1365 열기</a></div>
+  <div class="phase"><span class="badge live">TRACK</span><h3>MARTIAL · DRONE</h3><p>전문트랙 신청·승인, 전문 LEVEL과 포트폴리오.</p><a class="btn" href="https://idp.ai.kr/admin/idp-specialists.html" target="_blank">전문트랙 열기</a></div>
+  <div class="phase"><span class="badge live">2027</span><h3>전국통계 · 공공사업</h3><p>센터평가, 공공사업 준비도와 2027 실적보고.</p><a class="btn" href="https://idp.ai.kr/admin/idp-public-business.html" target="_blank">공공사업 관리 열기</a></div>
+ </div>
+ <div class="notice" style="margin-top:16px"><b>다음 결합 패치</b><br>IDP 최신 ZIP의 실제 관리자 함수와 페이지를 읽어 GMS의 현재 Supabase 세션으로 직접 호출하도록 옮기면, 위 버튼들이 외부 IDP 관리자 페이지를 여는 방식이 아니라 이 화면 안에서 바로 조회·승인·수정하는 완전한 단일 로그인 관제센터가 됩니다.</div>
+</div>
+
 <div id="page-statistics" class="page hidden"><div class="pagehead"><div><div class="eyebrow">STATISTICS</div><h1>통합 운영통계</h1><p>회원·수익·교육·조직 성장현황을 한눈에 보는 단계입니다.</p></div></div><div class="phasegrid"><div class="phase"><span class="badge next">STEP 10</span><h3>회원 성장</h3><p>신규가입, 유료전환, LEVEL 분포.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>수익 현황</h3><p>연회비, 교육, 자격, 세미나별 통계.</p></div><div class="phase"><span class="badge next">STEP 10</span><h3>활동 현황</h3><p>영상·훈련·지부·지도활동 통계.</p></div></div></div>
 
  <div id="page-member-card" class="page hidden"><div class="pagehead"><div><div class="eyebrow">DIGITAL MEMBER CARD</div><h1>디지털 회원카드</h1><p>통합회원번호, LEVEL, G-POINT, 조직별 PLAN을 한 장에 표시할 예정입니다.</p></div></div><div class="notice">마이페이지 V2에서 회원사진 · 통합회원번호 · GOLD LV.5 · G-POINT · 6개 조직 PLAN · 연회비 만료일을 카드 형태로 제공합니다.</div></div>
@@ -675,7 +693,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.2.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.8.0</b></div>
 </main>
 
 
@@ -769,7 +787,7 @@ LEVELS.forEach(([n,c])=>{
 
 function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
 function cleanOAuthUrl(){
-  const routeHash=(location.hash||'').match(/^#(dashboard|members|levels|org-levels|membership-plan|payments|content-access|learning|points|certificates|organization|global-members|statistics|member-card|settings|roadmap)$/)?.[0] || '';
+  const routeHash=(location.hash||'').match(/^#(dashboard|idp-control|members|levels|org-levels|membership-plan|payments|content-access|learning|points|certificates|organization|global-members|statistics|member-card|settings|roadmap)$/)?.[0] || '';
   if(location.search || (location.hash && !routeHash)){
     history.replaceState({},document.title,location.pathname + routeHash);
   }
@@ -1965,7 +1983,7 @@ showLogin=async function(message=''){
  await oldShowLogin(message);
 };
 
-// GMS v2.5.7.0 Realtime
+// GMS v2.5.8.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
