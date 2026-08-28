@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.10.0 | Global Membership System</title>
+<title>GMS v2.5.11.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -306,7 +306,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.10.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.11.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -772,7 +772,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.10.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.11.0</b></div>
 </main>
 
 
@@ -2112,12 +2112,14 @@ async function sparkGrant(){
 async function sparkLoadPending(){
  if(!sparkAdminAllowed)return;const status=$('sparkPendingStatus');status.textContent='검증 대기 기록을 불러오는 중입니다…';
  try{const d=await sparkRpc('spark_superadmin_list_pending',{p_limit:100});
-  $('sparkPendingRows').innerHTML=(d.items||[]).map(s=>`<tr><td>${sparkDate(s.submitted_at)}</td><td><b>${sparkEsc(s.member_name)}</b><br><small>${sparkEsc(s.email||'-')}</small></td><td>${sparkEsc(s.category_icon)} ${sparkEsc(s.mission_title)}</td><td class="spark-proof">${sparkEsc(s.proof_text||s.proof_storage_path||'증빙 없음')}</td><td class="spark-positive">+${sparkNum(s.spark_amount)} ⚡</td><td><div class="spark-action-group"><button class="spark-mini-btn" data-spark-approve="${s.submission_id}">승인</button><button class="spark-mini-btn danger" data-spark-reject="${s.submission_id}">반려</button></div></td></tr>`).join('')||'<tr><td colspan="6">현재 검증 대기 미션이 없습니다.</td></tr>';
+  $('sparkPendingRows').innerHTML=(d.items||[]).map(s=>{const proof=s.proof_storage_path?`<button class="spark-mini-btn gold" data-spark-proof="${sparkEsc(s.proof_storage_path)}">📷 비공개 사진 보기</button>${s.proof_text?`<br><small>${sparkEsc(s.proof_text)}</small>`:''}`:sparkEsc(s.proof_text||'증빙 없음');return `<tr><td>${sparkDate(s.submitted_at)}</td><td><b>${sparkEsc(s.member_name)}</b><br><small>${sparkEsc(s.email||'-')}</small></td><td>${sparkEsc(s.category_icon)} ${sparkEsc(s.mission_title)}</td><td class="spark-proof">${proof}</td><td class="spark-positive">+${sparkNum(s.spark_amount)} ⚡</td><td><div class="spark-action-group"><button class="spark-mini-btn" data-spark-approve="${s.submission_id}">승인</button><button class="spark-mini-btn danger" data-spark-reject="${s.submission_id}">반려</button></div></td></tr>`;}).join('')||'<tr><td colspan="6">현재 검증 대기 미션이 없습니다.</td></tr>';
   status.textContent=`검증 대기 ${sparkNum(d.count)}건`;
   $('sparkPendingRows').querySelectorAll('[data-spark-approve]').forEach(b=>b.onclick=()=>sparkReview(b.dataset.sparkApprove,'approved'));
   $('sparkPendingRows').querySelectorAll('[data-spark-reject]').forEach(b=>b.onclick=()=>sparkReview(b.dataset.sparkReject,'rejected'));
+  $('sparkPendingRows').querySelectorAll('[data-spark-proof]').forEach(b=>b.onclick=()=>sparkViewProof(b.dataset.sparkProof));
  }catch(e){status.textContent='조회 실패: '+e.message;}
 }
+async function sparkViewProof(path){const win=window.open('','_blank');if(win)win.document.write('<p style="font-family:sans-serif;padding:30px">비공개 증빙사진을 불러오는 중입니다…</p>');try{const{data,error}=await db.storage.from('spark-proof').createSignedUrl(path,300);if(error)throw error;if(win)win.location.href=data.signedUrl;else window.open(data.signedUrl,'_blank');}catch(e){if(win)win.close();alert('증빙사진 조회 실패: '+e.message);}}
 async function sparkReview(id,decision){
  let reason=null;if(decision==='rejected'){reason=prompt('반려 사유를 입력하세요.');if(reason===null)return;if(!reason.trim()){alert('반려 사유가 필요합니다.');return;}}
  if(decision==='approved'&&!confirm('이 미션 수행을 승인하고 서버 규칙의 SPARK를 자동 적립하시겠습니까?'))return;
@@ -2176,7 +2178,7 @@ async function sparkAdminInit(){if(sparkAdminLoaded){await sparkLoadDashboard();
 const sparkOldShowPage=showPage;
 showPage=function(id){sparkOldShowPage(id);if(id==='spark-admin')sparkAdminInit();};
 
-// GMS v2.5.10.0 Realtime
+// GMS v2.5.11.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
