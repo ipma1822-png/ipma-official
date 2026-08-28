@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.9.0 | Global Membership System</title>
+<title>GMS v2.5.10.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
@@ -295,7 +295,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .spark-mini-btn{border:0;border-radius:8px;padding:7px 9px;font-weight:900;cursor:pointer;background:#0c2843;color:#fff}
 .spark-mini-btn.gold{background:#e5ad18;color:#101828}.spark-mini-btn.danger{background:#b42318}
 .spark-role-lock{border:1px solid #f2c94c;background:#fffbeb;color:#715000;padding:12px 14px;border-radius:12px;margin:14px 0}
+.spark-editor{border:2px solid #e8b529;background:#fffcf2}.spark-editor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.spark-editor-grid .wide{grid-column:span 2}.spark-editor-grid .full{grid-column:1/-1}.spark-editor textarea{min-height:74px}
 @media(max-width:760px){.spark-grid-form{grid-template-columns:1fr}.spark-admin .stats{grid-template-columns:repeat(2,1fr)}.spark-tabs{display:grid;grid-template-columns:repeat(2,1fr)}.spark-tab{padding:9px 5px;font-size:12px}}
+@media(max-width:760px){.spark-editor-grid{grid-template-columns:1fr 1fr}.spark-editor-grid .wide,.spark-editor-grid .full{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -303,7 +306,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.9.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.10.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -715,7 +718,30 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
  </div>
  <div id="sparkPanePending" class="spark-pane hidden"><div class="panel"><div class="panelhead"><b>관리자 검증 대기</b><button id="sparkPendingRefresh" class="btn">새로고침</button></div><div id="sparkPendingStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>제출일</th><th>회원</th><th>미션</th><th>증빙</th><th>SPARK</th><th>처리</th></tr></thead><tbody id="sparkPendingRows"></tbody></table></div></div></div>
- <div id="sparkPaneMissions" class="spark-pane hidden"><div class="panel"><div class="panelhead"><b>VERIFIED MISSION 및 RULE ENGINE</b><button id="sparkMissionRefresh" class="btn">새로고침</button></div><div class="scroll"><table><thead><tr><th>분야</th><th>미션</th><th>SPARK</th><th>반복</th><th>검증</th><th>승인</th><th>상태</th></tr></thead><tbody id="sparkMissionRows"></tbody></table></div></div></div>
+ <div id="sparkPaneMissions" class="spark-pane hidden">
+  <div class="panel spark-editor hidden" id="sparkMissionEditor">
+   <div class="panelhead"><div><b id="sparkMissionEditorTitle">새 미션 등록</b><div style="font-size:12px;color:#667085;margin-top:4px">신규 미션은 DRAFT로 저장됩니다. 저장 후 안전·연령 검토를 거쳐 공개하세요.</div></div><button id="sparkMissionEditorClose" class="btn">닫기</button></div>
+   <div class="spark-editor-grid">
+    <div class="field"><label>분야</label><select id="sparkEditCategory"><option value="SAFETY">안전</option><option value="DRONE">드론</option><option value="PATROL">순찰</option><option value="DISASTER">재난</option><option value="CARE">봉사·배려</option><option value="ENVIRONMENT">환경</option><option value="DIGITAL_SAFETY">디지털안전</option><option value="HEALTH">건강·운동</option><option value="LEADERSHIP">리더십</option><option value="GLOBAL">글로벌</option></select></div>
+    <div class="field wide"><label>미션 제목</label><input id="sparkEditTitle" placeholder="예: 우리 동네 안전표지 확인"></div>
+    <div class="field"><label>난이도 1~5</label><input id="sparkEditDifficulty" type="number" min="1" max="5" value="1"></div>
+    <div class="field full"><label>미션 설명</label><textarea id="sparkEditDescription" placeholder="미션의 목적과 내용을 설명하세요."></textarea></div>
+    <div class="field full"><label>수행방법</label><textarea id="sparkEditInstructions" placeholder="회원이 따라야 할 안전한 수행방법을 적으세요."></textarea></div>
+    <div class="field"><label>지급 SPARK</label><input id="sparkEditAmount" type="number" min="1" max="10000" value="30"></div>
+    <div class="field"><label>반복주기</label><select id="sparkEditRepeat"><option value="once">1회</option><option value="daily">매일</option><option value="weekly">매주</option><option value="monthly">매월</option><option value="unlimited">무제한</option></select></div>
+    <div class="field"><label>일일 제한</label><input id="sparkEditMaxDay" type="number" min="1" max="100" value="1"></div>
+    <div class="field"><label>주기별 제한</label><input id="sparkEditMaxCycle" type="number" min="1" placeholder="선택"></div>
+    <div class="field"><label>검증방식</label><select id="sparkEditVerification"><option value="self_check">자기확인</option><option value="text">텍스트</option><option value="photo">사진</option><option value="qr">QR</option><option value="admin">관리자</option><option value="auto">자동검증</option></select></div>
+    <div class="field"><label>승인방식</label><select id="sparkEditApproval"><option value="manual">관리자 승인</option><option value="auto">자동승인</option></select></div>
+    <div class="field"><label>최소연령</label><input id="sparkEditMinAge" type="number" min="5" placeholder="선택"></div>
+    <div class="field"><label>최대연령</label><input id="sparkEditMaxAge" type="number" min="5" placeholder="선택"></div>
+    <div class="field"><label>지역범위</label><input id="sparkEditRegion" value="ALL"></div>
+    <div class="field"><label><input id="sparkEditProof" type="checkbox"> 증빙 필수</label></div>
+   </div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button id="sparkMissionSave" class="btn gold">DRAFT 저장</button><span id="sparkMissionEditMsg" class="spark-status"></span></div>
+  </div>
+  <div class="panel" style="margin-top:16px"><div class="panelhead"><div><b>VERIFIED MISSION 및 RULE ENGINE</b><div style="font-size:12px;color:#667085;margin-top:4px">SPARK 점수는 회원 화면이 아니라 서버 규칙에서만 결정됩니다.</div></div><div style="display:flex;gap:8px"><button id="sparkMissionNew" class="btn gold">+ 새 미션</button><button id="sparkMissionRefresh" class="btn">새로고침</button></div></div><div id="sparkMissionStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>분야</th><th>미션</th><th>SPARK</th><th>반복</th><th>검증·승인</th><th>상태</th><th>관리</th></tr></thead><tbody id="sparkMissionRows"></tbody></table></div></div>
+ </div>
  <div id="sparkPaneLedger" class="spark-pane hidden"><div class="panel"><div class="panelhead"><div><b>Immutable SPARK Ledger</b><div style="font-size:12px;color:#667085;margin-top:4px">수정·삭제하지 않고 잘못된 지급은 reversal 거래를 추가합니다.</div></div><button id="sparkLedgerRefresh" class="btn">새로고침</button></div><div id="sparkLedgerStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>일시</th><th>회원</th><th>구분</th><th>SPARK</th><th>사유</th><th>상태</th><th>관리</th></tr></thead><tbody id="sparkLedgerRows"></tbody></table></div></div></div>
 </div>
 
@@ -746,7 +772,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.9.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.10.0</b></div>
 </main>
 
 
@@ -2097,20 +2123,60 @@ async function sparkReview(id,decision){
  if(decision==='approved'&&!confirm('이 미션 수행을 승인하고 서버 규칙의 SPARK를 자동 적립하시겠습니까?'))return;
  try{await sparkRpc('spark_superadmin_review_submission',{p_submission_id:id,p_decision:decision,p_reason:reason});await Promise.all([sparkLoadDashboard(),sparkLoadPending()]);}catch(e){alert('처리 실패: '+e.message);}
 }
+let sparkMissionCache=[],sparkEditingMission=null;
+const sparkOptionalNumber=id=>{const v=$(id).value.trim();return v===''?null:Number(v);};
+function sparkOpenMissionEditor(mission=null){
+ sparkEditingMission=mission;$('sparkMissionEditor').classList.remove('hidden');$('sparkMissionEditMsg').textContent='';
+ $('sparkMissionEditorTitle').textContent=mission?'미션·규칙 수정':'새 미션 등록';$('sparkMissionSave').textContent=mission?'수정내용 저장':'DRAFT 저장';
+ $('sparkEditCategory').disabled=!!mission;$('sparkEditCategory').value=mission?.category_code||'SAFETY';
+ $('sparkEditTitle').value=mission?.title||'';$('sparkEditDescription').value=mission?.description||'';$('sparkEditInstructions').value=mission?.instructions||'';
+ $('sparkEditDifficulty').value=mission?.difficulty||1;$('sparkEditAmount').value=mission?.spark_amount||30;$('sparkEditRepeat').value=mission?.repeat_cycle||'once';
+ $('sparkEditMaxDay').value=mission?.max_per_day||1;$('sparkEditMaxCycle').value=mission?.max_per_cycle??'';$('sparkEditVerification').value=mission?.verification_method||'self_check';
+ $('sparkEditApproval').value=mission?.approval_mode||'manual';$('sparkEditMinAge').value=mission?.min_age??'';$('sparkEditMaxAge').value=mission?.max_age??'';
+ $('sparkEditRegion').value=mission?.region_scope||'ALL';$('sparkEditProof').checked=!!mission?.proof_required;$('sparkMissionEditor').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function sparkCloseMissionEditor(){$('sparkMissionEditor').classList.add('hidden');sparkEditingMission=null;}
+function sparkMissionPayload(){
+ const approval=$('sparkEditApproval').value,verification=$('sparkEditVerification').value;
+ if(approval==='auto'&&!['self_check','auto'].includes(verification))throw new Error('자동승인은 자기확인 또는 자동검증 방식에서만 사용할 수 있습니다.');
+ return {p_title:$('sparkEditTitle').value.trim(),p_description:$('sparkEditDescription').value.trim(),p_instructions:$('sparkEditInstructions').value.trim()||null,p_difficulty:Number($('sparkEditDifficulty').value),p_spark_amount:Number($('sparkEditAmount').value),p_repeat_cycle:$('sparkEditRepeat').value,p_max_per_day:Number($('sparkEditMaxDay').value),p_max_per_cycle:sparkOptionalNumber('sparkEditMaxCycle'),p_verification_method:verification,p_approval_mode:approval,p_proof_required:$('sparkEditProof').checked,p_min_age:sparkOptionalNumber('sparkEditMinAge'),p_max_age:sparkOptionalNumber('sparkEditMaxAge'),p_region_scope:$('sparkEditRegion').value.trim()||'ALL'};
+}
+async function sparkSaveMission(){
+ const msg=$('sparkMissionEditMsg');let payload;try{payload=sparkMissionPayload();if(!payload.p_title)throw new Error('미션 제목을 입력하세요.');if(!payload.p_description)throw new Error('미션 설명을 입력하세요.');}catch(e){msg.textContent=e.message;return;}
+ if(!confirm(sparkEditingMission?'미션 내용과 서버 적립규칙을 수정하시겠습니까?':'새 미션을 DRAFT로 등록하시겠습니까?'))return;
+ $('sparkMissionSave').disabled=true;msg.textContent='서버에 안전하게 저장하는 중입니다…';
+ try{if(sparkEditingMission){payload.p_mission_id=sparkEditingMission.mission_id;await sparkRpc('spark_superadmin_update_mission',payload);}else{payload.p_category_code=$('sparkEditCategory').value;await sparkRpc('spark_superadmin_create_mission',payload);}msg.textContent='저장되었습니다.';sparkCloseMissionEditor();await Promise.all([sparkLoadMissions(),sparkLoadDashboard()]);}catch(e){msg.textContent='저장 실패: '+e.message;}finally{$('sparkMissionSave').disabled=false;}
+}
+async function sparkSetMissionStatus(id,status){
+ const m=sparkMissionCache.find(x=>x.mission_id===id);if(!m)return;let safety=false,age=false,reason='';
+ if(status==='published'){
+  if(!confirm(`미션 공개 전 안전 적합성을 직접 확인하셨습니까?\n\n${m.title}`))return;safety=true;
+  if(!confirm('참여 연령과 수행내용의 연령 적합성을 직접 확인하셨습니까?'))return;age=true;
+  if(!confirm('VERIFIED MISSION으로 공개하시겠습니까? 공개 즉시 회원 화면에 표시될 수 있습니다.'))return;
+ }else{reason=prompt(status==='paused'?'미션 일시중지 사유를 입력하세요.':'미션 보관 사유를 입력하세요.')??'';if(!reason.trim())return;}
+ try{await sparkRpc('spark_superadmin_set_mission_status',{p_mission_id:id,p_status:status,p_confirm_safety:safety,p_confirm_age:age,p_reason:reason||null});await Promise.all([sparkLoadMissions(),sparkLoadDashboard()]);}catch(e){alert('상태 변경 실패: '+e.message);}
+}
 async function sparkLoadMissions(){
- if(!sparkAdminAllowed)return;
- try{const d=await sparkRpc('spark_superadmin_list_missions');$('sparkMissionRows').innerHTML=(d.items||[]).map(m=>`<tr><td>${sparkEsc(m.category_icon)} ${sparkEsc(m.category_name)}</td><td><b>${sparkEsc(m.title)}</b><br><small>${sparkEsc(m.code)}</small></td><td class="spark-positive">+${sparkNum(m.spark_amount)} ⚡</td><td>${sparkEsc(m.repeat_cycle)} / 일 ${sparkNum(m.max_per_day)}회</td><td>${sparkEsc(m.verification_method)}</td><td>${m.approval_mode==='auto'?'자동':'관리자'}</td><td><span class="badge ${m.status==='published'?'live':'next'}">${sparkEsc(m.status)}</span></td></tr>`).join('')||'<tr><td colspan="7">등록된 미션이 없습니다.</td></tr>';}catch(e){$('sparkMissionRows').innerHTML=`<tr><td colspan="7">조회 실패: ${sparkEsc(e.message)}</td></tr>`;}
+ if(!sparkAdminAllowed)return;const status=$('sparkMissionStatus');status.textContent='미션과 서버 규칙을 불러오는 중입니다…';
+ try{const d=await sparkRpc('spark_superadmin_list_missions');sparkMissionCache=d.items||[];
+  $('sparkMissionRows').innerHTML=sparkMissionCache.map(m=>{const actions=[`<button class="spark-mini-btn" data-mission-edit="${m.mission_id}">수정</button>`];if(m.status!=='published')actions.push(`<button class="spark-mini-btn gold" data-mission-publish="${m.mission_id}">공개</button>`);if(m.status==='published')actions.push(`<button class="spark-mini-btn danger" data-mission-pause="${m.mission_id}">중지</button>`);if(m.status!=='archived')actions.push(`<button class="spark-mini-btn" data-mission-archive="${m.mission_id}">보관</button>`);return `<tr><td>${sparkEsc(m.category_icon)} ${sparkEsc(m.category_name)}</td><td><b>${sparkEsc(m.title)}</b><br><small>${sparkEsc(m.code)}</small></td><td class="spark-positive">+${sparkNum(m.spark_amount)} ⚡</td><td>${sparkEsc(m.repeat_cycle)} / 일 ${sparkNum(m.max_per_day)}회</td><td>${sparkEsc(m.verification_method)}<br><small>${m.approval_mode==='auto'?'자동승인':'관리자승인'}</small></td><td><span class="badge ${m.status==='published'?'live':'next'}">${sparkEsc(m.status)}</span></td><td><div class="spark-action-group">${actions.join('')}</div></td></tr>`;}).join('')||'<tr><td colspan="7">등록된 미션이 없습니다.</td></tr>';
+  status.textContent=`전체 ${sparkNum(d.count)}개 미션 · 공개 ${sparkNum(sparkMissionCache.filter(x=>x.status==='published').length)}개`;
+  $('sparkMissionRows').querySelectorAll('[data-mission-edit]').forEach(b=>b.onclick=()=>sparkOpenMissionEditor(sparkMissionCache.find(x=>x.mission_id===b.dataset.missionEdit)));
+  $('sparkMissionRows').querySelectorAll('[data-mission-publish]').forEach(b=>b.onclick=()=>sparkSetMissionStatus(b.dataset.missionPublish,'published'));
+  $('sparkMissionRows').querySelectorAll('[data-mission-pause]').forEach(b=>b.onclick=()=>sparkSetMissionStatus(b.dataset.missionPause,'paused'));
+  $('sparkMissionRows').querySelectorAll('[data-mission-archive]').forEach(b=>b.onclick=()=>sparkSetMissionStatus(b.dataset.missionArchive,'archived'));
+ }catch(e){status.textContent='조회 실패: '+e.message;$('sparkMissionRows').innerHTML=`<tr><td colspan="7">조회 실패: ${sparkEsc(e.message)}</td></tr>`;}
 }
 async function sparkLoadLedger(){
  if(!sparkAdminAllowed)return;const status=$('sparkLedgerStatus');status.textContent='원장을 불러오는 중입니다…';
  try{const d=await sparkRpc('spark_superadmin_list_ledger',{p_member_id:null,p_limit:200});$('sparkLedgerRows').innerHTML=(d.items||[]).map(l=>`<tr><td>${sparkDate(l.created_at)}</td><td><b>${sparkEsc(l.member_name)}</b><br><small>${sparkEsc(l.email||'-')}</small></td><td>${sparkEsc(l.transaction_type)}</td><td class="${Number(l.amount)>=0?'spark-positive':'spark-negative'}">${Number(l.amount)>0?'+':''}${sparkNum(l.amount)} ⚡</td><td>${sparkEsc(l.note||l.reason_code)}</td><td>${l.reversed?'<span class="badge next">취소됨</span>':l.transaction_type==='reversal'?'<span class="badge next">취소거래</span>':'<span class="badge live">유효</span>'}</td><td>${Number(l.amount)>0&&!l.reversed?`<button class="spark-mini-btn danger" data-spark-reverse="${l.ledger_id}">지급취소</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="7">원장 기록이 없습니다.</td></tr>';status.textContent=`최근 원장 ${sparkNum(d.count)}건`;$('sparkLedgerRows').querySelectorAll('[data-spark-reverse]').forEach(b=>b.onclick=()=>sparkReverse(b.dataset.sparkReverse));}catch(e){status.textContent='조회 실패: '+e.message;}
 }
 async function sparkReverse(id){const reason=prompt('원장 삭제 대신 취소(reversal) 거래를 추가합니다.\n취소 사유를 입력하세요.');if(reason===null)return;if(!reason.trim()){alert('취소 사유가 필요합니다.');return;}if(!confirm('이 지급을 취소하시겠습니까? 원본은 보존되고 반대 거래가 추가됩니다.'))return;try{await sparkRpc('spark_superadmin_reverse',{p_ledger_id:id,p_reason:reason});await Promise.all([sparkLoadDashboard(),sparkLoadMembers(),sparkLoadLedger()]);}catch(e){alert('취소 실패: '+e.message);}}
-async function sparkAdminInit(){if(sparkAdminLoaded){await sparkLoadDashboard();return;}sparkAdminLoaded=true;document.querySelectorAll('[data-spark-tab]').forEach(b=>b.onclick=()=>sparkOpenTab(b.dataset.sparkTab));$('sparkMemberSearchBtn').onclick=sparkLoadMembers;$('sparkMemberSearch').onkeydown=e=>{if(e.key==='Enter')sparkLoadMembers();};$('sparkGrantBtn').onclick=sparkGrant;$('sparkPendingRefresh').onclick=sparkLoadPending;$('sparkMissionRefresh').onclick=sparkLoadMissions;$('sparkLedgerRefresh').onclick=sparkLoadLedger;try{await sparkLoadDashboard();await sparkLoadMembers();}catch(e){console.warn('SPARK admin:',e.message);}}
+async function sparkAdminInit(){if(sparkAdminLoaded){await sparkLoadDashboard();return;}sparkAdminLoaded=true;document.querySelectorAll('[data-spark-tab]').forEach(b=>b.onclick=()=>sparkOpenTab(b.dataset.sparkTab));$('sparkMemberSearchBtn').onclick=sparkLoadMembers;$('sparkMemberSearch').onkeydown=e=>{if(e.key==='Enter')sparkLoadMembers();};$('sparkGrantBtn').onclick=sparkGrant;$('sparkPendingRefresh').onclick=sparkLoadPending;$('sparkMissionRefresh').onclick=sparkLoadMissions;$('sparkMissionNew').onclick=()=>sparkOpenMissionEditor();$('sparkMissionEditorClose').onclick=sparkCloseMissionEditor;$('sparkMissionSave').onclick=sparkSaveMission;$('sparkLedgerRefresh').onclick=sparkLoadLedger;try{await sparkLoadDashboard();await sparkLoadMembers();}catch(e){console.warn('SPARK admin:',e.message);}}
 const sparkOldShowPage=showPage;
 showPage=function(id){sparkOldShowPage(id);if(id==='spark-admin')sparkAdminInit();};
 
-// GMS v2.5.9.0 Realtime
+// GMS v2.5.10.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
