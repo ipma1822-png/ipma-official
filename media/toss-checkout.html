@@ -1,0 +1,32 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IPMA 테스트 결제</title>
+<style>body{margin:0;background:#07111f;color:#eef4ff;font-family:Arial,'Noto Sans KR',sans-serif}.wrap{max-width:720px;margin:0 auto;padding:28px 16px 60px}.card{background:#101c2c;border:1px solid #2b3b52;border-radius:18px;padding:22px;margin-bottom:16px}.gold{color:#e6bd59}.price{font-size:34px;font-weight:900;margin:8px 0}.notice{background:#15304a;border:1px solid #2d6b9e;padding:14px;border-radius:12px;line-height:1.6}.btn{width:100%;padding:16px;border:0;border-radius:12px;background:#246bfe;color:white;font-size:17px;font-weight:900;cursor:pointer}.btn:disabled{opacity:.45}.back{display:inline-block;margin-top:16px;color:#b7c7e5;text-decoration:none}.status{font-size:13px;color:#b7c7e5;margin-top:12px}</style>
+<script src="https://js.tosspayments.com/v2/standard"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><div class="wrap">
+<div class="card"><h2 class="gold">IPMA 유료 영상 테스트 결제</h2><div>SMA3-1 · 경찰무도 교육영상</div><div class="price">₩1,000</div><div class="notice">현재는 토스페이먼츠 테스트 키를 사용하는 시험 결제입니다. 실제 돈은 청구되지 않습니다. 결제 인증과 서버 승인, Supabase 열람권한 생성까지 실제 서비스와 같은 흐름으로 확인합니다.</div></div>
+<div class="card"><div id="payment-method"></div><div id="agreement"></div><button id="payBtn" class="btn" disabled>결제 준비중</button><div id="status" class="status">로그인 상태를 확인하고 있습니다.</div></div>
+<a class="back" href="./">← 영상교육관으로 돌아가기</a></div>
+<script>
+const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
+// 공개 가능한 테스트 클라이언트 키. 시크릿 키는 절대 HTML/GitHub에 넣지 않습니다.
+const TOSS_CLIENT_KEY='test_gck_docs_Ovk5rk1EwkEbP0W43nO7xlzm';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const statusEl=document.getElementById('status'), payBtn=document.getElementById('payBtn');
+(async()=>{try{
+ const {data:{session}}=await db.auth.getSession();
+ if(!session){statusEl.textContent='먼저 IPMA 통합회원으로 로그인해 주세요.';payBtn.textContent='로그인 필요';return}
+ const customerKey='ipma_'+session.user.id;
+ const tossPayments=TossPayments(TOSS_CLIENT_KEY);
+ const widgets=tossPayments.widgets({customerKey});
+ await widgets.setAmount({currency:'KRW',value:1000});
+ await widgets.renderPaymentMethods({selector:'#payment-method',variantKey:'DEFAULT'});
+ await widgets.renderAgreement({selector:'#agreement',variantKey:'AGREEMENT'}).catch(()=>widgets.renderAgreement({selector:'#agreement'}));
+ payBtn.disabled=false;payBtn.textContent='₩1,000 테스트 결제하기';statusEl.textContent='테스트 결제수단을 선택한 뒤 버튼을 눌러주세요.';
+ payBtn.onclick=async()=>{
+   payBtn.disabled=true;statusEl.textContent='토스 결제창을 여는 중입니다.';
+   const r=crypto.getRandomValues(new Uint32Array(2));
+   const orderId='IPMA-'+Date.now().toString(36).toUpperCase()+'-'+r[0].toString(36).toUpperCase()+r[1].toString(36).toUpperCase();
+   try{await widgets.requestPayment({orderId,orderName:'SMA3-1 경찰무도 교육영상',customerEmail:session.user.email||undefined,successUrl:new URL('./toss-success.html?content=IPMA-MUX-SMA3-1',location.href).href,failUrl:new URL('./toss-fail.html?content=IPMA-MUX-SMA3-1',location.href).href});}
+   catch(e){payBtn.disabled=false;statusEl.textContent='결제창을 열지 못했습니다: '+(e?.message||e)}
+ };
+}catch(e){statusEl.textContent='결제 준비 오류: '+(e?.message||e)}})();
+</script></body></html>

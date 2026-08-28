@@ -338,8 +338,8 @@
 <section class="ipma-learning-test" id="ipma-mux-stream-test">
  <div class="ipma-learning-head">
   <div>
-   <h2>IPMA 유료 영상 콘텐츠 · 1단계 테스트</h2>
-   <p>Mux 스트리밍과 Supabase 구매권한을 연결하는 시험 콘텐츠입니다. 실제 결제 연동 전에는 구매 버튼이 결제를 실행하지 않습니다.</p>
+   <h2>IPMA 유료 영상 콘텐츠 · 결제 테스트</h2>
+   <p>Mux 스트리밍 · Supabase 구매권한 · 토스페이먼츠 테스트 결제를 연결한 시험 콘텐츠입니다. 테스트 결제는 실제 금액이 청구되지 않습니다.</p>
   </div>
   <div class="ipma-learning-badge" id="paidMuxBadge">🔒 유료 · ₩1,000</div>
  </div>
@@ -356,7 +356,8 @@
    <div class="ipma-paid-price">₩1,000</div>
    <p class="muted">재생시간 4분 02초 · Mux Video</p>
    <p class="muted">구매가 완료되면 이 자리에서 즉시 재생되도록 설계한 1단계 시험입니다.</p>
-   <button class="ipma-paid-buy" id="paidMuxBuy" type="button" disabled>결제 연동 준비중</button>
+   <button class="ipma-paid-buy" id="paidMuxBuy" type="button" disabled>구매권한 확인중</button>
+   <a class="ipma-learning-login" id="paidMuxTestPay" href="./toss-checkout.html?content=IPMA-MUX-SMA3-1" style="display:none;background:#246bfe;border-color:#246bfe;color:#fff">토스 1,000원 테스트 결제</a>
    <a class="ipma-learning-login" id="paidMuxLogin" href="../member-login/" style="display:none">통합회원 로그인</a>
    <div class="ipma-learning-status" id="paidMuxStatus">Supabase 상품·구매권한 상태를 확인합니다.</div>
   </aside>
@@ -526,14 +527,16 @@ function openPlayer(playbackId,title){
 async function bootPaidMux(){
  try{
   const {data:{session}}=await paidDb.auth.getSession();
-  if(!session){setLocked('로그인 후 구매할 수 있습니다. 실제 PG 결제는 다음 단계에서 연결합니다.');if(login)login.style.display='inline-block';if(buy)buy.textContent='로그인 후 구매 · ₩1,000';return}
+  if(!session){setLocked('로그인 후 구매할 수 있습니다.');if(login)login.style.display='inline-block';if(buy){buy.textContent='로그인 후 구매 · ₩1,000';buy.disabled=true}return}
+  const testPay=document.getElementById('paidMuxTestPay');
   if(status)status.textContent='로그인 확인 완료 · 구매권한을 확인합니다.';
   const {data,error}=await paidDb.rpc('ipma_get_paid_content_playback',{p_content_code:CONTENT_CODE});
-  if(error){setLocked('1단계 DB 설치가 아직 필요합니다. Supabase SQL을 실행하면 구매권한 확인이 활성화됩니다.');if(buy)buy.textContent='결제 연동 준비중 · ₩1,000';return}
+  if(error){setLocked('유료 콘텐츠 DB 연결을 확인해 주세요.');if(buy){buy.textContent='DB 확인 필요';buy.disabled=true}return}
   const row=Array.isArray(data)?data[0]:data;
-  if(row&&row.playback_id){openPlayer(row.playback_id,row.content_title);return}
-  setLocked('이 콘텐츠는 유료입니다. 결제 완료 시 자동으로 이 화면에서 영상이 열립니다.');
-  if(buy)buy.textContent='₩1,000 결제하고 바로 시청';
+  if(row&&row.playback_id){openPlayer(row.playback_id,row.content_title);if(testPay) testPay.style.display='inline-block';return}
+  setLocked('이 콘텐츠는 유료입니다. 테스트 결제 완료 시 자동으로 이 화면에서 영상이 열립니다.');
+  if(buy){buy.textContent='₩1,000 테스트 결제하고 바로 시청';buy.disabled=false;buy.onclick=()=>{location.href='./toss-checkout.html?content='+encodeURIComponent(CONTENT_CODE)}}
+  if(testPay) testPay.style.display='none';
  }catch(e){setLocked('구매권한 확인 중 오류가 발생했습니다. 잠시 후 다시 확인해 주세요.')}
 }
 bootPaidMux();
