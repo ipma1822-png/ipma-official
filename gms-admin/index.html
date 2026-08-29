@@ -4,8 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>GMS v2.5.11.0 | Global Membership System</title>
+<title>GMS v2.5.12.0 | Global Membership System</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
 :root{
  --navy:#07172b;--navy2:#123b63;--navy3:#0d2b4a;--gold:#d7ad50;--gold2:#b98b34;
@@ -297,8 +298,13 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 .spark-role-lock{border:1px solid #f2c94c;background:#fffbeb;color:#715000;padding:12px 14px;border-radius:12px;margin:14px 0}
 .spark-editor{border:2px solid #e8b529;background:#fffcf2}.spark-editor-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .spark-editor-grid .wide{grid-column:span 2}.spark-editor-grid .full{grid-column:1/-1}.spark-editor textarea{min-height:74px}
+.spark-qr-note{border:1px solid #efd27b;background:#fffbeb;color:#715000;padding:12px 14px;border-radius:12px;margin-bottom:14px;line-height:1.55;font-size:13px}
+.spark-qr-box{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:22px;align-items:center;padding:20px}
+.spark-qr-code{min-height:260px;display:grid;place-items:center;background:#fff;border:1px solid #dce3eb;border-radius:14px;padding:16px}.spark-qr-code img,.spark-qr-code canvas{max-width:100%;height:auto!important}
+.spark-qr-url{word-break:break-all;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:9px;padding:11px;font-size:12px;color:#475467;margin:10px 0}
 @media(max-width:760px){.spark-grid-form{grid-template-columns:1fr}.spark-admin .stats{grid-template-columns:repeat(2,1fr)}.spark-tabs{display:grid;grid-template-columns:repeat(2,1fr)}.spark-tab{padding:9px 5px;font-size:12px}}
 @media(max-width:760px){.spark-editor-grid{grid-template-columns:1fr 1fr}.spark-editor-grid .wide,.spark-editor-grid .full{grid-column:1/-1}}
+@media(max-width:760px){.spark-qr-box{grid-template-columns:1fr;padding:14px}.spark-qr-code{min-height:220px}}
 </style>
 </head>
 <body>
@@ -306,7 +312,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  <div class="topin">
   <div class="brand" data-page="dashboard" onclick="showPage('dashboard'); return false;"><b>GMS · GLOBAL MEMBERSHIP SYSTEM</b><span>GLOBAL · TAEKWONKUMDO · POLICE MARTIAL ARTS · DRONE PATROL · GLOBAL NEWS24 · ACTS</span></div>
   <div class="topright">
-   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.11.0</div>
+   <div class="adminpill" style="border-color:#d7ad5070;color:#f0cf83;font-weight:900">GMS v2.5.12.0</div>
    <div id="adminEmailTop" class="adminpill"></div>
    <a class="btn ghost hidden" id="adminHubTop" href="https://ipma.kr/admin-hub/" target="_self"><span class="desktop-label">사이트·관리자 허브</span><span class="mobile-label">허브</span></a>
    <button id="logout" class="btn ghost hidden"><span class="desktop-label">로그아웃</span><span class="mobile-label">OUT</span></button>
@@ -324,7 +330,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
    <div class="mega"><a href="#idp-control" class="wide" data-page="idp-control" onclick="showPage('idp-control'); return false;">국제드론순찰대 통합관제센터<small>공식센터 · 대원 · YOUTH · 봉사 · 전문트랙 · 공공사업</small></a><a href="https://idp.ai.kr/admin/idp-centers.html" target="_blank">공식센터 승인</a><a href="https://idp.ai.kr/admin/idp-volunteer.html" target="_blank">봉사·1365</a><a href="https://idp.ai.kr/admin/idp-specialists.html" target="_blank">MARTIAL·DRONE</a><a href="https://idp.ai.kr/admin/idp-public-business.html" target="_blank">2027 공공사업</a></div>
   </div>
   <div class="navitem"><a href="#spark-admin" class="navtop" data-page="spark-admin" onclick="showPage('spark-admin'); return false;">⚡ SPARK 관리</a>
-   <div class="mega"><a href="#spark-admin" class="wide" data-page="spark-admin" onclick="showPage('spark-admin'); return false;">SPARK SYSTEM 통합관리<small>현황 · 회원 · 검증 · 특별지급 · 불변원장</small></a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('members'); return false;">회원별 SPARK</a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('pending'); return false;">검증 대기</a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('ledger'); return false;">SPARK 원장</a><a href="https://idp.ai.kr/spark/" target="_blank">공개 SPARK 보기</a></div>
+   <div class="mega"><a href="#spark-admin" class="wide" data-page="spark-admin" onclick="showPage('spark-admin'); return false;">SPARK SYSTEM 통합관리<small>현황 · 회원 · 검증 · 특별지급 · QR · 불변원장</small></a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('members'); return false;">회원별 SPARK</a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('pending'); return false;">검증 대기</a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('qr'); return false;">QR MISSION</a><a href="#spark-admin" onclick="showPage('spark-admin'); sparkOpenTab('ledger'); return false;">SPARK 원장</a><a href="https://idp.ai.kr/spark/" target="_blank">공개 SPARK 보기</a></div>
   </div>
   <div class="navitem"><a href="/admin/network-notice-admin.html" class="navtop">📢 통합공지</a>
    <div class="mega"><a href="/admin/network-notice-admin.html" class="wide">통합공지 발행센터<small>태권검도 · 경찰무도 · 드론순찰대 · ACTS 대상 선택 발행</small></a><a href="/admin/network-notice-admin.html">총재 메시지·공지 작성</a></div>
@@ -703,6 +709,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   <button class="spark-tab active" data-spark-tab="members">회원·특별지급</button>
   <button class="spark-tab" data-spark-tab="pending">검증 대기</button>
   <button class="spark-tab" data-spark-tab="missions">미션·규칙</button>
+  <button class="spark-tab" data-spark-tab="qr">QR MISSION</button>
   <button class="spark-tab" data-spark-tab="ledger">불변 원장</button>
  </div>
  <div id="sparkPaneMembers" class="spark-pane">
@@ -742,6 +749,29 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
   </div>
   <div class="panel" style="margin-top:16px"><div class="panelhead"><div><b>VERIFIED MISSION 및 RULE ENGINE</b><div style="font-size:12px;color:#667085;margin-top:4px">SPARK 점수는 회원 화면이 아니라 서버 규칙에서만 결정됩니다.</div></div><div style="display:flex;gap:8px"><button id="sparkMissionNew" class="btn gold">+ 새 미션</button><button id="sparkMissionRefresh" class="btn">새로고침</button></div></div><div id="sparkMissionStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>분야</th><th>미션</th><th>SPARK</th><th>반복</th><th>검증·승인</th><th>상태</th><th>관리</th></tr></thead><tbody id="sparkMissionRows"></tbody></table></div></div>
  </div>
+ <div id="sparkPaneQr" class="spark-pane hidden">
+  <div class="spark-qr-note">QR MISSION은 검증방식 <b>QR</b>·승인방식 <b>자동승인</b>인 미션만 연결합니다. 회원이 스캔할 참여화면은 다음 배포 단계에서 연결되므로, 그 전까지 캠페인은 초안 또는 일시중지 상태로 준비해 주세요.</div>
+  <div id="sparkQrDisplay" class="panel hidden" style="margin-bottom:16px">
+   <div class="panelhead"><div><b id="sparkQrDisplayTitle">QR MISSION</b><div style="font-size:12px;color:#667085;margin-top:4px">현장 게시 전 캠페인·시간·장소를 다시 확인하세요.</div></div><button id="sparkQrDisplayClose" class="btn">닫기</button></div>
+   <div class="spark-qr-box"><div id="sparkQrCode" class="spark-qr-code"></div><div><b>회원 스캔 주소</b><div id="sparkQrUrl" class="spark-qr-url"></div><div class="spark-action-group"><button id="sparkQrCopy" class="btn gold">주소 복사</button><button id="sparkQrDownload" class="btn">QR 이미지 저장</button></div><div id="sparkQrDisplayMsg" class="spark-status"></div></div></div>
+  </div>
+  <div class="panel spark-editor" id="sparkQrEditor">
+   <div class="panelhead"><div><b>새 QR 캠페인</b><div style="font-size:12px;color:#667085;margin-top:4px">SPARK 값은 선택한 미션의 서버 규칙을 그대로 사용하며 이 화면에서 입력하지 않습니다.</div></div></div>
+   <div class="spark-editor-grid">
+    <div class="field wide"><label>QR 미션</label><select id="sparkQrMission"><option value="">QR 미션을 선택하세요</option></select></div>
+    <div class="field wide"><label>캠페인 이름</label><input id="sparkQrLabel" placeholder="예: 2026 서울 안전체험 QR"></div>
+    <div class="field wide"><label>장소</label><input id="sparkQrVenue" placeholder="예: 서울 시민안전체험관"></div>
+    <div class="field"><label>지역범위</label><input id="sparkQrRegion" value="ALL"></div>
+    <div class="field"><label>회원별 참여한도</label><input id="sparkQrPerMember" type="number" min="1" max="100" value="1"></div>
+    <div class="field wide"><label>시작 일시</label><input id="sparkQrStarts" type="datetime-local"></div>
+    <div class="field wide"><label>종료 일시</label><input id="sparkQrEnds" type="datetime-local"></div>
+    <div class="field"><label>전체 참여한도</label><input id="sparkQrMaxClaims" type="number" min="1" placeholder="제한 없음"></div>
+    <div class="field wide"><label><input id="sparkQrActivate" type="checkbox"> 생성 즉시 활성화</label><div style="font-size:11px;color:#9a6700;margin-top:5px">회원 참여화면 배포 전에는 체크하지 않는 것을 권장합니다.</div></div>
+   </div>
+   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px"><button id="sparkQrCreate" class="btn gold">QR 캠페인 생성</button><span id="sparkQrCreateMsg" class="spark-status"></span></div>
+  </div>
+  <div class="panel" style="margin-top:16px"><div class="panelhead"><div><b>QR 캠페인 관리</b><div style="font-size:12px;color:#667085;margin-top:4px">상태 변경은 최고관리자 서버 함수로 처리하며 참여기록은 수정·삭제되지 않습니다.</div></div><button id="sparkQrRefresh" class="btn">새로고침</button></div><div id="sparkQrStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>캠페인</th><th>미션</th><th>기간·장소</th><th>참여</th><th>상태</th><th>관리</th></tr></thead><tbody id="sparkQrRows"></tbody></table></div></div>
+ </div>
  <div id="sparkPaneLedger" class="spark-pane hidden"><div class="panel"><div class="panelhead"><div><b>Immutable SPARK Ledger</b><div style="font-size:12px;color:#667085;margin-top:4px">수정·삭제하지 않고 잘못된 지급은 reversal 거래를 추가합니다.</div></div><button id="sparkLedgerRefresh" class="btn">새로고침</button></div><div id="sparkLedgerStatus" class="spark-status"></div><div class="scroll"><table><thead><tr><th>일시</th><th>회원</th><th>구분</th><th>SPARK</th><th>사유</th><th>상태</th><th>관리</th></tr></thead><tbody id="sparkLedgerRows"></tbody></table></div></div></div>
 </div>
 
@@ -772,7 +802,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
  </div></div>
 </section>
 
-<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.11.0</b></div>
+<div class="footer">GMS · Global Membership System — GLOBAL · WTKF · IPMA · IDP · NEWS24 · ACTS · <b>v2.5.12.0</b></div>
 </main>
 
 
@@ -2071,9 +2101,10 @@ async function sparkRpc(name,args={}){const {data,error}=await db.rpc(name,args)
 
 function sparkOpenTab(name){
  document.querySelectorAll('[data-spark-tab]').forEach(b=>b.classList.toggle('active',b.dataset.sparkTab===name));
- ['Members','Pending','Missions','Ledger'].forEach(n=>$('sparkPane'+n)?.classList.toggle('hidden',n.toLowerCase()!==name));
+ ['Members','Pending','Missions','Qr','Ledger'].forEach(n=>$('sparkPane'+n)?.classList.toggle('hidden',n.toLowerCase()!==name));
  if(name==='pending')sparkLoadPending();
  if(name==='missions')sparkLoadMissions();
+ if(name==='qr')sparkLoadQr();
  if(name==='ledger')sparkLoadLedger();
 }
 window.sparkOpenTab=sparkOpenTab;
@@ -2140,7 +2171,7 @@ function sparkOpenMissionEditor(mission=null){
 function sparkCloseMissionEditor(){$('sparkMissionEditor').classList.add('hidden');sparkEditingMission=null;}
 function sparkMissionPayload(){
  const approval=$('sparkEditApproval').value,verification=$('sparkEditVerification').value;
- if(approval==='auto'&&!['self_check','auto'].includes(verification))throw new Error('자동승인은 자기확인 또는 자동검증 방식에서만 사용할 수 있습니다.');
+ if(approval==='auto'&&!['self_check','auto','qr'].includes(verification))throw new Error('자동승인은 자기확인·자동검증·QR 방식에서만 사용할 수 있습니다.');
  return {p_title:$('sparkEditTitle').value.trim(),p_description:$('sparkEditDescription').value.trim(),p_instructions:$('sparkEditInstructions').value.trim()||null,p_difficulty:Number($('sparkEditDifficulty').value),p_spark_amount:Number($('sparkEditAmount').value),p_repeat_cycle:$('sparkEditRepeat').value,p_max_per_day:Number($('sparkEditMaxDay').value),p_max_per_cycle:sparkOptionalNumber('sparkEditMaxCycle'),p_verification_method:verification,p_approval_mode:approval,p_proof_required:$('sparkEditProof').checked,p_min_age:sparkOptionalNumber('sparkEditMinAge'),p_max_age:sparkOptionalNumber('sparkEditMaxAge'),p_region_scope:$('sparkEditRegion').value.trim()||'ALL'};
 }
 async function sparkSaveMission(){
@@ -2169,16 +2200,95 @@ async function sparkLoadMissions(){
   $('sparkMissionRows').querySelectorAll('[data-mission-archive]').forEach(b=>b.onclick=()=>sparkSetMissionStatus(b.dataset.missionArchive,'archived'));
  }catch(e){status.textContent='조회 실패: '+e.message;$('sparkMissionRows').innerHTML=`<tr><td colspan="7">조회 실패: ${sparkEsc(e.message)}</td></tr>`;}
 }
+
+let sparkQrCurrentUrl='',sparkQrCurrentLabel='';
+const sparkQrStatusLabel={draft:'초안',active:'활성',paused:'일시중지',closed:'종료',revoked:'폐기'};
+function sparkLocalDateTimeValue(date){const d=new Date(date.getTime()-date.getTimezoneOffset()*60000);return d.toISOString().slice(0,16);}
+function sparkSetQrDateDefaults(){
+ if(!$('sparkQrStarts').value)$('sparkQrStarts').value=sparkLocalDateTimeValue(new Date());
+ if(!$('sparkQrEnds').value)$('sparkQrEnds').value=sparkLocalDateTimeValue(new Date(Date.now()+8*60*60*1000));
+}
+async function sparkLoadQr(){
+ if(!sparkAdminAllowed)return;const status=$('sparkQrStatus');status.textContent='QR 미션과 캠페인을 불러오는 중입니다…';sparkSetQrDateDefaults();
+ try{
+  if(!sparkMissionCache.length){const d=await sparkRpc('spark_superadmin_list_missions');sparkMissionCache=d.items||[];}
+  const qrMissions=sparkMissionCache.filter(m=>m.verification_method==='qr'&&m.approval_mode==='auto');
+  const selected=$('sparkQrMission').value;
+  $('sparkQrMission').innerHTML='<option value="">QR 미션을 선택하세요</option>'+qrMissions.map(m=>`<option value="${m.mission_id}">${sparkEsc(m.title)} · +${sparkNum(m.spark_amount)} SPARK · ${sparkEsc(m.status)}</option>`).join('');
+  if(qrMissions.some(m=>m.mission_id===selected))$('sparkQrMission').value=selected;
+  const{data:campaigns,error}=await db.from('spark_qr_campaigns').select('id,mission_id,qr_token,label,venue,region_scope,starts_at,ends_at,max_claims,per_member_limit,status,created_at,mission:spark_missions(title,code,status)').order('created_at',{ascending:false}).limit(100);
+  if(error)throw error;
+  const claimCounts=await Promise.all((campaigns||[]).map(async c=>{const{count,error:countError}=await db.from('spark_qr_claims').select('id',{count:'exact',head:true}).eq('campaign_id',c.id);if(countError)throw countError;return count||0;}));
+  $('sparkQrRows').innerHTML=(campaigns||[]).map((c,i)=>{
+   const actions=[`<button class="spark-mini-btn gold" data-qr-show="${c.qr_token}" data-qr-label="${sparkEsc(c.label)}">QR 표시</button>`];
+   if(['draft','paused'].includes(c.status))actions.push(`<button class="spark-mini-btn" data-qr-status="active" data-qr-id="${c.id}">활성화</button>`);
+   if(c.status==='active')actions.push(`<button class="spark-mini-btn" data-qr-status="paused" data-qr-id="${c.id}">일시중지</button>`,`<button class="spark-mini-btn danger" data-qr-status="closed" data-qr-id="${c.id}">종료</button>`);
+   if(['draft','paused'].includes(c.status))actions.push(`<button class="spark-mini-btn danger" data-qr-status="revoked" data-qr-id="${c.id}">폐기</button>`);
+   const limit=c.max_claims==null?'제한 없음':sparkNum(c.max_claims)+'명';
+   return `<tr><td><b>${sparkEsc(c.label)}</b><br><small>${sparkEsc(c.region_scope)}</small></td><td><b>${sparkEsc(c.mission?.title||'-')}</b><br><small>${sparkEsc(c.mission?.code||'')}</small></td><td>${sparkDate(c.starts_at)}<br>~ ${sparkDate(c.ends_at)}<br><small>${sparkEsc(c.venue||'장소 미지정')}</small></td><td><b>${sparkNum(claimCounts[i])}</b> / ${limit}<br><small>회원별 ${sparkNum(c.per_member_limit)}회</small></td><td><span class="badge ${c.status==='active'?'live':'next'}">${sparkEsc(sparkQrStatusLabel[c.status]||c.status)}</span></td><td><div class="spark-action-group">${actions.join('')}</div></td></tr>`;
+  }).join('')||'<tr><td colspan="6">생성된 QR 캠페인이 없습니다.</td></tr>';
+  status.textContent=`QR 미션 ${sparkNum(qrMissions.length)}개 · 캠페인 ${sparkNum((campaigns||[]).length)}개 · 활성 ${sparkNum((campaigns||[]).filter(c=>c.status==='active').length)}개`;
+  if(!qrMissions.length)status.textContent+='\n먼저 미션·규칙에서 검증방식 QR, 승인방식 자동승인 미션을 등록하세요.';
+  $('sparkQrRows').querySelectorAll('[data-qr-show]').forEach(b=>b.onclick=()=>sparkShowQr(b.dataset.qrShow,b.dataset.qrLabel));
+  $('sparkQrRows').querySelectorAll('[data-qr-status]').forEach(b=>b.onclick=()=>sparkSetQrCampaignStatus(b.dataset.qrId,b.dataset.qrStatus));
+ }catch(e){status.textContent='QR 캠페인 조회 실패: '+e.message;$('sparkQrRows').innerHTML=`<tr><td colspan="6">조회 실패: ${sparkEsc(e.message)}</td></tr>`;}
+}
+async function sparkCreateQrCampaign(){
+ const msg=$('sparkQrCreateMsg'),missionId=$('sparkQrMission').value,label=$('sparkQrLabel').value.trim(),starts=$('sparkQrStarts').value,ends=$('sparkQrEnds').value;
+ const maxRaw=$('sparkQrMaxClaims').value.trim(),perMember=Number($('sparkQrPerMember').value),activate=$('sparkQrActivate').checked;
+ if(!missionId){msg.textContent='QR 미션을 선택하세요.';return;}if(!label){msg.textContent='캠페인 이름을 입력하세요.';return;}
+ if(!starts||!ends||new Date(ends)<=new Date(starts)){msg.textContent='종료 일시는 시작 일시보다 뒤여야 합니다.';return;}
+ if(!Number.isInteger(perMember)||perMember<1||perMember>100){msg.textContent='회원별 참여한도는 1~100이어야 합니다.';return;}
+ const maxClaims=maxRaw===''?null:Number(maxRaw);if(maxClaims!==null&&(!Number.isInteger(maxClaims)||maxClaims<1)){msg.textContent='전체 참여한도는 1 이상의 정수여야 합니다.';return;}
+ if(activate&&!confirm('회원 QR 참여화면이 배포되어 있는지 확인하셨습니까?\n캠페인을 즉시 활성화하시겠습니까?'))return;
+ if(!activate&&!confirm('QR 캠페인을 초안으로 생성하시겠습니까?'))return;
+ $('sparkQrCreate').disabled=true;msg.textContent='서버에 QR 캠페인을 생성하는 중입니다…';
+ try{
+  const d=await sparkRpc('spark_superadmin_create_qr_campaign',{p_mission_id:missionId,p_label:label,p_venue:$('sparkQrVenue').value.trim()||null,p_region_scope:$('sparkQrRegion').value.trim()||'ALL',p_starts_at:new Date(starts).toISOString(),p_ends_at:new Date(ends).toISOString(),p_max_claims:maxClaims,p_per_member_limit:perMember,p_activate:activate});
+  msg.textContent=`생성 완료 · ${sparkQrStatusLabel[d.status]||d.status}`;$('sparkQrLabel').value='';$('sparkQrVenue').value='';$('sparkQrMaxClaims').value='';$('sparkQrActivate').checked=false;
+  await sparkLoadQr();sparkShowQr(d.token,label);
+ }catch(e){msg.textContent='생성 실패: '+e.message;}finally{$('sparkQrCreate').disabled=false;}
+}
+async function sparkSetQrCampaignStatus(id,status){
+ const label=sparkQrStatusLabel[status]||status;
+ const warning=status==='revoked'?'폐기된 QR은 다시 사용할 수 없도록 운영해야 합니다. ':'';
+ if(!confirm(`${warning}이 QR 캠페인을 ${label} 상태로 변경하시겠습니까?`))return;
+ try{await sparkRpc('spark_superadmin_set_qr_campaign_status',{p_campaign_id:id,p_status:status});await sparkLoadQr();}catch(e){alert('QR 캠페인 상태 변경 실패: '+e.message);}
+}
+function sparkShowQr(token,label){
+ sparkQrCurrentUrl=`https://idp.ai.kr/spark/qr.html?t=${token}`;sparkQrCurrentLabel=label||'SPARK-QR';
+ $('sparkQrDisplay').classList.remove('hidden');$('sparkQrDisplayTitle').textContent=`QR MISSION · ${sparkQrCurrentLabel}`;$('sparkQrUrl').textContent=sparkQrCurrentUrl;$('sparkQrDisplayMsg').textContent='';
+ const box=$('sparkQrCode');box.innerHTML='';
+ if(typeof QRCode==='undefined'){$('sparkQrDisplayMsg').textContent='QR 생성 도구를 불러오지 못했습니다. 주소 복사 기능을 사용하세요.';}else{new QRCode(box,{text:sparkQrCurrentUrl,width:240,height:240,colorDark:'#07172b',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});}
+ $('sparkQrDisplay').scrollIntoView({behavior:'smooth',block:'start'});
+}
+async function sparkCopyQrUrl(){
+ if(!sparkQrCurrentUrl)return;try{await navigator.clipboard.writeText(sparkQrCurrentUrl);$('sparkQrDisplayMsg').textContent='QR 주소를 복사했습니다.';}catch(e){prompt('아래 주소를 복사하세요.',sparkQrCurrentUrl);}
+}
+function sparkDownloadQr(){
+ const box=$('sparkQrCode'),canvas=box.querySelector('canvas'),img=box.querySelector('img');let href='';
+ try{href=canvas?.toDataURL('image/png')||img?.src||'';}catch(e){}
+ if(!href){$('sparkQrDisplayMsg').textContent='QR 이미지를 아직 만들지 못했습니다. 잠시 후 다시 눌러 주세요.';return;}
+ const a=document.createElement('a');a.href=href;a.download=`${sparkQrCurrentLabel.replace(/[^0-9A-Za-z가-힣_-]+/g,'-')}-QR.png`;document.body.appendChild(a);a.click();a.remove();$('sparkQrDisplayMsg').textContent='QR 이미지 저장을 시작했습니다.';
+}
 async function sparkLoadLedger(){
  if(!sparkAdminAllowed)return;const status=$('sparkLedgerStatus');status.textContent='원장을 불러오는 중입니다…';
  try{const d=await sparkRpc('spark_superadmin_list_ledger',{p_member_id:null,p_limit:200});$('sparkLedgerRows').innerHTML=(d.items||[]).map(l=>`<tr><td>${sparkDate(l.created_at)}</td><td><b>${sparkEsc(l.member_name)}</b><br><small>${sparkEsc(l.email||'-')}</small></td><td>${sparkEsc(l.transaction_type)}</td><td class="${Number(l.amount)>=0?'spark-positive':'spark-negative'}">${Number(l.amount)>0?'+':''}${sparkNum(l.amount)} ⚡</td><td>${sparkEsc(l.note||l.reason_code)}</td><td>${l.reversed?'<span class="badge next">취소됨</span>':l.transaction_type==='reversal'?'<span class="badge next">취소거래</span>':'<span class="badge live">유효</span>'}</td><td>${Number(l.amount)>0&&!l.reversed?`<button class="spark-mini-btn danger" data-spark-reverse="${l.ledger_id}">지급취소</button>`:'-'}</td></tr>`).join('')||'<tr><td colspan="7">원장 기록이 없습니다.</td></tr>';status.textContent=`최근 원장 ${sparkNum(d.count)}건`;$('sparkLedgerRows').querySelectorAll('[data-spark-reverse]').forEach(b=>b.onclick=()=>sparkReverse(b.dataset.sparkReverse));}catch(e){status.textContent='조회 실패: '+e.message;}
 }
 async function sparkReverse(id){const reason=prompt('원장 삭제 대신 취소(reversal) 거래를 추가합니다.\n취소 사유를 입력하세요.');if(reason===null)return;if(!reason.trim()){alert('취소 사유가 필요합니다.');return;}if(!confirm('이 지급을 취소하시겠습니까? 원본은 보존되고 반대 거래가 추가됩니다.'))return;try{await sparkRpc('spark_superadmin_reverse',{p_ledger_id:id,p_reason:reason});await Promise.all([sparkLoadDashboard(),sparkLoadMembers(),sparkLoadLedger()]);}catch(e){alert('취소 실패: '+e.message);}}
-async function sparkAdminInit(){if(sparkAdminLoaded){await sparkLoadDashboard();return;}sparkAdminLoaded=true;document.querySelectorAll('[data-spark-tab]').forEach(b=>b.onclick=()=>sparkOpenTab(b.dataset.sparkTab));$('sparkMemberSearchBtn').onclick=sparkLoadMembers;$('sparkMemberSearch').onkeydown=e=>{if(e.key==='Enter')sparkLoadMembers();};$('sparkGrantBtn').onclick=sparkGrant;$('sparkPendingRefresh').onclick=sparkLoadPending;$('sparkMissionRefresh').onclick=sparkLoadMissions;$('sparkMissionNew').onclick=()=>sparkOpenMissionEditor();$('sparkMissionEditorClose').onclick=sparkCloseMissionEditor;$('sparkMissionSave').onclick=sparkSaveMission;$('sparkLedgerRefresh').onclick=sparkLoadLedger;try{await sparkLoadDashboard();await sparkLoadMembers();}catch(e){console.warn('SPARK admin:',e.message);}}
+async function sparkAdminInit(){
+ if(sparkAdminLoaded){await sparkLoadDashboard();return;}
+ sparkAdminLoaded=true;
+ document.querySelectorAll('[data-spark-tab]').forEach(b=>b.onclick=()=>sparkOpenTab(b.dataset.sparkTab));
+ $('sparkMemberSearchBtn').onclick=sparkLoadMembers;$('sparkMemberSearch').onkeydown=e=>{if(e.key==='Enter')sparkLoadMembers();};$('sparkGrantBtn').onclick=sparkGrant;
+ $('sparkPendingRefresh').onclick=sparkLoadPending;$('sparkMissionRefresh').onclick=sparkLoadMissions;$('sparkMissionNew').onclick=()=>sparkOpenMissionEditor();$('sparkMissionEditorClose').onclick=sparkCloseMissionEditor;$('sparkMissionSave').onclick=sparkSaveMission;
+ $('sparkQrRefresh').onclick=sparkLoadQr;$('sparkQrCreate').onclick=sparkCreateQrCampaign;$('sparkQrDisplayClose').onclick=()=>$('sparkQrDisplay').classList.add('hidden');$('sparkQrCopy').onclick=sparkCopyQrUrl;$('sparkQrDownload').onclick=sparkDownloadQr;$('sparkLedgerRefresh').onclick=sparkLoadLedger;
+ try{await sparkLoadDashboard();await sparkLoadMembers();const active=document.querySelector('[data-spark-tab].active')?.dataset.sparkTab;if(active&&active!=='members')sparkOpenTab(active);}catch(e){console.warn('SPARK admin:',e.message);}
+}
 const sparkOldShowPage=showPage;
 showPage=function(id){sparkOldShowPage(id);if(id==='spark-admin')sparkAdminInit();};
 
-// GMS v2.5.11.0 Realtime
+// GMS v2.5.12.0 Realtime
 try{ db.channel('gms-public-live').on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_public_activity'},()=>loadPublicDashboard()).on('postgres_changes',{event:'INSERT',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'gms_global_applications'},()=>loadGlobalApplications()).subscribe(); }catch(e){console.warn('Realtime init:',e)}
 window.addEventListener('DOMContentLoaded',()=>{if($('gaSearch'))$('gaSearch').oninput=renderGlobalApplications;if($('gaStatusFilter'))$('gaStatusFilter').onchange=renderGlobalApplications;if($('gaOrgFilter'))$('gaOrgFilter').onchange=renderGlobalApplications;});
 window.addEventListener('hashchange',()=>{const id=(location.hash||'').replace('#','').trim();if(id&&document.getElementById('page-'+id))showPage(id);});
