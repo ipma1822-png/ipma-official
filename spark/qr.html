@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta name="spark-qr-version" content="1.1.0">
+<title>QR MISSION | IDP SPARK</title>
+<link rel="stylesheet" href="../assets/css/spark.css">
+<style>
+.sp-version{display:inline-flex;align-items:center;margin-left:9px;padding:3px 7px;border:1px solid rgba(255,189,61,.45);border-radius:999px;color:#ffbd3d;font-size:10px;font-weight:800;letter-spacing:.04em;vertical-align:middle;white-space:nowrap}
+.qr-shell{width:min(620px,100%);margin:18px auto 0}.qr-state{text-align:center;padding:28px 22px}.qr-state .qr-icon{font-size:58px;line-height:1}.qr-state h1{margin:10px 0 8px;font-size:clamp(28px,7vw,42px)}.qr-state p{color:var(--sp-muted);line-height:1.65;margin:0}
+.qr-card{background:linear-gradient(150deg,var(--sp-panel2),var(--sp-panel));border:1px solid var(--sp-line);border-radius:22px;padding:22px;margin-top:13px}.qr-card h2{margin:10px 0 7px;font-size:clamp(25px,6vw,36px)}.qr-card p{color:var(--sp-muted);line-height:1.65}.qr-topline{display:flex;justify-content:space-between;gap:12px;align-items:start}.qr-reward{color:var(--sp-yellow);font-size:22px;font-weight:950;white-space:nowrap}.qr-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.qr-info div{background:#09131f;border:1px solid var(--sp-line);border-radius:12px;padding:12px}.qr-info small{display:block;color:var(--sp-muted);font-size:10px;margin-bottom:5px}.qr-info b{font-size:13px;line-height:1.45}.qr-rule{background:#07121d;border:1px solid #34485e;border-radius:13px;padding:14px;color:#c9d6e3;line-height:1.65;white-space:pre-line}.qr-action{width:100%;margin-top:15px;padding:14px}.qr-success{text-align:center;border-color:rgba(255,213,72,.45);box-shadow:0 0 45px rgba(255,213,72,.08)}.qr-success .bolt{font-size:70px}.qr-success strong{display:block;color:var(--sp-yellow);font-size:38px;margin:8px 0}.qr-login{margin:13px 0 0}.qr-security{margin-top:13px;text-align:center;color:#72869a;font-size:11px;line-height:1.55}
+@media(max-width:580px){.sp-version{margin-left:5px;padding:2px 5px;font-size:9px}.qr-shell{margin-top:8px}.qr-card{padding:18px}.qr-info{grid-template-columns:1fr}.qr-state{padding:22px 17px}}
+</style>
+</head>
+<body class="spark-body">
+<header class="sp-top"><div class="sp-wrap"><a class="sp-brand" href="index.html"><b>SPARK ⚡</b> SYSTEM <span class="sp-version" title="QR MISSION 배포 버전 2026.08.29">v1.1.0</span><small>QR MISSION</small></a><nav class="sp-nav"><a class="sp-btn ghost hide-mobile" href="app.html">MY SPARK</a><button id="logout" class="sp-btn hidden">로그아웃</button></nav></div></header>
+<main class="sp-app"><div class="sp-wrap"><div class="qr-shell">
+ <section id="stateView" class="qr-card qr-state"><div id="stateIcon" class="qr-icon">⚡</div><div class="sp-kicker">IDP SPARK QR MISSION</div><h1 id="stateTitle">QR을 확인하고 있습니다</h1><p id="stateText">안전한 서버에서 캠페인과 참여조건을 확인합니다.</p></section>
+ <section id="loginView" class="sp-login qr-login hidden"><div class="sp-kicker">IDP ONE ACCOUNT</div><h2>로그인 후 참여합니다</h2><p>기존 IDP 카카오 인증으로 로그인하면 현재 QR 미션으로 다시 돌아옵니다.</p><button id="kakaoLogin" class="sp-btn sp-kakao" style="width:100%">카카오로 계속하기</button><div id="loginMsg" class="sp-message">회원 본인의 성장기록에 SPARK가 적립됩니다.</div></section>
+ <section id="missionView" class="qr-card hidden"><div class="qr-topline"><div><div id="missionCategory" class="sp-kicker"></div><h2 id="missionTitle">QR MISSION</h2></div><div id="missionReward" class="qr-reward">+0 ⚡</div></div><p id="missionDescription"></p><div id="missionInstructions" class="qr-rule"></div><div class="qr-info"><div><small>캠페인</small><b id="campaignLabel">-</b></div><div><small>장소</small><b id="campaignVenue">-</b></div><div><small>진행기간</small><b id="campaignPeriod">-</b></div><div><small>나의 참여</small><b id="campaignClaims">-</b></div></div><button id="claimMission" class="sp-btn gold qr-action">QR MISSION COMPLETE</button><div id="claimMsg" class="sp-message">버튼을 누르면 서버가 모든 조건을 다시 확인한 뒤 SPARK를 자동 적립합니다.</div></section>
+ <section id="successView" class="qr-card qr-success hidden"><div class="bolt">⚡</div><div class="sp-kicker">QR MISSION COMPLETE</div><strong id="successAmount">+0 SPARK</strong><h2 id="successMission">미션 완료</h2><p id="successTier"></p><div class="sp-actions"><a class="sp-btn gold" href="app.html">MY SPARK 확인</a><a class="sp-btn" href="index.html">SPARK 소개</a></div></section>
+ <div class="qr-security">QR에는 점수가 저장되지 않습니다. 캠페인·회원·기간·횟수·연령·지역·미션 규칙을 Supabase 서버가 검증하고 불변원장에 기록합니다.</div>
+</div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/spark.js"></script>
+<script>
+const{db,esc,fmt}=SPARK;
+const $=id=>document.getElementById(id);
+const token=new URLSearchParams(location.search).get('t')||'';
+const validUuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+let preview=null,initializing=false,claimed=false;
+function message(el,text,type=''){el.textContent=text;el.className='sp-message '+type;}
+function showState(icon,title,text,type=''){$('stateView').classList.remove('hidden');$('stateIcon').textContent=icon;$('stateTitle').textContent=title;$('stateText').textContent=text;$('stateView').style.borderColor=type==='bad'?'rgba(255,139,139,.55)':type==='ok'?'rgba(105,221,160,.5)':'';}
+function hideViews(){$('loginView').classList.add('hidden');$('missionView').classList.add('hidden');$('successView').classList.add('hidden');}
+function dateText(value){return value?new Date(value).toLocaleString('ko-KR'):'-';}
+function availability(p){
+ const now=Date.now(),start=new Date(p.starts_at).getTime(),end=new Date(p.ends_at).getTime();
+ if(!p.valid){if(now<start)return['아직 시작 전입니다.','캠페인 시작 일시 이후 참여할 수 있습니다.'];if(now>end)return['종료된 QR 미션입니다.','캠페인 운영기간이 종료되었습니다.'];return['현재 참여할 수 없습니다.','관리자가 캠페인을 활성화하면 참여할 수 있습니다.'];}
+ if(Number(p.member_claims)>=Number(p.per_member_limit))return['참여 횟수를 모두 사용했습니다.','이 QR 캠페인의 회원별 참여한도를 사용했습니다.'];
+ if(p.capacity_remaining!==null&&Number(p.capacity_remaining)<=0)return['참여 인원이 마감됐습니다.','이 QR 캠페인의 전체 참여인원이 마감되었습니다.'];
+ return null;
+}
+function renderMission(p){
+ const m=p.mission||{};$('missionCategory').textContent=`${m.category_icon||'⚡'} ${m.category_name||'QR MISSION'}`;$('missionTitle').textContent=m.title||'QR MISSION';$('missionReward').textContent=`+${fmt(m.spark_amount)} ⚡`;$('missionDescription').textContent=m.description||'';$('missionInstructions').textContent=m.instructions||'현장 안내와 안전수칙을 따라 참여해 주세요.';$('campaignLabel').textContent=p.label||'-';$('campaignVenue').textContent=p.venue||'장소 미지정';$('campaignPeriod').textContent=`${dateText(p.starts_at)} ~ ${dateText(p.ends_at)}`;$('campaignClaims').textContent=`${fmt(p.member_claims)} / ${fmt(p.per_member_limit)}회`;
+ $('missionView').classList.remove('hidden');const unavailable=availability(p);$('claimMission').disabled=!!unavailable;if(unavailable){message($('claimMsg'),unavailable[1],'bad');showState('🔒',unavailable[0],unavailable[1],'bad')}else{message($('claimMsg'),'참여 버튼을 누르면 서버 검증 후 SPARK가 즉시 적립됩니다.','ok');showState('📱','QR MISSION 확인 완료','안전수칙을 확인한 후 미션을 완료해 주세요.','ok')}
+}
+async function loadPreview(){
+ const{data,error}=await db.rpc('spark_preview_qr_mission',{p_token:token});if(error)throw error;if(!data?.valid&&data?.reason==='QR_NOT_FOUND')throw new Error('등록되지 않았거나 잘못된 QR입니다.');preview=data;renderMission(data);
+}
+async function init(){
+ if(initializing)return;initializing=true;hideViews();
+ try{
+  if(!validUuid.test(token)){showState('⚠️','올바른 QR이 아닙니다','관리자가 발급한 SPARK QR을 다시 스캔해 주세요.','bad');return;}
+  const{data:{session}}=await db.auth.getSession();
+  if(!session){showState('🔐','로그인이 필요합니다','기존 IDP 카카오 계정으로 로그인하면 QR 미션으로 다시 돌아옵니다.');$('loginView').classList.remove('hidden');return;}
+  $('logout').classList.remove('hidden');showState('⚡','회원정보를 연결하고 있습니다','기존 IDP 통합회원과 MY SPARK를 안전하게 확인합니다.');
+  const start=await db.rpc('spark_start_me');if(start.error)throw start.error;if(start.data?.linked===false)throw new Error('같은 이메일의 활성 통합회원을 찾지 못했습니다. 본부 관리자에게 회원 연결을 요청해 주세요.');
+  await loadPreview();
+ }catch(error){showState('⚠️','QR MISSION을 열 수 없습니다',error.message||String(error),'bad');}finally{initializing=false;}
+}
+$('kakaoLogin').onclick=async()=>{message($('loginMsg'),'카카오 로그인 화면으로 이동합니다…');const{error}=await db.auth.signInWithOAuth({provider:'kakao',options:{redirectTo:location.href}});if(error)message($('loginMsg'),error.message,'bad');};
+$('logout').onclick=async()=>{await db.auth.signOut();location.href=`qr.html?t=${encodeURIComponent(token)}`;};
+$('claimMission').onclick=async()=>{
+ if(!preview||claimed)return;if(!confirm(`${preview.mission?.title||'QR MISSION'}을 완료하고 서버 검증을 진행하시겠습니까?`))return;
+ claimed=true;$('claimMission').disabled=true;message($('claimMsg'),'서버에서 캠페인·회원·기간·횟수·미션 규칙을 확인하고 있습니다…');
+ const key=`spark-qr-request:${token}`;let requestId=sessionStorage.getItem(key);if(!validUuid.test(requestId||'')){requestId=crypto.randomUUID();sessionStorage.setItem(key,requestId);}
+ try{
+  const{data,error}=await db.rpc('spark_claim_qr_mission',{p_token:token,p_client_request_id:requestId});if(error)throw error;
+  if(data?.duplicate){const dash=await db.rpc('spark_get_my_dashboard');$('missionView').classList.add('hidden');$('stateView').classList.add('hidden');$('successView').classList.remove('hidden');$('successAmount').textContent='적립 확인 완료';$('successMission').textContent=preview.mission?.title||'QR MISSION';$('successTier').textContent=dash.data?.spark?`현재 ${dash.data.spark.tier_icon||''} ${dash.data.spark.tier_name||''} · 누적 ${fmt(dash.data.spark.lifetime_spark)} SPARK`:'이미 처리된 QR 참여입니다.';return;}
+  $('missionView').classList.add('hidden');$('stateView').classList.add('hidden');$('successView').classList.remove('hidden');$('successAmount').textContent=`+${fmt(data.spark_awarded)} SPARK ⚡`;$('successMission').textContent=data.mission_title||preview.mission?.title||'QR MISSION';$('successTier').textContent=`현재 ${data.tier?.tier_icon||''} ${data.tier?.tier_name||''} · 누적 ${fmt(data.tier?.lifetime_spark)} SPARK`;
+ }catch(error){claimed=false;$('claimMission').disabled=false;message($('claimMsg'),error.message||String(error),'bad');}
+};
+db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session)init();});
+init();
+</script>
+</body>
+</html>
