@@ -1,5 +1,14 @@
 (function(){
  const t=document.querySelector('.ipma-menu-toggle'), n=document.querySelector('.ipma-mega-nav'); if(t&&n)t.addEventListener('click',()=>n.classList.toggle('open'));
+ // IPMA OFFICIAL GUIDE v1.0: add one shared menu entry without rewriting every page header.
+ if(n && !n.querySelector('[data-ipma-official-guide]')){
+   const prefix=(location.pathname==='/'||location.pathname.endsWith('/index.html')&&location.pathname.split('/').filter(Boolean).length===1)?'./':'../';
+   const item=document.createElement('div');
+   item.className='ipma-nav-item'; item.dataset.ipmaOfficialGuide='1';
+   item.innerHTML='<a class="ipma-nav-main" href="'+prefix+'official-guide/">공식 Q&amp;A</a><div class="ipma-dropdown"><b>공식 질문과 답변</b><a href="'+prefix+'official-guide/">공식 Q&amp;A 센터</a><a href="'+prefix+'verification/">공식 조회</a><a href="'+prefix+'leadership/">공식 임원 안내</a><a href="'+prefix+'branches/">공식 지부 안내</a></div>';
+   const verification=[...n.querySelectorAll(':scope > .ipma-nav-item')].find(el=>/조회|인증/.test(el.querySelector('.ipma-nav-main')?.textContent||''));
+   n.insertBefore(item,verification||null);
+ }
  // IPMA ASSOCIATION v2.4.2: restore mobile horizontal primary navigation.
  // The original mega-nav remains untouched and continues to serve the hamburger menu.
  if(n && !document.querySelector('.ipma-mobile-primary')){
