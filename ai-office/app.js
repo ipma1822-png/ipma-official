@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.6.0';
+  const VERSION='1.7.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -170,6 +170,9 @@
     "aria:meeting-agenda":meetingAgendaWorkflow,
     "aria:meeting-check":meetingCheckWorkflow,
     "aria:meeting-brief":meetingBriefWorkflow,
+    "aria:meeting-result":meetingResultWorkflow,
+    "aria:followup":followupWorkflow,
+    "aria:followup-check":followupCheckWorkflow,
     "gen:news":newsWorkflow,
     "gen:article":articleWorkflow,
     "gen:library":libraryWorkflow,
@@ -748,7 +751,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.6.0 / HOME 17차
+   AI OFFICE 2.0 v1.7.0 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -807,7 +810,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.6.0 REAL OFFICE WORKFLOW
+   v1.7.0 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -855,7 +858,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.6.0</span>
+      <span class="version-chip">v1.7.0</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -1008,6 +1011,57 @@ function meetingWorkflow(){
   }
   renderWorkflow("회의 준비 브리핑","ARIA · MEETING PREP",rows,"가장 가까운 회의와 연결 TASK를 읽어 준비사항을 한 화면에 모읍니다.");
 }
+
+function latestMeetingRecord(){
+  const ms=readJsonStore("ipma_ai_office_meetings_v1",[]);
+  return [...ms].sort((x,y)=>{
+    const ax=new Date(x?.date||x?.startAt||0).getTime()||0;
+    const ay=new Date(y?.date||y?.startAt||0).getTime()||0;
+    return ay-ax;
+  })[0]||null;
+}
+function meetingResultWorkflow(){
+  const m=latestMeetingRecord();
+  const rows=[];
+  if(m){
+    rows.push(["회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+    const decisions=Array.isArray(m.decisions)?m.decisions:(m.decisions?[m.decisions]:[]);
+    decisions.forEach((x,i)=>rows.push([`결정 ${i+1}`,typeof x==="string"?x:(x?.title||x?.text||"결정사항"),""]));
+    if(m.summary) rows.push(["결과 요약",m.summary,""]);
+    if(m.notes) rows.push(["회의 메모",m.notes,""]);
+  }
+  renderWorkflow("회의 결과","ARIA · MEETING RESULT",rows,"등록된 회의 결과·결정사항을 읽어 후속 업무의 기준으로 보여줍니다.");
+}
+function followupWorkflow(){
+  const m=latestMeetingRecord();
+  const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
+  const linked=m?tasks.filter(t=>String(t.meetingId||"")===String(m.id||"")):[];
+  const rows=[];
+  if(m) rows.push(["기준 회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+  linked.slice(0,10).forEach(t=>rows.push([
+    t.assignee||t.owner||"후속 TASK",
+    t.title||t.name||"TASK",
+    `${t.status||"대기"}${t.dueDate?` · ${fmtDateText(t.dueDate)}`:""}`
+  ]));
+  renderWorkflow("회의 후속 업무","ARIA · FOLLOW-UP ACTIONS",rows,"회의와 연결된 기존 TASK를 담당·상태·마감 기준으로 보여줍니다. 자동으로 새 TASK를 만들지는 않습니다.");
+}
+function followupCheckWorkflow(){
+  const m=latestMeetingRecord();
+  const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
+  const linked=m?tasks.filter(t=>String(t.meetingId||"")===String(m.id||"")):[];
+  const done=linked.filter(t=>["done","completed","완료"].includes(String(t.status||"").toLowerCase()));
+  const pending=linked.filter(t=>!["done","completed","완료"].includes(String(t.status||"").toLowerCase()));
+  const rows=[];
+  if(m) rows.push(["기준 회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+  rows.push(["진행 현황",`${done.length}/${linked.length} 완료`,pending.length?`미완료 ${pending.length}건`:"후속 업무 완료"]);
+  pending.slice(0,8).forEach(t=>rows.push([
+    "□ 미완료",
+    t.title||t.name||"TASK",
+    `${t.assignee||t.owner||"담당 미지정"}${t.dueDate?` · ${fmtDateText(t.dueDate)}`:""}`
+  ]));
+  renderWorkflow("후속 업무 점검","ARIA · FOLLOW-UP CHECK",rows,"회의 후속 TASK의 완료 여부를 점검합니다. 원본 TASK 상태는 변경하지 않습니다.");
+}
+
 function newsWorkflow(){
   const news=readJsonStore("ipma_ai_office_news_brief_v1",[]);
   const rows=news.slice(0,5).map(x=>[x.title||"뉴스",x.summary||x.source||"",x.priority?`우선순위 ${x.priority}`:""]);
