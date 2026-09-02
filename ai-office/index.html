@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#081b31">
-  <title>AI 사무국 2.0 | IPMA</title>
-  <link rel="stylesheet" href="./style.css">
+  <meta name="ai-office-version" content="0.3.0">
+  <title>AI 사무국 2.0 v0.3.0 | IPMA</title>
+  <link rel="stylesheet" href="./style.css?v=0.3.0">
 </head>
 <body>
   <header class="topbar">
@@ -15,7 +16,8 @@
       <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
     </a>
     <div class="top-actions">
-      <span class="status"><i></i> HOME 2차</span>
+      <span class="version-chip">v0.3.0</span>
+      <span class="status"><i></i> HOME 3차</span>
       <a class="ghost" href="../admin-hub/">관리자 허브</a>
     </div>
   </header>
@@ -26,6 +28,7 @@
         <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
         <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
         <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
+        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.3.0</b><em>3차 · 오늘/주간/월간 업무화면</em></div>
       </div>
       <div class="clock-card" aria-label="현재 시각">
         <span id="todayLabel">오늘</span>
@@ -43,29 +46,55 @@
 
     <section class="section-head">
       <div><p class="eyebrow">WORKSPACE</p><h2>오늘의 업무 공간</h2></div>
-      <p>2차 HOME에서는 화면 구조만 구축합니다. 일정·TASK·PROJECT 데이터 쓰기는 다음 단계에서 연결합니다.</p>
+      <p>3차에서는 오늘 · 이번 주 · 이번 달을 업무운영 화면으로 확장합니다. 아직 일정·TASK 데이터베이스 쓰기는 하지 않습니다.</p>
     </section>
 
     <section class="workspace-grid">
-      <button class="work-card active" data-panel="briefing"><span class="icon">☀</span><strong>출근 브리핑</strong><small>오늘의 핵심을 한눈에</small><em>OPEN</em></button>
-      <button class="work-card" data-panel="today"><span class="icon">📅</span><strong>오늘</strong><small>일정 · 업무 · 준비사항</small><em>READY</em></button>
-      <button class="work-card" data-panel="week"><span class="icon">🎯</span><strong>이번 주</strong><small>핵심목표 · 마감 · 진행률</small><em>READY</em></button>
-      <button class="work-card" data-panel="month"><span class="icon">🗓</span><strong>이번 달</strong><small>행사 · 프로젝트 · D-Day</small><em>READY</em></button>
+      <button class="work-card" data-panel="briefing"><span class="icon">☀</span><strong>출근 브리핑</strong><small>오늘의 핵심을 한눈에</small><em>OPEN</em></button>
+      <button class="work-card active" data-panel="today"><span class="icon">📅</span><strong>오늘</strong><small>일정 · 업무 · 준비사항</small><em>3차</em></button>
+      <button class="work-card" data-panel="week"><span class="icon">🎯</span><strong>이번 주</strong><small>핵심목표 · 마감 · 진행률</small><em>3차</em></button>
+      <button class="work-card" data-panel="month"><span class="icon">🗓</span><strong>이번 달</strong><small>행사 · 프로젝트 · D-Day</small><em>3차</em></button>
       <button class="work-card" data-panel="task"><span class="icon">☑</span><strong>TASK</strong><small>해야 할 일과 미완료 업무</small><em>NEXT</em></button>
       <button class="work-card" data-panel="project"><span class="icon">📊</span><strong>PROJECT</strong><small>목적 · 자료 · 결정 · 후속업무</small><em>NEXT</em></button>
       <button class="work-card" data-panel="meeting"><span class="icon">👥</span><strong>회의</strong><small>안건 · 결정사항 · 후속업무</small><em>NEXT</em></button>
       <button class="work-card" data-panel="library"><span class="icon">📂</span><strong>자료</strong><small>기존 자료 검색 · 호출 · 표시</small><em>CONNECT</em></button>
     </section>
 
+    <section class="period-board" aria-label="오늘 주간 월간 업무요약">
+      <article class="period-card selected" data-jump="today">
+        <div class="period-head"><span>📅</span><div><p>TODAY</p><h3 id="todayCardTitle">오늘</h3></div><b>운영</b></div>
+        <ul>
+          <li><strong>핵심</strong><span>서울 전략회의 준비</span></li>
+          <li><strong>일정</strong><span>다음 일정 9월 4일</span></li>
+          <li><strong>상태</strong><span>업무 DB 연결 전 · 읽기 중심</span></li>
+        </ul>
+      </article>
+      <article class="period-card" data-jump="week">
+        <div class="period-head"><span>🎯</span><div><p>THIS WEEK</p><h3 id="weekCardTitle">이번 주</h3></div><b>계획</b></div>
+        <ul>
+          <li><strong>목표</strong><span>AI 사무국 업무기반 확립</span></li>
+          <li><strong>순서</strong><span>오늘/주간/월간 → 일정 → TASK</span></li>
+          <li><strong>보호</strong><span>GMS · 인증 · Supabase 무수정</span></li>
+        </ul>
+      </article>
+      <article class="period-card" data-jump="month">
+        <div class="period-head"><span>🗓</span><div><p>THIS MONTH</p><h3 id="monthCardTitle">이번 달</h3></div><b>전망</b></div>
+        <ul>
+          <li><strong>프로젝트</strong><span>서울 전략회의를 첫 실전 사례로 적용</span></li>
+          <li><strong>연결</strong><span>PROJECT · 회의 · 자료 구조 준비</span></li>
+          <li><strong>원칙</strong><span>기존 기능 우선 재사용</span></li>
+        </ul>
+      </article>
+    </section>
+
     <section class="desk-grid">
       <article class="panel main-panel" id="detailPanel">
-        <div class="panel-title"><div><p class="eyebrow" id="panelEyebrow">MORNING BRIEFING</p><h2 id="panelTitle">출근 브리핑</h2></div><span class="safe-badge">읽기 중심</span></div>
-        <div class="brief-list" id="panelBody">
-          <div><span>01</span><p><b>오늘 주요 일정</b><small>서울 전략회의 준비를 첫 PROJECT 기준으로 관리합니다.</small></p></div>
-          <div><span>02</span><p><b>이번 주 핵심</b><small>AI 사무국 HOME 구축 후 일정 → TASK → PROJECT 순으로 확장합니다.</small></p></div>
-          <div><span>03</span><p><b>기존 시스템 보호</b><small>GMS · IDP · SPARK · 인증 · Supabase · Realtime은 이번 단계에서 수정하지 않습니다.</small></p></div>
-          <div><span>04</span><p><b>AI 사무국 제안</b><small>새 기능보다 기존 시스템 연결을 우선합니다.</small></p></div>
+        <div class="panel-title">
+          <div><p class="eyebrow" id="panelEyebrow">TODAY</p><h2 id="panelTitle">오늘</h2><p class="panel-date" id="panelDate">현재 날짜 기준</p></div>
+          <span class="safe-badge">읽기 중심 · v0.3.0</span>
         </div>
+        <div class="brief-list" id="panelBody"></div>
+        <div class="panel-foot" id="panelFoot">※ 현재는 업무운영 화면 구조 단계입니다. 실제 일정·TASK 저장은 다음 단계에서 연결합니다.</div>
       </article>
 
       <aside class="panel ai-panel">
@@ -92,11 +121,11 @@
     </section>
 
     <footer>
-      <span>AI OFFICE 2.0 · HOME v0.2.0</span>
+      <span><b>AI OFFICE 2.0 · v0.3.0</b> · HOME 3차</span>
       <span>REUSE → CONNECT → EXTEND</span>
     </footer>
   </main>
 
-  <script src="./app.js"></script>
+  <script src="./app.js?v=0.3.0"></script>
 </body>
 </html>
