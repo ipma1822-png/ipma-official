@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.5.0';
+  const VERSION='1.6.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -167,6 +167,9 @@
     "aria:task":taskWorkflow,
     "aria:project":projectWorkflow,
     "aria:meeting":meetingWorkflow,
+    "aria:meeting-agenda":meetingAgendaWorkflow,
+    "aria:meeting-check":meetingCheckWorkflow,
+    "aria:meeting-brief":meetingBriefWorkflow,
     "gen:news":newsWorkflow,
     "gen:article":articleWorkflow,
     "gen:library":libraryWorkflow,
@@ -745,7 +748,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.5.0 / HOME 17차
+   AI OFFICE 2.0 v1.6.0 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -804,7 +807,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.5.0 REAL OFFICE WORKFLOW
+   v1.6.0 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -852,7 +855,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.5.0</span>
+      <span class="version-chip">v1.6.0</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -942,6 +945,55 @@ function projectWorkflow(){
   const rows=projects.slice(0,8).map(x=>[x.title||"PROJECT",x.status||"진행",x.summary||x.description||""]);
   renderWorkflow("PROJECT 현황","ARIA · PROJECT",rows,"PROJECT와 연결 TASK는 기존 저장 데이터를 그대로 사용합니다.");
 }
+
+function nextMeetingRecord(){
+  return pickUpcoming(readJsonStore("ipma_ai_office_meetings_v1",[]))[0] || null;
+}
+function meetingAgendaWorkflow(){
+  const m=nextMeetingRecord();
+  const rows=[];
+  if(m){
+    rows.push(["회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+    const agenda=Array.isArray(m.agenda)?m.agenda:(m.agenda?[m.agenda]:[]);
+    agenda.forEach((x,i)=>rows.push([`안건 ${i+1}`,typeof x==="string"?x:(x?.title||x?.text||"안건"),""]));
+    if(m.notes) rows.push(["참고",m.notes,""]);
+  }
+  renderWorkflow("회의 안건","ARIA · MEETING AGENDA",rows,"가장 가까운 회의에 등록된 안건만 읽어 순서대로 보여줍니다.");
+}
+function meetingCheckWorkflow(){
+  const m=nextMeetingRecord();
+  const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
+  const rows=[];
+  if(m){
+    rows.push(["대상 회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+    const linked=tasks.filter(t=>String(t.meetingId||"")===String(m.id||""));
+    linked.forEach(t=>{
+      const done=["done","completed","완료"].includes(String(t.status||"").toLowerCase());
+      rows.push([done?"✓ 완료":"□ 준비",t.title||t.name||"TASK",t.status||""]);
+    });
+    if(m.location) rows.push(["장소 확인",m.location,""]);
+    if(m.attendees) rows.push(["참석자 확인",Array.isArray(m.attendees)?m.attendees.join(", "):m.attendees,""]);
+  }
+  renderWorkflow("회의 준비 체크","ARIA · MEETING CHECK",rows,"회의 연결 TASK의 완료 여부와 장소·참석자를 한 화면에서 점검합니다.");
+}
+function meetingBriefWorkflow(){
+  const m=nextMeetingRecord();
+  const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
+  const rows=[];
+  if(m){
+    rows.push(["회의",m.title||"회의",m.date?fmtDateText(m.date):""]);
+    if(m.location) rows.push(["장소",m.location,""]);
+    if(m.attendees) rows.push(["참석",Array.isArray(m.attendees)?m.attendees.join(", "):m.attendees,""]);
+    const agenda=Array.isArray(m.agenda)?m.agenda:(m.agenda?[m.agenda]:[]);
+    if(agenda.length) rows.push(["핵심 안건",agenda.slice(0,3).map(x=>typeof x==="string"?x:(x?.title||x?.text||"안건")).join(" · "),""]);
+    const linked=tasks.filter(t=>String(t.meetingId||"")===String(m.id||""));
+    const pending=linked.filter(t=>!["done","completed","완료"].includes(String(t.status||"").toLowerCase()));
+    rows.push(["준비 현황",`${linked.length-pending.length}/${linked.length} 완료`,pending.length?`미완료 ${pending.length}건`:"준비 완료"]);
+    if(m.notes||m.summary) rows.push(["메모",m.summary||m.notes,""]);
+  }
+  renderWorkflow("회의 직전 브리핑","ARIA · MEETING BRIEF",rows,"회의 직전에 필요한 일정·장소·참석·안건·준비 TASK를 압축해서 보여줍니다.");
+}
+
 function meetingWorkflow(){
   const meetings=pickUpcoming(readJsonStore("ipma_ai_office_meetings_v1",[]));
   const m=meetings[0];
