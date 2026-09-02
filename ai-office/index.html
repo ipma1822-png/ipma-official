@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#081b31">
-  <meta name="ai-office-version" content="0.10.0">
-  <title>AI 사무국 2.0 v0.11.0 | IPMA</title>
-  <link rel="stylesheet" href="./style.css?v=0.10.0">
+  <meta name="ai-office-version" content="0.12.0">
+  <title>AI 사무국 2.0 v0.12.0 | IPMA</title>
+  <link rel="stylesheet" href="./style.css?v=0.12.0">
 </head>
 <body>
   <header class="topbar">
@@ -16,8 +16,8 @@
       <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
     </a>
     <div class="top-actions">
-      <span class="version-chip">v0.11.0</span>
-      <span class="status"><i></i> HOME 11차</span>
+      <span class="version-chip">v0.12.0</span>
+      <span class="status"><i></i> HOME 12차</span>
       <a class="ghost" href="../admin-hub/">관리자 허브</a>
     </div>
   </header>
@@ -28,7 +28,7 @@
         <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
         <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
         <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
-        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.11.0</b><em>11차 · 예약업무</em></div>
+        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.12.0</b><em>12차 · 뉴스 브리핑</em></div>
       </div>
       <div class="clock-card" aria-label="현재 시각">
         <span id="todayLabel">오늘</span>
@@ -46,7 +46,7 @@
 
     <section class="section-head">
       <div><p class="eyebrow">WORKSPACE</p><h2>오늘의 업무 공간</h2></div>
-      <p>11차에서는 기존 공통 ACTION과 SAFE BRIDGE를 그대로 유지하면서 예약업무를 추가합니다. AI OFFICE가 열려 있는 동안 예약시간을 감지해 같은 ACTION을 실행하며, 서버·Supabase·기존 CONTROL/DISPLAY는 수정하지 않습니다.</p>
+      <p>12차에서는 GEN의 뉴스 ACTION을 실제 브리핑 보드로 확장합니다. 외부 뉴스 API나 자동 기사발행은 연결하지 않고, 확인된 뉴스 항목을 안전하게 모아 우선순위 브리핑으로 정리합니다.</p>
     </section>
 
     <section class="workspace-grid">
@@ -312,7 +312,7 @@
       <article class="panel main-panel" id="detailPanel">
         <div class="panel-title">
           <div><p class="eyebrow" id="panelEyebrow">TODAY</p><h2 id="panelTitle">오늘</h2><p class="panel-date" id="panelDate">현재 날짜 기준</p></div>
-          <span class="safe-badge">BRIDGE 준비 · v0.11.0</span>
+          <span class="safe-badge">NEWS BRIEFING · v0.12.0</span>
         </div>
         <div class="brief-list" id="panelBody"></div>
         <div class="panel-foot" id="panelFoot">※ TASK와 PROJECT는 AI OFFICE 전용 localStorage에만 저장됩니다. 기존 Supabase/GMS 데이터는 수정하지 않습니다.</div>
@@ -333,10 +333,44 @@
 
 
 
+    <section class="news-briefing-board" id="newsBriefingBoard" aria-label="GEN 뉴스 브리핑">
+      <div class="news-briefing-head">
+        <div><p class="eyebrow">GEN NEWS BRIEFING · 12차</p><h2>뉴스 브리핑</h2><p>확인한 뉴스 제목·출처·요약을 직접 모아 GEN이 우선순위 브리핑으로 정리합니다. 외부 뉴스 자동수집과 기사 자동발행은 아직 연결하지 않습니다.</p></div>
+        <span>v0.12.0 · SAFE NEWS DESK</span>
+      </div>
+
+      <div class="news-briefing-grid">
+        <article class="news-input-card">
+          <h3>뉴스 항목 등록</h3>
+          <form id="newsBriefForm" class="news-brief-form">
+            <label class="wide"><span>제목</span><input id="newsTitle" maxlength="140" placeholder="확인한 뉴스 제목" required></label>
+            <label><span>분야</span><select id="newsCategory"><option>종합</option><option>안전</option><option>무도·스포츠</option><option>드론</option><option>공익</option><option>국제</option><option>조직</option></select></label>
+            <label><span>중요도</span><select id="newsPriority"><option value="3">긴급</option><option value="2" selected>중요</option><option value="1">일반</option></select></label>
+            <label class="wide"><span>출처</span><input id="newsSource" maxlength="100" placeholder="예: 연합뉴스 / 경찰청 / 확인한 매체"></label>
+            <label class="wide"><span>한줄 요약</span><textarea id="newsSummary" rows="3" maxlength="320" placeholder="브리핑에 표시할 핵심만 입력하세요." required></textarea></label>
+            <button type="submit" class="news-add">+ 뉴스 항목 추가</button>
+          </form>
+          <p class="news-safe-note">※ 현재는 직접 확인한 정보만 저장하는 로컬 브리핑함입니다. 사실 확인되지 않은 내용을 자동 생성하지 않습니다.</p>
+        </article>
+
+        <article class="news-summary-card">
+          <div class="news-summary-top"><div><h3>오늘의 GEN 브리핑</h3><small id="newsBriefTime">아직 생성 전</small></div><button type="button" id="newsBuildBrief">브리핑 새로 정리</button></div>
+          <div class="news-metrics"><div><small>전체</small><b id="newsTotal">0</b></div><div><small>긴급</small><b id="newsUrgent">0</b></div><div><small>중요</small><b id="newsImportant">0</b></div></div>
+          <div id="newsBriefTop" class="news-brief-top"><p>뉴스 항목을 등록하면 중요도 순으로 최대 5건을 브리핑합니다.</p></div>
+        </article>
+      </div>
+
+      <article class="news-list-card">
+        <div class="news-list-head"><div><h3>브리핑 뉴스함</h3><small>중요도 순 · 등록시간 순 / 이 브라우저 localStorage에만 저장</small></div><div class="news-filter-group"><button type="button" class="news-filter active" data-news-filter="all">전체</button><button type="button" class="news-filter" data-news-filter="3">긴급</button><button type="button" class="news-filter" data-news-filter="2">중요</button><button type="button" class="news-filter" data-news-filter="1">일반</button></div></div>
+        <div id="newsBriefList" class="news-brief-list"></div>
+      </article>
+    </section>
+
+
     <section class="scheduler-board" aria-label="예약업무 보드">
       <div class="scheduler-head">
         <div><p class="eyebrow">SCHEDULED ACTION · 11차</p><h2>예약업무</h2><p>AI OFFICE가 열려 있는 동안 예약시간을 감지하여 기존 MENU/VOICE와 같은 공통 ACTION을 실행합니다. 브라우저가 닫혀 있으면 실행되지 않습니다.</p></div>
-        <span>v0.11.0 · LOCAL SCHEDULER</span>
+        <span>v0.12.0 · LOCAL SCHEDULER</span>
       </div>
 
       <div class="scheduler-grid">
@@ -375,7 +409,7 @@
     <section class="display-bridge-board" aria-label="CONTROL DISPLAY 연결 준비">
       <div class="bridge-head">
         <div><p class="eyebrow">CONTROL ↔ DISPLAY · 10차</p><h2>기존 송출 시스템 연결 준비</h2><p>현재 IPMA ZIP에는 실제 CONTROL/DISPLAY 원본이 포함되어 있지 않아 송수신 코드를 추측해 연결하지 않습니다. 대신 기존 시스템이 나중에 한 줄의 transport 등록만으로 AI OFFICE ACTION을 받을 수 있는 안전한 BRIDGE를 준비했습니다.</p></div>
-        <span>v0.11.0 · SAFE BRIDGE</span>
+        <span>v0.12.0 · SAFE BRIDGE</span>
       </div>
       <div class="bridge-grid">
         <article><small>BRIDGE 상태</small><b id="bridgeStatus">대기 · transport 미연결</b><em id="bridgeDetail">기존 CONTROL/DISPLAY 원본 확인 후 연결</em></article>
@@ -396,11 +430,11 @@
     </section>
 
     <footer>
-      <span><b>AI OFFICE 2.0 · v0.11.0</b> · HOME 11차 · 예약업무</span>
+      <span><b>AI OFFICE 2.0 · v0.12.0</b> · HOME 12차 · 뉴스 브리핑</span>
       <span>REUSE → CONNECT → EXTEND</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=0.11.0"></script>
+  <script src="./app.js?v=0.12.0"></script>
 </body>
 </html>

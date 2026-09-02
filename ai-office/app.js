@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.11.0';
+  const VERSION='0.12.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -166,7 +166,8 @@
     const state=document.getElementById('voiceState');
     if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'메뉴 ACTION 실행')+' · '+actionId;
     emitDisplayBridge(actionId,source,{agent,action});
-    scrollDetail();
+    if(agent==='gen'&&action==='news'){const board=document.getElementById('newsBriefingBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
+    else scrollDetail();
     return true;
   }
 
@@ -174,7 +175,7 @@
   document.querySelectorAll('[data-office-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction(btn.dataset.officeAction,'menu')));
 
   const genActionRows={
-    news:[['뉴스 모니터링','주요 뉴스와 조직 관련 이슈를 정리하는 준비 영역입니다.','NEWS'],['현재 단계','외부 뉴스 자동수집은 아직 연결하지 않습니다.','안전'],['향후 연결','12차 뉴스 브리핑 단계에서 실제 데이터 연결을 검토합니다.','NEXT']],
+    news:[['뉴스 브리핑','확인한 뉴스 항목을 중요도 순으로 정리합니다.','BRIEF'],['뉴스함','제목 · 출처 · 한줄요약을 직접 등록해 브리핑 근거로 사용합니다.','SOURCE'],['현재 단계','외부 뉴스 자동수집과 기사 자동발행은 연결하지 않습니다.','안전']],
     article:[['기사 초안','제목 · 부제 · 요약 · 본문 초안을 준비합니다.','DRAFT'],['자료조사','기사 근거와 관련자료를 정리합니다.','RESEARCH'],['발행','자동 발행하지 않고 사람의 최종 승인을 받습니다.','승인']],
     content:[['SNS','기사·행사·프로젝트 홍보문을 준비합니다.','SNS'],['발표자료','회의 및 대외 발표용 콘텐츠 준비를 지원합니다.','PRESENT'],['원칙','기존 콘텐츠 시스템을 중복 개발하지 않습니다.','REUSE']],
     image:[['이미지','기존 이미지 저장·전송·표시 구조를 우선 재사용합니다.','IMAGE'],['DISPLAY','향후 CONTROL/DISPLAY ACTION과 연결합니다.','CONNECT'],['현재 단계','9차에서는 메뉴·음성 공통 ACTION으로 호출합니다.','ACTION']],
@@ -280,6 +281,39 @@
     saveSchedules(items);renderSchedules();
   });
   renderSchedules();runScheduleTick();setInterval(runScheduleTick,30000);
+
+
+  // ===== HOME 12차 · GEN 뉴스 브리핑 (확인된 항목 localStorage) =====
+  const NEWS_STORAGE_KEY='ipma_ai_office_news_brief_v1';
+  const NEWS_BRIEF_TIME_KEY='ipma_ai_office_news_brief_time_v1';
+  let newsFilter='all';
+  function loadNews(){try{const raw=localStorage.getItem(NEWS_STORAGE_KEY);const v=raw?JSON.parse(raw):[];return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function saveNews(v){try{localStorage.setItem(NEWS_STORAGE_KEY,JSON.stringify(v));}catch(e){}}
+  function newsPriorityLabel(v){return String(v)==='3'?'긴급':String(v)==='2'?'중요':'일반';}
+  function newsSort(items){return [...items].sort((a,b)=>(+b.priority-+a.priority)||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));}
+  function formatNewsTime(iso){try{return new Intl.DateTimeFormat('ko-KR',{timeZone:SEOUL_TZ,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(iso));}catch(e){return '';}}
+  function buildNewsBrief(recordTime=false){
+    const items=newsSort(loadNews()).slice(0,5);const box=document.getElementById('newsBriefTop');if(!box)return;
+    if(!items.length){box.innerHTML='<p>뉴스 항목을 등록하면 중요도 순으로 최대 5건을 브리핑합니다.</p>';}
+    else box.innerHTML=items.map((n,i)=>`<div><span>${i+1}</span><p><b>${esc(n.title)}</b><small>${esc(n.summary)}${n.source?' · 출처 '+esc(n.source):''}</small></p><em class="p${esc(n.priority)}">${newsPriorityLabel(n.priority)}</em></div>`).join('');
+    if(recordTime){try{localStorage.setItem(NEWS_BRIEF_TIME_KEY,new Date().toISOString());}catch(e){}}
+    const t=localStorage.getItem(NEWS_BRIEF_TIME_KEY);const te=document.getElementById('newsBriefTime');if(te)te.textContent=t?'마지막 정리 · '+formatNewsTime(t):'자동수집 없음 · 직접 확인 뉴스 기준';
+  }
+  function renderNews(){
+    const all=loadNews(), sorted=newsSort(all), list=document.getElementById('newsBriefList');
+    const total=document.getElementById('newsTotal'),urgent=document.getElementById('newsUrgent'),important=document.getElementById('newsImportant');
+    if(total)total.textContent=all.length;if(urgent)urgent.textContent=all.filter(x=>String(x.priority)==='3').length;if(important)important.textContent=all.filter(x=>String(x.priority)==='2').length;
+    if(list){const shown=newsFilter==='all'?sorted:sorted.filter(x=>String(x.priority)===newsFilter);list.innerHTML=shown.length?shown.map(n=>`<div class="news-item" data-news-id="${esc(n.id)}"><div class="news-priority p${esc(n.priority)}">${newsPriorityLabel(n.priority)}</div><div class="news-item-main"><div><b>${esc(n.title)}</b><span>${esc(n.category||'종합')}</span></div><p>${esc(n.summary)}</p><small>${esc(n.source||'출처 미입력')} · ${esc(formatNewsTime(n.createdAt))}</small></div><button type="button" data-news-delete>삭제</button></div>`).join(''):'<div class="news-empty">해당 조건의 뉴스 항목이 없습니다.</div>';}
+    buildNewsBrief(false);
+  }
+  const newsForm=document.getElementById('newsBriefForm');if(newsForm)newsForm.addEventListener('submit',e=>{
+    e.preventDefault();const title=document.getElementById('newsTitle').value.trim(),summary=document.getElementById('newsSummary').value.trim();if(!title||!summary)return;
+    const items=loadNews();items.push({id:'news-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title,summary,source:document.getElementById('newsSource').value.trim(),category:document.getElementById('newsCategory').value,priority:document.getElementById('newsPriority').value,createdAt:new Date().toISOString()});saveNews(items);newsForm.reset();renderNews();
+  });
+  document.querySelectorAll('[data-news-filter]').forEach(btn=>btn.addEventListener('click',()=>{newsFilter=btn.dataset.newsFilter;document.querySelectorAll('[data-news-filter]').forEach(x=>x.classList.toggle('active',x===btn));renderNews();}));
+  const newsList=document.getElementById('newsBriefList');if(newsList)newsList.addEventListener('click',e=>{const row=e.target.closest('[data-news-id]');if(!row||!e.target.closest('[data-news-delete]'))return;saveNews(loadNews().filter(x=>x.id!==row.dataset.newsId));renderNews();});
+  const newsBuild=document.getElementById('newsBuildBrief');if(newsBuild)newsBuild.addEventListener('click',()=>buildNewsBrief(true));
+  renderNews();
 
 
   // ===== HOME 9차 · 브라우저 음성인식 → 공통 ACTION =====
