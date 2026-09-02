@@ -1,6 +1,8 @@
+function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+
 (function(){
   'use strict';
-  const VERSION='1.9.6';
+  const VERSION='1.9.7';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -187,7 +189,7 @@
       if(source==="display" && legacy) legacy.hidden=true;
       const state=document.getElementById('voiceState');
       if(state) state.textContent='업무 ACTION 실행 · '+actionId;
-      return true; // v1.9.6: legacy renderPanel이 TODAY를 남기거나 덮어쓰지 못하게 종료
+      return true; // v1.9.7: legacy renderPanel이 TODAY를 남기거나 덮어쓰지 못하게 종료
     }catch(err){
       console.error("REAL WORKFLOW",err);
       return false;
@@ -272,7 +274,6 @@
   let selectedResourceId=null;
   function loadResources(){try{const raw=localStorage.getItem(RESOURCE_STORAGE_KEY);const v=raw?JSON.parse(raw):[];return Array.isArray(v)?v:[];}catch(e){return [];}}
   function saveResources(v){try{localStorage.setItem(RESOURCE_STORAGE_KEY,JSON.stringify(v));}catch(e){}}
-  function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
   function typeLabel(v){return v==='image'?'이미지':v==='document'?'문서':v==='chart'?'그래프':'링크';}
   function safePreviewUrl(url){try{const u=new URL(url,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}}
   function renderResourcePreview(item){
@@ -765,7 +766,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.9.6 / HOME 17차
+   AI OFFICE 2.0 v1.9.7 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -824,7 +825,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.9.6 REAL OFFICE WORKFLOW
+   v1.9.7 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -873,7 +874,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.9.6</span>
+      <span class="version-chip">v1.9.7</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -1139,7 +1140,7 @@ function taskApprovalWorkflow(){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>업무 사람 승인</h2></div>
-      <span class="version-chip">v1.9.6</span>
+      <span class="version-chip">v1.9.7</span>
     </div>
     <div class="approval-list">${cards}</div>
     <p class="safe-note">승인 버튼을 누른 후보만 기존 AI 사무국 TASK 저장소에 등록합니다. 거절한 후보는 TASK가 되지 않습니다.</p>
@@ -1234,16 +1235,16 @@ function mediaWorkflow(){
 
 
 
-/* v1.9.6 ACTION VERIFY */
+/* v1.9.7 ACTION VERIFY */
 (function(){
   function show(){
     try{
       const p=new URLSearchParams(location.search);
       const action=p.get('displayAction')||'HOME';
-      let el=document.getElementById('aiOfficeActionVerify196');
+      let el=document.getElementById('aiOfficeActionVerify197');
       if(!el){
         el=document.createElement('div');
-        el.id='aiOfficeActionVerify196';
+        el.id='aiOfficeActionVerify197';
         el.style.cssText='position:fixed;left:8px;top:38px;z-index:99999;background:#fff;color:#111;border:2px solid #111;padding:6px 9px;border-radius:8px;font:700 11px/1.2 sans-serif;max-width:88vw;word-break:break-all';
         document.body.appendChild(el);
       }
