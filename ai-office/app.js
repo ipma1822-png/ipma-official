@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.9.2';
+  const VERSION='1.9.3';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -182,6 +182,8 @@
   };
   if(realWorkflows[actionId]){
     try{
+      const legacy=document.getElementById("detailPanel");
+      if(source==="display" && legacy) legacy.hidden=true;
       realWorkflows[actionId]();
       const state=document.getElementById('voiceState');
       if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'업무 ACTION 실행')+' · '+actionId;
@@ -194,6 +196,8 @@
   }
 
     if(!actionId)return false;
+    const legacy=document.getElementById("detailPanel");
+    if(legacy) legacy.hidden=false;
     const [agent,action]=actionId.includes(':')?actionId.split(':',2):['aria',actionId];
     if(agent==='gen') renderGenAction(action);
     else renderPanel(action);
@@ -762,7 +766,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.9.2 / HOME 17차
+   AI OFFICE 2.0 v1.9.3 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -821,7 +825,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.9.2 REAL OFFICE WORKFLOW
+   v1.9.3 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -855,12 +859,17 @@ function pickUpcoming(items,dateFields=["date","dueDate","startAt","scheduledAt"
 function ensureWorkflowPanel(){
   let el=document.getElementById("realWorkflowPanel");
   if(el) return el;
+  // v1.9.3: DISPLAY에서 기존 TODAY 패널 아래쪽에 새 카드를 붙이지 않고,
+  // 실제 업무 결과 전용 영역을 detailPanel 바로 앞에 만들어 눈에 보이게 표시한다.
   el=document.createElement("section");
   el.id="realWorkflowPanel";
   el.className="office-card";
-  el.style.marginTop="14px";
-  const host=document.querySelector("main")||document.body;
-  host.appendChild(el);
+  el.style.margin="14px 0";
+  el.style.position="relative";
+  el.style.zIndex="5";
+  const detail=document.getElementById("detailPanel");
+  if(detail && detail.parentNode) detail.parentNode.insertBefore(el,detail);
+  else (document.querySelector("main")||document.body).prepend(el);
   return el;
 }
 function renderWorkflow(title,kicker,rows,footer=""){
@@ -869,14 +878,15 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.9.2</span>
+      <span class="version-chip">v1.9.3</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
     </div>
     ${footer?`<p class="safe-note">${escapeHtml(footer)}</p>`:""}
   `;
-  el.scrollIntoView({behavior:"smooth",block:"start"});
+  el.hidden=false;
+  el.scrollIntoView({behavior:"auto",block:"start"});
 }
 function todayWorkflow(){
   const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
@@ -1134,7 +1144,7 @@ function taskApprovalWorkflow(){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>업무 사람 승인</h2></div>
-      <span class="version-chip">v1.9.2</span>
+      <span class="version-chip">v1.9.3</span>
     </div>
     <div class="approval-list">${cards}</div>
     <p class="safe-note">승인 버튼을 누른 후보만 기존 AI 사무국 TASK 저장소에 등록합니다. 거절한 후보는 TASK가 되지 않습니다.</p>
@@ -1149,7 +1159,8 @@ function taskApprovalWorkflow(){
       rejectTaskProposal(btn.dataset.rejectId);
     });
   });
-  el.scrollIntoView({behavior:"smooth",block:"start"});
+  el.hidden=false;
+  el.scrollIntoView({behavior:"auto",block:"start"});
 }
 function approveTaskProposal(id){
   const proposals=taskProposalItems();
