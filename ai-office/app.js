@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.9.0';
+  const VERSION='0.10.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -123,6 +123,41 @@
     document.querySelectorAll('.period-card').forEach(c=>c.classList.remove('selected'));
   }
 
+  // ===== HOME 10차 · CONTROL ↔ DISPLAY SAFE BRIDGE =====
+  // 실제 CONTROL/DISPLAY transport는 원본 확인 전 연결하지 않는다.
+  // 기존 시스템은 추후 window.AIOfficeBridge.registerTransport(sendFn)만 호출하면 된다.
+  let displayTransport=null;
+  const bridgeStatus=document.getElementById('bridgeStatus');
+  const bridgeDetail=document.getElementById('bridgeDetail');
+  const bridgeLastAction=document.getElementById('bridgeLastAction');
+  const bridgeLastSource=document.getElementById('bridgeLastSource');
+  function updateBridgeUi(actionId,source){
+    if(bridgeLastAction)bridgeLastAction.textContent=actionId||'아직 없음';
+    if(bridgeLastSource)bridgeLastSource.textContent=(source||'menu').toUpperCase()+' ACTION';
+  }
+  function emitDisplayBridge(actionId,source,payload={}){
+    const detail={version:VERSION,actionId,source,timestamp:new Date().toISOString(),payload};
+    updateBridgeUi(actionId,source);
+    window.dispatchEvent(new CustomEvent('ai-office:display-action',{detail}));
+    if(typeof displayTransport==='function'){
+      try{displayTransport(detail);return {sent:true,detail};}
+      catch(error){if(bridgeStatus)bridgeStatus.textContent='transport 오류';if(bridgeDetail)bridgeDetail.textContent=String(error?.message||error);return {sent:false,error,detail};}
+    }
+    return {sent:false,reason:'transport-not-registered',detail};
+  }
+  window.AIOfficeBridge=Object.freeze({
+    version:VERSION,
+    registerTransport(fn){
+      if(typeof fn!=='function')return false;
+      displayTransport=fn;
+      if(bridgeStatus)bridgeStatus.textContent='연결 준비 완료 · transport 등록됨';
+      if(bridgeDetail)bridgeDetail.textContent='기존 CONTROL/DISPLAY transport를 사용합니다.';
+      return true;
+    },
+    unregisterTransport(){displayTransport=null;if(bridgeStatus)bridgeStatus.textContent='대기 · transport 미연결';if(bridgeDetail)bridgeDetail.textContent='기존 CONTROL/DISPLAY 원본 확인 후 연결';},
+    emit:emitDisplayBridge
+  });
+
   function executeOfficeAction(actionId,source='menu'){
     if(!actionId)return false;
     const [agent,action]=actionId.includes(':')?actionId.split(':',2):['aria',actionId];
@@ -130,6 +165,7 @@
     else renderPanel(action);
     const state=document.getElementById('voiceState');
     if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'메뉴 ACTION 실행')+' · '+actionId;
+    emitDisplayBridge(actionId,source,{agent,action});
     scrollDetail();
     return true;
   }
@@ -147,6 +183,13 @@
   };
   document.querySelectorAll('[data-gen-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('gen:'+btn.dataset.genAction,'menu')));
 
+
+  const bridgeTest=document.getElementById('bridgeTest');
+  if(bridgeTest)bridgeTest.addEventListener('click',()=>{
+    const result=emitDisplayBridge('aria:today','bridge-test',{test:true});
+    const note=document.getElementById('bridgeTestNote');
+    if(note)note.textContent=result.sent?'등록된 transport로 테스트 ACTION을 전달했습니다.':'정상: 내부 이벤트 발생 · 실제 DISPLAY 전송 없음 (transport 미연결)';
+  });
 
   // ===== HOME 9차 · 브라우저 음성인식 → 공통 ACTION =====
   const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
