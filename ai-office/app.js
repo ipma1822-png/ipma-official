@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.12.0';
+  const VERSION='0.13.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -167,6 +167,7 @@
     if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'메뉴 ACTION 실행')+' · '+actionId;
     emitDisplayBridge(actionId,source,{agent,action});
     if(agent==='gen'&&action==='news'){const board=document.getElementById('newsBriefingBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
+    else if(agent==='gen'&&(action==='image'||action==='library')){const board=document.getElementById('resourceDisplayBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else scrollDetail();
     return true;
   }
@@ -178,9 +179,9 @@
     news:[['뉴스 브리핑','확인한 뉴스 항목을 중요도 순으로 정리합니다.','BRIEF'],['뉴스함','제목 · 출처 · 한줄요약을 직접 등록해 브리핑 근거로 사용합니다.','SOURCE'],['현재 단계','외부 뉴스 자동수집과 기사 자동발행은 연결하지 않습니다.','안전']],
     article:[['기사 초안','제목 · 부제 · 요약 · 본문 초안을 준비합니다.','DRAFT'],['자료조사','기사 근거와 관련자료를 정리합니다.','RESEARCH'],['발행','자동 발행하지 않고 사람의 최종 승인을 받습니다.','승인']],
     content:[['SNS','기사·행사·프로젝트 홍보문을 준비합니다.','SNS'],['발표자료','회의 및 대외 발표용 콘텐츠 준비를 지원합니다.','PRESENT'],['원칙','기존 콘텐츠 시스템을 중복 개발하지 않습니다.','REUSE']],
-    image:[['이미지','기존 이미지 저장·전송·표시 구조를 우선 재사용합니다.','IMAGE'],['DISPLAY','향후 CONTROL/DISPLAY ACTION과 연결합니다.','CONNECT'],['현재 단계','9차에서는 메뉴·음성 공통 ACTION으로 호출합니다.','ACTION']],
+    image:[['이미지 DISPLAY','등록한 기존 이미지 위치를 선택해 SAFE BRIDGE로 표시 명령을 보냅니다.','DISPLAY'],['보호','파일을 AI OFFICE에 중복 저장하지 않습니다.','REUSE'],['현재 단계','transport 미연결 시 내부 Bridge 이벤트까지만 발생합니다.','SAFE']],
     media:[['영상','기존 영상 콘텐츠 호출을 우선 검토합니다.','VIDEO'],['음악','브라우저 자동재생 제한을 준수합니다.','AUDIO'],['연결','14차 음악·영상 단계에서 실제 호출 구조를 검토합니다.','NEXT']],
-    library:[['자료','기존 자료의 검색 · 분류 · 호출을 담당합니다.','RESOURCE'],['중복저장 금지','AI OFFICE 자체에 기존 자료를 다시 저장하지 않습니다.','REUSE'],['연결','자료 위치 조사 후 DISPLAY와 연결합니다.','CONNECT']]
+    library:[['자료 호출함','기존 자료 위치를 등록·선택해 DISPLAY 준비 명령을 만듭니다.','RESOURCE'],['중복저장 금지','AI OFFICE에는 URL/경로와 메모만 저장합니다.','REUSE'],['연결','선택 자료를 SAFE BRIDGE payload로 전달합니다.','DISPLAY']]
   };
   document.querySelectorAll('[data-gen-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('gen:'+btn.dataset.genAction,'menu')));
 
@@ -191,6 +192,60 @@
     const note=document.getElementById('bridgeTestNote');
     if(note)note.textContent=result.sent?'등록된 transport로 테스트 ACTION을 전달했습니다.':'정상: 내부 이벤트 발생 · 실제 DISPLAY 전송 없음 (transport 미연결)';
   });
+
+
+  // ===== HOME 13차 · 자료·이미지 DISPLAY SAFE RESOURCE BRIDGE =====
+  const RESOURCE_STORAGE_KEY='ipma_ai_office_display_resources_v1';
+  const RESOURCE_LAST_KEY='ipma_ai_office_display_resource_last_v1';
+  let selectedResourceId=null;
+  function loadResources(){try{const raw=localStorage.getItem(RESOURCE_STORAGE_KEY);const v=raw?JSON.parse(raw):[];return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function saveResources(v){try{localStorage.setItem(RESOURCE_STORAGE_KEY,JSON.stringify(v));}catch(e){}}
+  function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+  function typeLabel(v){return v==='image'?'이미지':v==='document'?'문서':v==='chart'?'그래프':'링크';}
+  function safePreviewUrl(url){try{const u=new URL(url,location.href);return ['http:','https:'].includes(u.protocol)?u.href:'';}catch(e){return '';}}
+  function renderResourcePreview(item){
+    const preview=document.getElementById('resourcePreview');if(!preview)return;
+    if(!item){preview.innerHTML='<p>자료를 선택하면 여기에서 호출 내용을 확인합니다.</p>';return;}
+    const url=safePreviewUrl(item.url);
+    const image=item.type==='image'&&url?`<img src="${escapeHtml(url)}" alt="${escapeHtml(item.title)}" loading="lazy" onerror="this.style.display='none'">`:'';
+    preview.innerHTML=`${image}<div><span>${typeLabel(item.type)} · ${item.agent==='aria'?'ARIA':'GEN'}</span><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.url)}</small>${item.note?`<p>${escapeHtml(item.note)}</p>`:''}</div>`;
+  }
+  function renderResources(){
+    const rows=loadResources();const list=document.getElementById('resourceList');
+    const count=document.getElementById('resourceCount'),total=document.getElementById('resourceTotal'),selected=document.getElementById('resourceSelected');
+    if(count)count.textContent=rows.length+'개';if(total)total.textContent=String(rows.length);
+    const picked=rows.find(x=>x.id===selectedResourceId)||null;if(!picked)selectedResourceId=null;
+    if(selected)selected.textContent=picked?picked.title.slice(0,16):'없음';renderResourcePreview(picked);
+    if(!list)return;
+    if(!rows.length){list.innerHTML='<p class="resource-empty">등록된 자료가 없습니다. 기존 자료의 URL 또는 경로를 등록하세요.</p>';return;}
+    list.innerHTML=rows.map(item=>`<div class="resource-item${item.id===selectedResourceId?' selected':''}" data-resource-id="${escapeHtml(item.id)}"><div class="resource-kind">${typeLabel(item.type)}</div><div class="resource-main"><b>${escapeHtml(item.title)}</b><small>${escapeHtml(item.url)}</small>${item.note?`<p>${escapeHtml(item.note)}</p>`:''}</div><div class="resource-controls"><button type="button" data-resource-select="${escapeHtml(item.id)}">선택</button><button type="button" class="send" data-resource-send="${escapeHtml(item.id)}">DISPLAY 준비</button><button type="button" class="delete" data-resource-delete="${escapeHtml(item.id)}">삭제</button></div></div>`).join('');
+  }
+  function sendResourceToDisplay(item,source='resource'){
+    if(!item)return false;selectedResourceId=item.id;renderResources();
+    const actionId=(item.agent==='aria'?'aria':'gen')+':display-resource';
+    const payload={resource:{id:item.id,title:item.title,type:item.type,url:item.url,note:item.note||'',agent:item.agent||'gen'},mode:'display'};
+    const result=emitDisplayBridge(actionId,source,payload);
+    const last=document.getElementById('resourceLastSent');if(last)last.textContent=new Intl.DateTimeFormat('ko-KR',{timeZone:SEOUL_TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+    try{localStorage.setItem(RESOURCE_LAST_KEY,JSON.stringify({id:item.id,title:item.title,at:new Date().toISOString(),sent:!!result.sent}));}catch(e){}
+    const note=document.getElementById('resourceTransportNote');if(note)note.textContent=result.sent?'등록된 기존 transport로 DISPLAY 명령을 전달했습니다.':'정상: SAFE BRIDGE 내부 이벤트까지 완료 · 실제 DISPLAY transport는 아직 미연결';
+    return result.sent;
+  }
+  const resourceForm=document.getElementById('resourceForm');
+  if(resourceForm)resourceForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const title=document.getElementById('resourceTitle').value.trim(),url=document.getElementById('resourceUrl').value.trim();if(!title||!url)return;
+    const rows=loadResources();rows.unshift({id:'res-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),title,type:document.getElementById('resourceType').value,agent:document.getElementById('resourceAgent').value,url,note:document.getElementById('resourceNote').value.trim(),createdAt:new Date().toISOString()});
+    saveResources(rows);resourceForm.reset();renderResources();
+  });
+  const resourceList=document.getElementById('resourceList');
+  if(resourceList)resourceList.addEventListener('click',e=>{
+    const select=e.target.closest('[data-resource-select]'),send=e.target.closest('[data-resource-send]'),del=e.target.closest('[data-resource-delete]');const rows=loadResources();
+    if(select){selectedResourceId=select.dataset.resourceSelect;renderResources();return;}
+    if(send){const item=rows.find(x=>x.id===send.dataset.resourceSend);sendResourceToDisplay(item,'resource-button');return;}
+    if(del){const id=del.dataset.resourceDelete;saveResources(rows.filter(x=>x.id!==id));if(selectedResourceId===id)selectedResourceId=null;renderResources();}
+  });
+  const clearResourceSelection=document.getElementById('resourceClearSelection');if(clearResourceSelection)clearResourceSelection.addEventListener('click',()=>{selectedResourceId=null;renderResources();});
+  renderResources();
 
 
   // ===== HOME 11차 · 예약업무 (브라우저 내 LOCAL SCHEDULER) =====

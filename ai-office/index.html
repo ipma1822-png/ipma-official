@@ -6,8 +6,8 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#081b31">
   <meta name="ai-office-version" content="0.12.0">
-  <title>AI 사무국 2.0 v0.12.0 | IPMA</title>
-  <link rel="stylesheet" href="./style.css?v=0.12.0">
+  <title>AI 사무국 2.0 v0.13.0 | IPMA</title>
+  <link rel="stylesheet" href="./style.css?v=0.13.0">
 </head>
 <body>
   <header class="topbar">
@@ -16,7 +16,7 @@
       <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
     </a>
     <div class="top-actions">
-      <span class="version-chip">v0.12.0</span>
+      <span class="version-chip">v0.13.0</span>
       <span class="status"><i></i> HOME 12차</span>
       <a class="ghost" href="../admin-hub/">관리자 허브</a>
     </div>
@@ -28,7 +28,7 @@
         <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
         <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
         <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
-        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.12.0</b><em>12차 · 뉴스 브리핑</em></div>
+        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.13.0</b><em>13차 · 자료·이미지 DISPLAY</em></div>
       </div>
       <div class="clock-card" aria-label="현재 시각">
         <span id="todayLabel">오늘</span>
@@ -312,7 +312,7 @@
       <article class="panel main-panel" id="detailPanel">
         <div class="panel-title">
           <div><p class="eyebrow" id="panelEyebrow">TODAY</p><h2 id="panelTitle">오늘</h2><p class="panel-date" id="panelDate">현재 날짜 기준</p></div>
-          <span class="safe-badge">NEWS BRIEFING · v0.12.0</span>
+          <span class="safe-badge">DISPLAY READY · v0.13.0</span>
         </div>
         <div class="brief-list" id="panelBody"></div>
         <div class="panel-foot" id="panelFoot">※ TASK와 PROJECT는 AI OFFICE 전용 localStorage에만 저장됩니다. 기존 Supabase/GMS 데이터는 수정하지 않습니다.</div>
@@ -336,7 +336,7 @@
     <section class="news-briefing-board" id="newsBriefingBoard" aria-label="GEN 뉴스 브리핑">
       <div class="news-briefing-head">
         <div><p class="eyebrow">GEN NEWS BRIEFING · 12차</p><h2>뉴스 브리핑</h2><p>확인한 뉴스 제목·출처·요약을 직접 모아 GEN이 우선순위 브리핑으로 정리합니다. 외부 뉴스 자동수집과 기사 자동발행은 아직 연결하지 않습니다.</p></div>
-        <span>v0.12.0 · SAFE NEWS DESK</span>
+        <span>v0.13.0 · SAFE NEWS DESK</span>
       </div>
 
       <div class="news-briefing-grid">
@@ -367,10 +367,42 @@
     </section>
 
 
+    <section class="resource-display-board" id="resourceDisplayBoard" aria-label="자료 이미지 DISPLAY 준비">
+      <div class="resource-display-head">
+        <div><p class="eyebrow">RESOURCE → DISPLAY · 13차</p><h2>자료·이미지 DISPLAY</h2><p>기존 자료나 이미지의 위치(URL/경로)를 등록한 뒤 GEN ACTION으로 호출하고 SAFE BRIDGE에 전달합니다. 실제 CONTROL/DISPLAY transport가 연결되기 전에는 외부 기기로 전송하지 않습니다.</p></div>
+        <span>v0.13.0 · SAFE RESOURCE BRIDGE</span>
+      </div>
+      <div class="resource-display-grid">
+        <article class="resource-form-card">
+          <h3>표시 자료 등록</h3>
+          <form id="resourceForm" class="resource-form">
+            <label class="wide"><span>자료명</span><input id="resourceTitle" maxlength="100" placeholder="예: 서울 전략회의 조직도" required></label>
+            <label><span>종류</span><select id="resourceType"><option value="image">이미지</option><option value="document">문서</option><option value="chart">그래프</option><option value="link">링크</option></select></label>
+            <label><span>담당</span><select id="resourceAgent"><option value="gen">GEN · 젠</option><option value="aria">ARIA · 아리아</option></select></label>
+            <label class="wide"><span>URL / 기존 경로</span><input id="resourceUrl" maxlength="500" placeholder="https://... 또는 기존 시스템의 자료 경로" required></label>
+            <label class="wide"><span>메모</span><textarea id="resourceNote" rows="2" maxlength="240" placeholder="표시 목적이나 설명"></textarea></label>
+            <button type="submit" class="resource-add">+ DISPLAY 자료 등록</button>
+          </form>
+          <p class="resource-safe-note">※ 파일 자체를 AI OFFICE에 중복 저장하지 않습니다. 여기에는 기존 자료의 위치와 표시 명령만 보관합니다.</p>
+        </article>
+        <article class="resource-status-card">
+          <div class="resource-status-top"><div><h3>DISPLAY 호출 상태</h3><small>공통 ACTION → SAFE BRIDGE</small></div><button type="button" id="resourceClearSelection">선택 해제</button></div>
+          <div class="resource-preview" id="resourcePreview"><p>자료를 선택하면 여기에서 호출 내용을 확인합니다.</p></div>
+          <div class="resource-metrics"><div><small>등록 자료</small><b id="resourceTotal">0</b></div><div><small>선택 자료</small><b id="resourceSelected">없음</b></div><div><small>마지막 호출</small><b id="resourceLastSent">아직 없음</b></div></div>
+          <p class="resource-transport-note" id="resourceTransportNote">현재 transport 미연결이면 내부 Bridge 이벤트까지만 발생합니다.</p>
+        </article>
+      </div>
+      <article class="resource-list-card">
+        <div class="resource-list-head"><div><h3>자료 호출함</h3><small>이 브라우저 localStorage에는 자료의 위치 정보만 저장</small></div><span id="resourceCount">0개</span></div>
+        <div id="resourceList" class="resource-list"></div>
+      </article>
+    </section>
+
+
     <section class="scheduler-board" aria-label="예약업무 보드">
       <div class="scheduler-head">
         <div><p class="eyebrow">SCHEDULED ACTION · 11차</p><h2>예약업무</h2><p>AI OFFICE가 열려 있는 동안 예약시간을 감지하여 기존 MENU/VOICE와 같은 공통 ACTION을 실행합니다. 브라우저가 닫혀 있으면 실행되지 않습니다.</p></div>
-        <span>v0.12.0 · LOCAL SCHEDULER</span>
+        <span>v0.13.0 · LOCAL SCHEDULER</span>
       </div>
 
       <div class="scheduler-grid">
@@ -409,7 +441,7 @@
     <section class="display-bridge-board" aria-label="CONTROL DISPLAY 연결 준비">
       <div class="bridge-head">
         <div><p class="eyebrow">CONTROL ↔ DISPLAY · 10차</p><h2>기존 송출 시스템 연결 준비</h2><p>현재 IPMA ZIP에는 실제 CONTROL/DISPLAY 원본이 포함되어 있지 않아 송수신 코드를 추측해 연결하지 않습니다. 대신 기존 시스템이 나중에 한 줄의 transport 등록만으로 AI OFFICE ACTION을 받을 수 있는 안전한 BRIDGE를 준비했습니다.</p></div>
-        <span>v0.12.0 · SAFE BRIDGE</span>
+        <span>v0.13.0 · SAFE BRIDGE</span>
       </div>
       <div class="bridge-grid">
         <article><small>BRIDGE 상태</small><b id="bridgeStatus">대기 · transport 미연결</b><em id="bridgeDetail">기존 CONTROL/DISPLAY 원본 확인 후 연결</em></article>
@@ -430,11 +462,11 @@
     </section>
 
     <footer>
-      <span><b>AI OFFICE 2.0 · v0.12.0</b> · HOME 12차 · 뉴스 브리핑</span>
+      <span><b>AI OFFICE 2.0 · v0.13.0</b> · HOME 13차 · 자료·이미지 DISPLAY</span>
       <span>REUSE → CONNECT → EXTEND</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=0.12.0"></script>
+  <script src="./app.js?v=0.13.0"></script>
 </body>
 </html>
