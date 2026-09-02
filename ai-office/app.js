@@ -168,6 +168,7 @@
     emitDisplayBridge(actionId,source,{agent,action});
     if(agent==='gen'&&action==='news'){const board=document.getElementById('newsBriefingBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else if(agent==='gen'&&action==='article'){const board=document.getElementById('articleDeskBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
+    else if(agent==='gen'&&action==='media'){const board=document.getElementById('mediaCallBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else if(agent==='gen'&&(action==='image'||action==='library')){const board=document.getElementById('resourceDisplayBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else scrollDetail();
     return true;
@@ -181,7 +182,7 @@
     article:[['기사 초안','제목 · 부제 · 요약 · 본문 초안을 준비합니다.','DRAFT'],['자료조사','기사 근거와 관련자료를 정리합니다.','RESEARCH'],['발행','자동 발행하지 않고 사람의 최종 승인을 받습니다.','승인']],
     content:[['SNS','기사·행사·프로젝트 홍보문을 준비합니다.','SNS'],['발표자료','회의 및 대외 발표용 콘텐츠 준비를 지원합니다.','PRESENT'],['원칙','기존 콘텐츠 시스템을 중복 개발하지 않습니다.','REUSE']],
     image:[['이미지 DISPLAY','등록한 기존 이미지 위치를 선택해 SAFE BRIDGE로 표시 명령을 보냅니다.','DISPLAY'],['보호','파일을 AI OFFICE에 중복 저장하지 않습니다.','REUSE'],['현재 단계','transport 미연결 시 내부 Bridge 이벤트까지만 발생합니다.','SAFE']],
-    media:[['영상','기존 영상 콘텐츠 호출을 우선 검토합니다.','VIDEO'],['음악','브라우저 자동재생 제한을 준수합니다.','AUDIO'],['연결','14차 음악·영상 단계에서 실제 호출 구조를 검토합니다.','NEXT']],
+    media:[['영상','기존 영상 URL/경로를 등록해 호출합니다.','VIDEO'],['음악','사람이 눌러 재생하며 자동재생하지 않습니다.','AUDIO'],['DISPLAY','SAFE BRIDGE에 미디어 payload를 전달합니다.','READY']],
     library:[['자료 호출함','기존 자료 위치를 등록·선택해 DISPLAY 준비 명령을 만듭니다.','RESOURCE'],['중복저장 금지','AI OFFICE에는 URL/경로와 메모만 저장합니다.','REUSE'],['연결','선택 자료를 SAFE BRIDGE payload로 전달합니다.','DISPLAY']]
   };
   document.querySelectorAll('[data-gen-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('gen:'+btn.dataset.genAction,'menu')));
@@ -196,6 +197,27 @@
 
 
   // ===== HOME 13차 · 자료·이미지 DISPLAY SAFE RESOURCE BRIDGE =====
+  const MEDIA_STORAGE_KEY='ipma_ai_office_media_library_v1';
+  const MEDIA_LAST_KEY='ipma_ai_office_media_last_v1';
+  let selectedMediaId='';
+  function loadMedia(){try{const raw=localStorage.getItem(MEDIA_STORAGE_KEY);const rows=raw?JSON.parse(raw):[];return Array.isArray(rows)?rows:[];}catch(e){return [];}}
+  function saveMedia(rows){try{localStorage.setItem(MEDIA_STORAGE_KEY,JSON.stringify(rows));}catch(e){}}
+  function mediaTypeLabel(v){return v==='audio'?'AUDIO':'VIDEO';}
+  function safeMediaSrc(v){const x=String(v||'').trim();return /^(https?:|blob:|data:audio|data:video)/i.test(x)?x:'';}
+  function mediaTime(v){if(!v)return '아직 없음';try{return new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(v));}catch(e){return '기록됨';}}
+  function renderMedia(){
+    const rows=loadMedia().sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));const list=document.getElementById('mediaList');
+    const total=document.getElementById('mediaTotal'),count=document.getElementById('mediaCount'),selected=document.getElementById('mediaSelected'),last=document.getElementById('mediaLastSent');
+    if(total)total.textContent=String(rows.length);if(count)count.textContent=rows.length+'개';const item=rows.find(x=>x.id===selectedMediaId);if(selected)selected.textContent=item?item.title:'없음';
+    try{const x=JSON.parse(localStorage.getItem(MEDIA_LAST_KEY)||'null');if(last)last.textContent=x?mediaTime(x.at):'아직 없음';}catch(e){if(last)last.textContent='아직 없음';}
+    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="media-item${x.id===selectedMediaId?' selected':''}" data-media-id="${esc(x.id)}"><div class="media-kind">${mediaTypeLabel(x.type)}</div><div class="media-main"><b>${esc(x.title)}</b><small>${esc(x.url)}</small>${x.note?`<p>${esc(x.note)}</p>`:''}</div><div class="media-controls"><button type="button" data-media-select>선택</button><button type="button" class="send" data-media-send>DISPLAY 준비</button><button type="button" class="delete" data-media-delete>삭제</button></div></div>`).join(''):'<p class="media-empty">등록된 음악·영상이 없습니다.</p>';
+    renderMediaPreview(item);
+  }
+  function renderMediaPreview(item){const box=document.getElementById('mediaPreview');if(!box)return;if(!item){box.innerHTML='<p>미디어를 선택하면 여기에서 호출정보를 확인합니다.</p>';return;}const src=safeMediaSrc(item.url);let player='';if(src){player=item.type==='audio'?`<audio controls preload="metadata" src="${esc(src)}"></audio>`:`<video controls preload="metadata" playsinline src="${esc(src)}"></video>`;}else{player='<div class="media-external">직접 재생 미지원 경로 · DISPLAY 호출정보로만 사용</div>';}box.innerHTML=`<div class="media-preview-meta"><span>${mediaTypeLabel(item.type)} · ${esc((item.agent||'gen').toUpperCase())}</span><b>${esc(item.title)}</b><small>${esc(item.url)}</small>${item.note?`<p>${esc(item.note)}</p>`:''}</div>${player}`;}
+  function sendMedia(item){if(!item)return;const actionId=(item.agent==='aria'?'aria':'gen')+':display-media';const payload={media:{id:item.id,title:item.title,type:item.type,url:item.url,note:item.note||'',agent:item.agent||'gen'},mode:'display',autoplay:false};const result=window.AIOfficeDisplayBridge?.send?window.AIOfficeDisplayBridge.send(actionId,'media',payload):null;const at=new Date().toISOString();try{localStorage.setItem(MEDIA_LAST_KEY,JSON.stringify({id:item.id,title:item.title,at,sent:!!result?.sent}));}catch(e){}const note=document.getElementById('mediaTransportNote');if(note)note.textContent=result?.sent?'기존 transport로 전달됨':'SAFE BRIDGE 내부 이벤트 완료 · 실제 DISPLAY transport는 아직 미연결';renderMedia();}
+  const mediaForm=document.getElementById('mediaForm');if(mediaForm)mediaForm.addEventListener('submit',e=>{e.preventDefault();const title=document.getElementById('mediaTitle').value.trim(),url=document.getElementById('mediaUrl').value.trim();if(!title||!url)return;const rows=loadMedia();const item={id:'media-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title,type:document.getElementById('mediaType').value,agent:document.getElementById('mediaAgent').value,url,note:document.getElementById('mediaNote').value.trim(),createdAt:new Date().toISOString()};rows.push(item);saveMedia(rows);selectedMediaId=item.id;mediaForm.reset();renderMedia();});
+  const mediaList=document.getElementById('mediaList');if(mediaList)mediaList.addEventListener('click',e=>{const row=e.target.closest('[data-media-id]');if(!row)return;const rows=loadMedia(),item=rows.find(x=>x.id===row.dataset.mediaId);if(!item)return;if(e.target.closest('[data-media-delete]')){saveMedia(rows.filter(x=>x.id!==item.id));if(selectedMediaId===item.id)selectedMediaId='';renderMedia();return;}selectedMediaId=item.id;if(e.target.closest('[data-media-send]'))sendMedia(item);else renderMedia();});
+  const mediaClear=document.getElementById('mediaClearSelection');if(mediaClear)mediaClear.addEventListener('click',()=>{selectedMediaId='';renderMedia();});
   const RESOURCE_STORAGE_KEY='ipma_ai_office_display_resources_v1';
   const RESOURCE_LAST_KEY='ipma_ai_office_display_resource_last_v1';
   let selectedResourceId=null;
@@ -246,6 +268,7 @@
     if(del){const id=del.dataset.resourceDelete;saveResources(rows.filter(x=>x.id!==id));if(selectedResourceId===id)selectedResourceId=null;renderResources();}
   });
   const clearResourceSelection=document.getElementById('resourceClearSelection');if(clearResourceSelection)clearResourceSelection.addEventListener('click',()=>{selectedResourceId=null;renderResources();});
+  renderMedia();
   renderResources();
 
 
