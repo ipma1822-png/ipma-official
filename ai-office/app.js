@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.4.0';
+  const VERSION='0.5.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -11,7 +11,7 @@
     month:{eyebrow:'THIS MONTH',title:'이번 달',foot:'월간 화면은 주요행사 · 프로젝트 · D-Day · 조직별 핵심업무를 연결하는 상위 보드입니다.',rows:[['월간 중심','중요 일정 · PROJECT · D-Day를 한 화면에서 확인','목표'],['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결 준비','PROJECT · 회의 · 자료 · 아리아 브리핑 구조 준비','연결'],['데이터 원칙','기존 데이터가 있으면 재사용하고 없을 때만 최소 확장','원칙']]},
     schedule:{eyebrow:'SCHEDULE',title:'일정',foot:'4차 일정 화면은 현재 확인된 일정만 읽기 중심으로 표시합니다. 일정 DB 생성·수정은 하지 않습니다.',rows:[['오늘','2026년 9월 2일 · AI 사무국 일정/D-Day 기반 구축','진행'],['다음 일정','2026년 9월 4일 국제드론순찰대 서울 전략회의','중요'],['연결 원칙','일정 → D-Day → TASK → PROJECT 순으로 연결합니다.','연결'],['데이터 원칙','기존 일정 기능이 없으므로 이번 단계에서는 UI/읽기 구조만 구축합니다.','보호']]},
     dday:{eyebrow:'D-DAY',title:'D-Day',foot:'D-Day는 Asia/Seoul 날짜 기준으로 자동 계산하며 첫 실전 PROJECT 일정과 연결됩니다.',rows:[['기준 일정','국제드론순찰대 서울 전략회의','PROJECT'],['목표일','2026년 9월 4일','DATE'],['계산 기준','Asia/Seoul 자정 기준 날짜 차이','자동'],['연결 예정','향후 일정 데이터의 중요일정을 D-Day 카드에 자동 반영','NEXT']]},
-    task:{eyebrow:'TASK',title:'TASK 업무관리',foot:'TASK는 5차 예정 기능입니다. 먼저 기존 기능 존재 여부를 확인합니다.',rows:[['상태','다음 개발단계 후보','NEXT'],['원칙','일정과 TASK는 구분하되 PROJECT에 연결','설계'],['예정 기능','마감 · 중요도 · 완료/미완료 · 관련 프로젝트','예정'],['주의','기존 TASK 기능 존재 여부를 먼저 확인한 뒤 개발','보호']]},
+    task:{eyebrow:'TASK',title:'TASK 업무관리',foot:'5차 TASK는 AI OFFICE 전용 localStorage에 저장하며 기존 Supabase/GMS에는 쓰지 않습니다.',rows:[['구조','해야 할 일 · 마감 · 중요도 · 완료/미완료','운영'],['연결','TASK마다 관련 PROJECT를 지정할 수 있습니다.','PROJECT'],['미완료','완료되지 않은 TASK는 자동 삭제하지 않습니다.','유지'],['저장','현재 브라우저의 AI OFFICE 전용 localStorage만 사용','안전']]},
     project:{eyebrow:'PROJECT',title:'PROJECT',foot:'PROJECT는 6차 예정 기능이며 서울 전략회의를 첫 실전 사례로 사용합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료 · 안건','설계'],['회의 후','결정사항 · 미결사항 · 후속업무를 연결','후속'],['주의','회원·회비·SPARK는 새로 만들지 않고 GMS에서 읽기','보호']]},
     meeting:{eyebrow:'MEETING',title:'회의관리',foot:'회의관리는 PROJECT와 연결하며 독립된 회원·조직 기능을 만들지 않습니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['연결 대상','PROJECT와 연결','연결'],['현재 단계','UI 진입점만 준비','준비']]},
     library:{eyebrow:'RESOURCE',title:'자료',foot:'기존 자료 저장 위치와 호출 방식을 먼저 확인한 뒤 AI OFFICE에서 연결합니다.',rows:[['저장 원칙','AI 사무국에 기존 자료를 중복 저장하지 않습니다.','원칙'],['역할','검색 · 분류 · 호출 · DISPLAY 연결','연결'],['이미지','기존 이미지 전송/표시 기능을 우선 재사용','재사용'],['현재 단계','기존 자료 저장 위치 조사 후 연결 예정','NEXT']]}
@@ -101,6 +101,70 @@
     document.querySelectorAll('.period-card').forEach(c=>c.classList.remove('selected'));
     document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'center'});
   }));
+
+
+  // ===== HOME 5차 · TASK 업무관리 (AI OFFICE 전용 localStorage) =====
+  const TASK_STORAGE_KEY='ipma_ai_office_tasks_v1';
+  let taskFilter='all';
+
+  const taskSeed=[
+    {id:'seed-member-plan',title:'회원등급안 준비',due:'2026-09-04',priority:'high',project:'서울 전략회의',done:false,createdAt:'2026-09-02T00:00:00+09:00'},
+    {id:'seed-fee-plan',title:'회비 A/B/C안 작성',due:'2026-09-04',priority:'high',project:'서울 전략회의',done:false,createdAt:'2026-09-02T00:00:00+09:00'},
+    {id:'seed-org-chart',title:'조직도 준비',due:'2026-09-04',priority:'normal',project:'서울 전략회의',done:false,createdAt:'2026-09-02T00:00:00+09:00'},
+    {id:'seed-spark-vision',title:'SPARK 비전 준비',due:'2026-09-04',priority:'normal',project:'서울 전략회의',done:false,createdAt:'2026-09-02T00:00:00+09:00'},
+    {id:'seed-tab-check',title:'Galaxy Tab 자료 점검',due:'2026-09-04',priority:'normal',project:'서울 전략회의',done:false,createdAt:'2026-09-02T00:00:00+09:00'}
+  ];
+
+  function loadTasks(){
+    try{
+      const raw=localStorage.getItem(TASK_STORAGE_KEY);
+      if(!raw){ localStorage.setItem(TASK_STORAGE_KEY,JSON.stringify(taskSeed)); return [...taskSeed]; }
+      const parsed=JSON.parse(raw);
+      return Array.isArray(parsed)?parsed:[...taskSeed];
+    }catch(e){ return [...taskSeed]; }
+  }
+  function saveTasks(tasks){
+    try{ localStorage.setItem(TASK_STORAGE_KEY,JSON.stringify(tasks)); }catch(e){}
+  }
+  function esc(v){ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function priorityLabel(v){ return v==='high'?'중요':v==='low'?'낮음':'보통'; }
+  function renderTasks(){
+    const list=document.getElementById('taskList'); if(!list)return;
+    const tasks=loadTasks();
+    const visible=tasks.filter(t=>taskFilter==='all'||(taskFilter==='done'?t.done:!t.done));
+    document.getElementById('taskTotal').textContent=tasks.length;
+    document.getElementById('taskOpen').textContent=tasks.filter(t=>!t.done).length;
+    document.getElementById('taskDone').textContent=tasks.filter(t=>t.done).length;
+    if(!visible.length){ list.innerHTML='<div class="task-empty">표시할 TASK가 없습니다.</div>'; return; }
+    list.innerHTML=visible.map(t=>`<div class="task-item ${t.done?'done':''}" data-task-id="${esc(t.id)}">
+      <label class="task-check"><input type="checkbox" ${t.done?'checked':''} data-task-toggle><span></span></label>
+      <div class="task-copy"><b>${esc(t.title)}</b><small>${t.due?'마감 '+esc(t.due):'마감일 없음'} · ${esc(t.project||'일반')}</small></div>
+      <em class="priority ${esc(t.priority||'normal')}">${priorityLabel(t.priority)}</em>
+      <button type="button" class="task-delete" data-task-delete aria-label="TASK 삭제">삭제</button>
+    </div>`).join('');
+  }
+  function addTask(data){ const tasks=loadTasks(); tasks.unshift(data); saveTasks(tasks); renderTasks(); }
+  function updateTask(id,patch){ const tasks=loadTasks().map(t=>t.id===id?{...t,...patch}:t); saveTasks(tasks); renderTasks(); }
+  function deleteTask(id){ const tasks=loadTasks().filter(t=>t.id!==id); saveTasks(tasks); renderTasks(); }
+
+  const taskForm=document.getElementById('taskForm');
+  if(taskForm) taskForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const title=document.getElementById('taskTitle').value.trim(); if(!title)return;
+    addTask({id:'task-'+Date.now(),title,due:document.getElementById('taskDue').value,priority:document.getElementById('taskPriority').value,project:document.getElementById('taskProject').value,done:false,createdAt:new Date().toISOString()});
+    taskForm.reset(); document.getElementById('taskPriority').value='normal'; document.getElementById('taskProject').value='서울 전략회의';
+  });
+  const taskList=document.getElementById('taskList');
+  if(taskList) taskList.addEventListener('change',e=>{
+    const row=e.target.closest('[data-task-id]'); if(row&&e.target.matches('[data-task-toggle]')) updateTask(row.dataset.taskId,{done:e.target.checked});
+  });
+  if(taskList) taskList.addEventListener('click',e=>{
+    const row=e.target.closest('[data-task-id]'); if(row&&e.target.matches('[data-task-delete]')) deleteTask(row.dataset.taskId);
+  });
+  document.querySelectorAll('[data-task-filter]').forEach(btn=>btn.addEventListener('click',()=>{
+    taskFilter=btn.dataset.taskFilter; document.querySelectorAll('[data-task-filter]').forEach(x=>x.classList.toggle('active',x===btn)); renderTasks();
+  }));
+  renderTasks();
 
   updateClock();
   renderPanel('today');
