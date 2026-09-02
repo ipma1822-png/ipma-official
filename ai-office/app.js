@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.9.1';
+  const VERSION='1.9.2';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -158,31 +158,7 @@
     emit:emitDisplayBridge
   });
 
-  
-/* =========================================================
-   v1.9.1 TASK PROPOSAL ROUTER PINPOINT
-   Preserve explicit displayAction from mobile CONTROL.
-   ========================================================= */
-function normalizeDisplayAction(raw){
-  const v=String(raw||"").trim();
-  const allowed=new Set([
-    "aria:today","aria:week","aria:month","aria:schedule",
-    "aria:task","aria:project","aria:meeting",
-    "aria:meeting-agenda","aria:meeting-check","aria:meeting-brief",
-    "aria:meeting-result","aria:followup","aria:followup-check",
-    "aria:task-proposal","aria:task-approval",
-    "gen:news","gen:article","gen:library","gen:media"
-  ]);
-  return allowed.has(v)?v:"";
-}
-function getRequestedDisplayAction(){
-  try{
-    const p=new URLSearchParams(location.search);
-    return normalizeDisplayAction(p.get("displayAction"));
-  }catch(_){ return ""; }
-}
-
-function executeOfficeAction(actionId,source='menu'){
+  function executeOfficeAction(actionId,source='menu'){
   const realWorkflows={
     "aria:today":todayWorkflow,
     "aria:week":weekWorkflow,
@@ -205,7 +181,16 @@ function executeOfficeAction(actionId,source='menu'){
     "gen:media":mediaWorkflow
   };
   if(realWorkflows[actionId]){
-    try{ realWorkflows[actionId](); }catch(err){ console.error("REAL WORKFLOW",err); }
+    try{
+      realWorkflows[actionId]();
+      const state=document.getElementById('voiceState');
+      if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'업무 ACTION 실행')+' · '+actionId;
+      if(source!=='display') emitDisplayBridge(actionId,source,{workflow:true});
+      return true; // 핵심: 아래 legacy renderPanel(action)이 다시 TODAY로 덮어쓰지 못하게 종료
+    }catch(err){
+      console.error('REAL WORKFLOW',err);
+      return false;
+    }
   }
 
     if(!actionId)return false;
@@ -777,7 +762,7 @@ function executeOfficeAction(actionId,source='menu'){
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.9.1 / HOME 17차
+   AI OFFICE 2.0 v1.9.2 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -836,7 +821,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.9.1 REAL OFFICE WORKFLOW
+   v1.9.2 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -884,7 +869,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.9.1</span>
+      <span class="version-chip">v1.9.2</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -967,7 +952,7 @@ function scheduleWorkflow(){
 function taskWorkflow(){
   const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
   const rows=tasks.slice(0,8).map(x=>[x.title||x.name||"TASK",x.status||"대기",x.dueDate?`마감 ${fmtDateText(x.dueDate)}`:""]);
-  renderWorkflow("TASK 업무판","ARIA · TASK",rows,"TASK 저장 구조는 변경하지 않습니다.");
+  renderWorkflow("업무 목록","ARIA · 업무",rows,"TASK 저장 구조는 변경하지 않습니다.");
 }
 function projectWorkflow(){
   const projects=readJsonStore("ipma_ai_office_projects_v1",[]);
@@ -1129,7 +1114,7 @@ function taskProposalWorkflow(){
     }
   }
   const rows=items.slice(0,10).map((x,i)=>[`제안 ${i+1}`,x.title,x.meetingTitle||"회의"]);
-  renderWorkflow("후속 TASK 제안","ARIA · TASK PROPOSAL",rows,"회의 결정사항을 TASK 후보로만 준비합니다. 아직 실제 TASK가 아니며 자동 등록되지 않습니다.");
+  renderWorkflow("후속 업무 제안","ARIA · 업무 PROPOSAL",rows,"회의 결정사항을 업무 후보로만 준비합니다. 아직 실제 업무가 아니며 자동 등록되지 않습니다.");
 }
 function taskApprovalWorkflow(){
   const all=taskProposalItems();
@@ -1137,19 +1122,19 @@ function taskApprovalWorkflow(){
   const el=ensureWorkflowPanel();
   const cards=items.length?items.map((x,i)=>`
     <article class="approval-card" data-proposal-id="${escapeHtml(String(x.id||""))}">
-      <h3>${escapeHtml(String(x.title||"TASK 후보"))}</h3>
+      <h3>${escapeHtml(String(x.title||"업무 후보"))}</h3>
       <div class="approval-meta">${escapeHtml(String(x.meetingTitle||"회의"))} · 승인 대기 ${i+1}</div>
       <div class="approval-actions">
-        <button class="approve" type="button" data-approve-id="${escapeHtml(String(x.id||""))}">✓ 승인하여 TASK 등록</button>
+        <button class="approve" type="button" data-approve-id="${escapeHtml(String(x.id||""))}">✓ 승인하여 업무 등록</button>
         <button class="reject" type="button" data-reject-id="${escapeHtml(String(x.id||""))}">✕ 거절</button>
       </div>
-      <div class="approval-status">사람이 승인하기 전에는 실제 TASK에 등록되지 않습니다.</div>
+      <div class="approval-status">사람이 승인하기 전에는 실제 업무에 등록되지 않습니다.</div>
     </article>
-  `).join(""):`<article class="approval-card"><h3>승인 대기 TASK 없음</h3><div class="approval-status">현재 검토할 TASK 후보가 없습니다.</div></article>`;
+  `).join(""):`<article class="approval-card"><h3>승인 대기 TASK 없음</h3><div class="approval-status">현재 검토할 업무 후보가 없습니다.</div></article>`;
   el.innerHTML=`
     <div class="section-head">
-      <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>TASK 사람 승인</h2></div>
-      <span class="version-chip">v1.9.1</span>
+      <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>업무 사람 승인</h2></div>
+      <span class="version-chip">v1.9.2</span>
     </div>
     <div class="approval-list">${cards}</div>
     <p class="safe-note">승인 버튼을 누른 후보만 기존 AI 사무국 TASK 저장소에 등록합니다. 거절한 후보는 TASK가 되지 않습니다.</p>
@@ -1170,7 +1155,7 @@ function approveTaskProposal(id){
   const proposals=taskProposalItems();
   const p=proposals.find(x=>String(x.id)===String(id));
   if(!p || p.status!=="proposal") return;
-  if(!window.confirm(`"${p.title}"\n\n이 항목을 실제 TASK로 등록하시겠습니까?`)) return;
+  if(!window.confirm(`"${p.title}"\n\n이 항목을 실제 업무로 등록하시겠습니까?`)) return;
 
   const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
   const duplicate=tasks.some(t=>
@@ -1205,18 +1190,18 @@ function approveTaskProposal(id){
   p.taskId=task.id;
   saveTaskProposalItems(proposals);
 
-  alert("승인되었습니다. 실제 TASK에 등록했습니다.");
+  alert("승인되었습니다. 실제 업무에 등록했습니다.");
   taskApprovalWorkflow();
 }
 function rejectTaskProposal(id){
   const proposals=taskProposalItems();
   const p=proposals.find(x=>String(x.id)===String(id));
   if(!p || p.status!=="proposal") return;
-  if(!window.confirm(`"${p.title}"\n\n이 TASK 후보를 거절하시겠습니까?`)) return;
+  if(!window.confirm(`"${p.title}"\n\n이 업무 후보를 거절하시겠습니까?`)) return;
   p.status="rejected";
   p.rejectedAt=new Date().toISOString();
   saveTaskProposalItems(proposals);
-  alert("거절되었습니다. 실제 TASK에는 등록하지 않았습니다.");
+  alert("거절되었습니다. 실제 업무에는 등록하지 않았습니다.");
   taskApprovalWorkflow();
 }
 
@@ -1240,19 +1225,4 @@ function mediaWorkflow(){
   const rows=items.slice(0,8).map(x=>[x.title||x.name||"미디어",x.type||"MEDIA",x.url||x.path||""]);
   renderWorkflow("미디어 호출","GEN · MEDIA",rows,"자동재생하지 않습니다. 사용자가 선택한 항목만 실행합니다.");
 }
-
-
-
-/* v1.9.1 explicit DISPLAY boot: do not let default TODAY override mobile action */
-window.addEventListener("DOMContentLoaded",()=>{
-  const requested=getRequestedDisplayAction();
-  if(!requested) return;
-  setTimeout(()=>{
-    try{
-      executeOfficeAction(requested,"display");
-    }catch(err){
-      console.error("DISPLAY ACTION ROUTER v1.9.1",err);
-    }
-  },0);
-},{once:true});
 
