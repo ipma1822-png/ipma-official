@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.7.0';
+  const VERSION='1.8.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -173,6 +173,8 @@
     "aria:meeting-result":meetingResultWorkflow,
     "aria:followup":followupWorkflow,
     "aria:followup-check":followupCheckWorkflow,
+    "aria:task-proposal":taskProposalWorkflow,
+    "aria:task-approval":taskApprovalWorkflow,
     "gen:news":newsWorkflow,
     "gen:article":articleWorkflow,
     "gen:library":libraryWorkflow,
@@ -751,7 +753,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.7.0 / HOME 17차
+   AI OFFICE 2.0 v1.8.0 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -810,7 +812,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.7.0 REAL OFFICE WORKFLOW
+   v1.8.0 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -858,7 +860,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.7.0</span>
+      <span class="version-chip">v1.8.0</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -1060,6 +1062,55 @@ function followupCheckWorkflow(){
     `${t.assignee||t.owner||"담당 미지정"}${t.dueDate?` · ${fmtDateText(t.dueDate)}`:""}`
   ]));
   renderWorkflow("후속 업무 점검","ARIA · FOLLOW-UP CHECK",rows,"회의 후속 TASK의 완료 여부를 점검합니다. 원본 TASK 상태는 변경하지 않습니다.");
+}
+
+
+const TASK_PROPOSAL_KEY="ipma_ai_office_task_proposals_v1";
+function taskProposalItems(){
+  return readJsonStore(TASK_PROPOSAL_KEY,[]);
+}
+function saveTaskProposalItems(items){
+  localStorage.setItem(TASK_PROPOSAL_KEY,JSON.stringify(items));
+}
+function buildMeetingTaskProposals(){
+  const m=latestMeetingRecord();
+  if(!m) return [];
+  const existing=readJsonStore("ipma_ai_office_tasks_v1",[]);
+  const proposals=[];
+  const decisions=Array.isArray(m.decisions)?m.decisions:(m.decisions?[m.decisions]:[]);
+  decisions.forEach((d,i)=>{
+    const text=typeof d==="string"?d:(d?.title||d?.text||"");
+    if(!text) return;
+    const duplicate=existing.some(t=>String(t.meetingId||"")===String(m.id||"") && (t.title||t.name||"").trim()===text.trim());
+    if(!duplicate) proposals.push({
+      id:`proposal-${m.id||"meeting"}-${i}-${Date.now()}`,
+      meetingId:m.id||"",
+      meetingTitle:m.title||"회의",
+      title:text,
+      status:"proposal",
+      createdAt:new Date().toISOString()
+    });
+  });
+  return proposals;
+}
+function taskProposalWorkflow(){
+  let items=taskProposalItems().filter(x=>x.status==="proposal");
+  if(!items.length){
+    const made=buildMeetingTaskProposals();
+    if(made.length){
+      const all=taskProposalItems();
+      all.push(...made);
+      saveTaskProposalItems(all);
+      items=made;
+    }
+  }
+  const rows=items.slice(0,10).map((x,i)=>[`제안 ${i+1}`,x.title,x.meetingTitle||"회의"]);
+  renderWorkflow("후속 TASK 제안","ARIA · TASK PROPOSAL",rows,"회의 결정사항을 TASK 후보로만 준비합니다. 아직 실제 TASK가 아니며 자동 등록되지 않습니다.");
+}
+function taskApprovalWorkflow(){
+  const items=taskProposalItems().filter(x=>x.status==="proposal");
+  const rows=items.slice(0,10).map((x,i)=>[`승인 대기 ${i+1}`,x.title,x.meetingTitle||"회의"]);
+  renderWorkflow("TASK 승인 대기","ARIA · HUMAN APPROVAL",rows,"승인 전 후보 목록입니다. 이번 단계에서는 승인 버튼으로 실제 TASK를 자동 생성하지 않습니다. 다음 쓰기 단계 전 안전 확인용입니다.");
 }
 
 function newsWorkflow(){
