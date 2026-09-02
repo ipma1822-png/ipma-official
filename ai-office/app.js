@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.6.0';
+  const VERSION='0.7.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -13,7 +13,7 @@
     dday:{eyebrow:'D-DAY',title:'D-Day',foot:'D-Day는 Asia/Seoul 날짜 기준으로 자동 계산하며 첫 실전 PROJECT 일정과 연결됩니다.',rows:[['기준 일정','국제드론순찰대 서울 전략회의','PROJECT'],['목표일','2026년 9월 4일','DATE'],['계산 기준','Asia/Seoul 자정 기준 날짜 차이','자동'],['연결 예정','향후 일정 데이터의 중요일정을 D-Day 카드에 자동 반영','NEXT']]},
     task:{eyebrow:'TASK',title:'TASK 업무관리',foot:'5차 TASK는 AI OFFICE 전용 localStorage에 저장하며 기존 Supabase/GMS에는 쓰지 않습니다.',rows:[['구조','해야 할 일 · 마감 · 중요도 · 완료/미완료','운영'],['연결','TASK마다 관련 PROJECT를 지정할 수 있습니다.','PROJECT'],['미완료','완료되지 않은 TASK는 자동 삭제하지 않습니다.','유지'],['저장','현재 브라우저의 AI OFFICE 전용 localStorage만 사용','안전']]},
     project:{eyebrow:'PROJECT',title:'PROJECT 업무관리',foot:'6차 PROJECT는 AI OFFICE 전용 localStorage에서 동작하며 기존 TASK를 프로젝트 단위로 연결합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료','운영'],['프로젝트 기록','결정사항 · 미결사항 · 후속업무를 한 프로젝트에 보존','기록'],['진행률','연결 TASK의 완료율을 기준으로 자동 계산','자동']]},
-    meeting:{eyebrow:'MEETING',title:'회의관리',foot:'회의관리는 PROJECT와 연결하며 독립된 회원·조직 기능을 만들지 않습니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['연결 대상','PROJECT와 연결','연결'],['현재 단계','UI 진입점만 준비','준비']]},
+    meeting:{eyebrow:'MEETING',title:'회의관리',foot:'7차 회의관리는 AI OFFICE 전용 localStorage에서 동작하며 PROJECT와 연결합니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['PROJECT 연결','회의 결과를 서울 전략회의 PROJECT 기록으로 반영할 수 있습니다.','연결'],['저장','현재 브라우저의 AI OFFICE 전용 localStorage만 사용','안전']]},
     library:{eyebrow:'RESOURCE',title:'자료',foot:'기존 자료 저장 위치와 호출 방식을 먼저 확인한 뒤 AI OFFICE에서 연결합니다.',rows:[['저장 원칙','AI 사무국에 기존 자료를 중복 저장하지 않습니다.','원칙'],['역할','검색 · 분류 · 호출 · DISPLAY 연결','연결'],['이미지','기존 이미지 전송/표시 기능을 우선 재사용','재사용'],['현재 단계','기존 자료 저장 위치 조사 후 연결 예정','NEXT']]}
   };
 
@@ -225,6 +225,70 @@
   if(taskList){taskList.addEventListener('change',()=>setTimeout(renderProjectTasks,0));taskList.addEventListener('click',()=>setTimeout(renderProjectTasks,0));}
   if(taskForm)taskForm.addEventListener('submit',()=>setTimeout(renderProjectTasks,0));
   renderProjectBasics();renderProjectTasks();renderProjectRecords();
+
+
+  // ===== HOME 7차 · 회의관리 (AI OFFICE 전용 localStorage) =====
+  const MEETING_STORAGE_KEY='ipma_ai_office_meeting_seoul_v1';
+  const MEETING_RECORDS_KEY='ipma_ai_office_meeting_seoul_records_v1';
+  const meetingSeed={date:'2026-09-04',time:'13:30',location:'서울',status:'준비',purpose:'국제드론순찰대의 정체성 · 조직체계 · 회원제도 · 회비 · AI 사무국 · SPARK · 향후 공동사업의 실행 방향을 정리한다.',participants:'확정 후 입력',materials:'조직도 · 회원등급안 · 회비안 · SPARK 비전 · Galaxy Tab 자료',nextMeetingDate:'',nextMeetingMemo:''};
+  const meetingRecordSeed={
+    agenda:[
+      {text:'국제드론순찰대 정체성과 조직체계 검토'},
+      {text:'무료회원 · 유료회원 · 회비 운영안 검토'},
+      {text:'AI 사무국 · SPARK · 향후 공동사업 검토'}
+    ],
+    questions:[],decisionNeeds:[
+      {text:'회원등급 및 회비 운영 방향'},
+      {text:'임원 종류 · 권한 · 책임 · 임기 운영 방향'}
+    ],decisions:[],unresolved:[],followups:[]
+  };
+  function loadMeeting(){try{const raw=localStorage.getItem(MEETING_STORAGE_KEY);return raw?{...meetingSeed,...JSON.parse(raw)}:{...meetingSeed};}catch(e){return {...meetingSeed};}}
+  function saveMeeting(data){try{localStorage.setItem(MEETING_STORAGE_KEY,JSON.stringify(data));}catch(e){}}
+  function loadMeetingRecords(){try{const raw=localStorage.getItem(MEETING_RECORDS_KEY);const parsed=raw?JSON.parse(raw):{};const out={...meetingRecordSeed,...parsed};Object.keys(meetingRecordSeed).forEach(k=>out[k]=Array.isArray(out[k])?out[k]:[]);return out;}catch(e){return JSON.parse(JSON.stringify(meetingRecordSeed));}}
+  function saveMeetingRecords(data){try{localStorage.setItem(MEETING_RECORDS_KEY,JSON.stringify(data));}catch(e){}}
+  function renderMeetingBasics(){
+    const m=loadMeeting();
+    const map={meetingDate:'date',meetingTime:'time',meetingLocation:'location',meetingStatus:'status',meetingPurpose:'purpose',meetingParticipants:'participants',meetingMaterials:'materials',nextMeetingDate:'nextMeetingDate',nextMeetingMemo:'nextMeetingMemo'};
+    Object.entries(map).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.value=m[key]||'';});
+    const badge=document.getElementById('meetingStatusBadge');if(badge)badge.textContent=m.status||'준비';
+  }
+  function renderMeetingRecords(){
+    const records=loadMeetingRecords();
+    document.querySelectorAll('[data-meeting-kind]').forEach(box=>{
+      const kind=box.dataset.meetingKind;const list=box.querySelector('.meeting-item-list');const items=records[kind]||[];
+      list.innerHTML=items.length?items.map((item,i)=>{
+        const detail=kind==='followups'?`<small>${item.owner?'담당 '+esc(item.owner):'담당 미정'}${item.due?' · 마감 '+esc(item.due):''}</small>`:'';
+        return `<div class="meeting-item"><span>${String(i+1).padStart(2,'0')}</span><p><b>${esc(item.text)}</b>${detail}</p><button type="button" data-meeting-delete="${i}">삭제</button></div>`;
+      }).join(''):'<div class="meeting-empty">아직 기록이 없습니다.</div>';
+    });
+  }
+  const meetingSave=document.getElementById('meetingSave');
+  if(meetingSave)meetingSave.addEventListener('click',()=>{
+    const old=loadMeeting();const data={...old,date:document.getElementById('meetingDate').value,time:document.getElementById('meetingTime').value,location:document.getElementById('meetingLocation').value.trim(),status:document.getElementById('meetingStatus').value,purpose:document.getElementById('meetingPurpose').value.trim(),participants:document.getElementById('meetingParticipants').value.trim(),materials:document.getElementById('meetingMaterials').value.trim()};
+    saveMeeting(data);renderMeetingBasics();const n=document.getElementById('meetingSaveNote');if(n){n.textContent='저장 완료 · AI OFFICE 전용 localStorage';setTimeout(()=>n.textContent='AI OFFICE 전용 localStorage · Supabase 쓰기 없음',1800);}
+  });
+  document.querySelectorAll('.meeting-item-form').forEach(form=>form.addEventListener('submit',e=>{
+    e.preventDefault();const box=form.closest('[data-meeting-kind]');const kind=box.dataset.meetingKind;const input=form.querySelector('input');const text=input.value.trim();if(!text)return;const records=loadMeetingRecords();records[kind].push({text,createdAt:new Date().toISOString()});saveMeetingRecords(records);input.value='';renderMeetingRecords();
+  }));
+  document.querySelectorAll('.meeting-followup-form').forEach(form=>form.addEventListener('submit',e=>{
+    e.preventDefault();const text=form.querySelector('.followup-text').value.trim();if(!text)return;const records=loadMeetingRecords();records.followups.push({text,owner:form.querySelector('.followup-owner').value.trim(),due:form.querySelector('.followup-due').value,createdAt:new Date().toISOString()});saveMeetingRecords(records);form.reset();renderMeetingRecords();
+  }));
+  document.querySelectorAll('.meeting-item-list').forEach(list=>list.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-meeting-delete]');if(!btn)return;const box=list.closest('[data-meeting-kind]');const kind=box.dataset.meetingKind;const records=loadMeetingRecords();records[kind].splice(Number(btn.dataset.meetingDelete),1);saveMeetingRecords(records);renderMeetingRecords();
+  }));
+  const nextMeetingSave=document.getElementById('nextMeetingSave');
+  if(nextMeetingSave)nextMeetingSave.addEventListener('click',()=>{const m=loadMeeting();m.nextMeetingDate=document.getElementById('nextMeetingDate').value;m.nextMeetingMemo=document.getElementById('nextMeetingMemo').value.trim();saveMeeting(m);nextMeetingSave.textContent='저장 완료';setTimeout(()=>nextMeetingSave.textContent='다음 회의 저장',1500);});
+
+  const meetingSyncProject=document.getElementById('meetingSyncProject');
+  if(meetingSyncProject)meetingSyncProject.addEventListener('click',()=>{
+    const mr=loadMeetingRecords();const pr=loadProjectRecords();
+    const merge=(target,items,mapper)=>{const existing=new Set(target.map(x=>String(x.text||'').trim()));items.forEach(item=>{const v=mapper(item);if(v.text&&!existing.has(v.text.trim())){target.push(v);existing.add(v.text.trim());}});};
+    merge(pr.decisions,mr.decisions,x=>({text:x.text,source:'meeting',createdAt:x.createdAt||new Date().toISOString()}));
+    merge(pr.unresolved,mr.unresolved,x=>({text:x.text,source:'meeting',createdAt:x.createdAt||new Date().toISOString()}));
+    merge(pr.followups,mr.followups,x=>({text:`${x.text}${x.owner?' · 담당 '+x.owner:''}${x.due?' · 마감 '+x.due:''}`,source:'meeting',createdAt:x.createdAt||new Date().toISOString()}));
+    saveProjectRecords(pr);renderProjectRecords();const note=document.getElementById('meetingSyncNote');if(note){note.textContent='PROJECT 기록 반영 완료';setTimeout(()=>note.textContent='중복 문구는 자동으로 건너뜁니다.',2000);}
+  });
+  renderMeetingBasics();renderMeetingRecords();
 
   updateClock();
   renderPanel('today');
