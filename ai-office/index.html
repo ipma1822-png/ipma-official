@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#081b31">
+  <title>AI 사무국 2.0 | IPMA</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../admin-hub/" aria-label="관리자 허브로 이동">
+      <img src="../assets/logos/ipma-logo.jpg" alt="IPMA">
+      <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="status"><i></i> HOME 2차</span>
+      <a class="ghost" href="../admin-hub/">관리자 허브</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="welcome">
+      <div>
+        <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
+        <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
+        <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
+      </div>
+      <div class="clock-card" aria-label="현재 시각">
+        <span id="todayLabel">오늘</span>
+        <b id="clock">--:--</b>
+        <small>Asia/Seoul</small>
+      </div>
+    </section>
+
+    <section class="priority-strip" aria-label="핵심 업무 현황">
+      <article><span>지금 가장 중요한 일</span><b>서울 전략회의 준비</b><small>첫 실전 PROJECT</small></article>
+      <article><span>다음 중요 일정</span><b>9월 4일</b><small>국제드론순찰대 서울 전략회의</small></article>
+      <article><span>D-DAY</span><b id="dday">계산 중</b><small>2026.09.04 기준</small></article>
+      <article><span>시스템 원칙</span><b>REUSE → CONNECT</b><small>중복개발 금지</small></article>
+    </section>
+
+    <section class="section-head">
+      <div><p class="eyebrow">WORKSPACE</p><h2>오늘의 업무 공간</h2></div>
+      <p>2차 HOME에서는 화면 구조만 구축합니다. 일정·TASK·PROJECT 데이터 쓰기는 다음 단계에서 연결합니다.</p>
+    </section>
+
+    <section class="workspace-grid">
+      <button class="work-card active" data-panel="briefing"><span class="icon">☀</span><strong>출근 브리핑</strong><small>오늘의 핵심을 한눈에</small><em>OPEN</em></button>
+      <button class="work-card" data-panel="today"><span class="icon">📅</span><strong>오늘</strong><small>일정 · 업무 · 준비사항</small><em>READY</em></button>
+      <button class="work-card" data-panel="week"><span class="icon">🎯</span><strong>이번 주</strong><small>핵심목표 · 마감 · 진행률</small><em>READY</em></button>
+      <button class="work-card" data-panel="month"><span class="icon">🗓</span><strong>이번 달</strong><small>행사 · 프로젝트 · D-Day</small><em>READY</em></button>
+      <button class="work-card" data-panel="task"><span class="icon">☑</span><strong>TASK</strong><small>해야 할 일과 미완료 업무</small><em>NEXT</em></button>
+      <button class="work-card" data-panel="project"><span class="icon">📊</span><strong>PROJECT</strong><small>목적 · 자료 · 결정 · 후속업무</small><em>NEXT</em></button>
+      <button class="work-card" data-panel="meeting"><span class="icon">👥</span><strong>회의</strong><small>안건 · 결정사항 · 후속업무</small><em>NEXT</em></button>
+      <button class="work-card" data-panel="library"><span class="icon">📂</span><strong>자료</strong><small>기존 자료 검색 · 호출 · 표시</small><em>CONNECT</em></button>
+    </section>
+
+    <section class="desk-grid">
+      <article class="panel main-panel" id="detailPanel">
+        <div class="panel-title"><div><p class="eyebrow" id="panelEyebrow">MORNING BRIEFING</p><h2 id="panelTitle">출근 브리핑</h2></div><span class="safe-badge">읽기 중심</span></div>
+        <div class="brief-list" id="panelBody">
+          <div><span>01</span><p><b>오늘 주요 일정</b><small>서울 전략회의 준비를 첫 PROJECT 기준으로 관리합니다.</small></p></div>
+          <div><span>02</span><p><b>이번 주 핵심</b><small>AI 사무국 HOME 구축 후 일정 → TASK → PROJECT 순으로 확장합니다.</small></p></div>
+          <div><span>03</span><p><b>기존 시스템 보호</b><small>GMS · IDP · SPARK · 인증 · Supabase · Realtime은 이번 단계에서 수정하지 않습니다.</small></p></div>
+          <div><span>04</span><p><b>AI 사무국 제안</b><small>새 기능보다 기존 시스템 연결을 우선합니다.</small></p></div>
+        </div>
+      </article>
+
+      <aside class="panel ai-panel">
+        <div class="ai-head"><span class="avatar">A</span><div><p class="eyebrow">AI SECRETARY</p><h3>ARIA · 아리아</h3></div></div>
+        <p>전략 · 기획 · 조직 · 일정 · 업무 · 프로젝트 · 회의 브리핑을 담당하는 AI 사무국장 영역입니다.</p>
+        <button class="ai-action" type="button" data-ai="aria">아리아 업무 보기</button>
+      </aside>
+
+      <aside class="panel ai-panel">
+        <div class="ai-head"><span class="avatar gen">G</span><div><p class="eyebrow">AI SECRETARY</p><h3>GEN · 젠</h3></div></div>
+        <p>뉴스 · 기사 · 콘텐츠 · 이미지 · 홍보 · SNS · 미디어 업무를 담당하는 AI 사무국장 영역입니다.</p>
+        <button class="ai-action" type="button" data-ai="gen">젠 업무 보기</button>
+      </aside>
+    </section>
+
+    <section class="connect-panel">
+      <div><p class="eyebrow">EXISTING SYSTEMS</p><h2>새로 만들지 않고 연결합니다</h2></div>
+      <nav class="system-links" aria-label="기존 시스템 바로가기">
+        <a href="../gms-admin/">GMS <span>회원 · PLAN · 회비 · 교육 · 통계</span></a>
+        <a href="../gms-admin/">IDP <span>기존 통합관제 구조 재사용</span></a>
+        <a href="../gms-admin/">SPARK <span>기존 SPARK 관리센터 재사용</span></a>
+        <a href="../admin-hub/">ADMIN HUB <span>기존 관리자 인증 영역</span></a>
+      </nav>
+    </section>
+
+    <footer>
+      <span>AI OFFICE 2.0 · HOME v0.2.0</span>
+      <span>REUSE → CONNECT → EXTEND</span>
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
