@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.14.0';
+  const VERSION='0.16.1';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -173,6 +173,10 @@
     else scrollDetail();
     return true;
   }
+
+  // v0.16.1 PINPOINT: 기존 공통 ACTION 라우터를 자체점검/향후 연동에서
+  // 동일 함수로 참조할 수 있도록 안전하게 공개합니다. 실행 로직은 변경하지 않습니다.
+  window.executeOfficeAction = executeOfficeAction;
 
   document.querySelectorAll('[data-ai-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('aria:'+btn.dataset.aiAction,'menu')));
   document.querySelectorAll('[data-office-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction(btn.dataset.officeAction,'menu')));
@@ -716,7 +720,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v0.16.0 / HOME 16차
+   AI OFFICE 2.0 v0.16.1 / HOME 16차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -724,7 +728,7 @@ function runIntegrationSelfCheck(){
   const add = (name, ok, detail) => results.push({name, ok:!!ok, detail});
 
   add("HOME 화면", !!document.querySelector("main"), "메인 DOM");
-  add("공통 ACTION", typeof window.executeOfficeAction === "function" || typeof executeOfficeAction === "function",
+  add("공통 ACTION", typeof window.executeOfficeAction === "function",
       "VOICE·MENU·예약 공통 실행함수");
   add("SAFE BRIDGE", typeof window.dispatchDisplayBridge === "function" ||
       typeof window.sendToDisplayBridge === "function" ||
