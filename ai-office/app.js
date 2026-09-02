@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.9.0';
+  const VERSION='1.9.1';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -158,7 +158,31 @@
     emit:emitDisplayBridge
   });
 
-  function executeOfficeAction(actionId,source='menu'){
+  
+/* =========================================================
+   v1.9.1 TASK PROPOSAL ROUTER PINPOINT
+   Preserve explicit displayAction from mobile CONTROL.
+   ========================================================= */
+function normalizeDisplayAction(raw){
+  const v=String(raw||"").trim();
+  const allowed=new Set([
+    "aria:today","aria:week","aria:month","aria:schedule",
+    "aria:task","aria:project","aria:meeting",
+    "aria:meeting-agenda","aria:meeting-check","aria:meeting-brief",
+    "aria:meeting-result","aria:followup","aria:followup-check",
+    "aria:task-proposal","aria:task-approval",
+    "gen:news","gen:article","gen:library","gen:media"
+  ]);
+  return allowed.has(v)?v:"";
+}
+function getRequestedDisplayAction(){
+  try{
+    const p=new URLSearchParams(location.search);
+    return normalizeDisplayAction(p.get("displayAction"));
+  }catch(_){ return ""; }
+}
+
+function executeOfficeAction(actionId,source='menu'){
   const realWorkflows={
     "aria:today":todayWorkflow,
     "aria:week":weekWorkflow,
@@ -753,7 +777,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.9.0 / HOME 17차
+   AI OFFICE 2.0 v1.9.1 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -812,7 +836,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.9.0 REAL OFFICE WORKFLOW
+   v1.9.1 REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -860,7 +884,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.9.0</span>
+      <span class="version-chip">v1.9.1</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -1125,7 +1149,7 @@ function taskApprovalWorkflow(){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>TASK 사람 승인</h2></div>
-      <span class="version-chip">v1.9.0</span>
+      <span class="version-chip">v1.9.1</span>
     </div>
     <div class="approval-list">${cards}</div>
     <p class="safe-note">승인 버튼을 누른 후보만 기존 AI 사무국 TASK 저장소에 등록합니다. 거절한 후보는 TASK가 되지 않습니다.</p>
@@ -1216,4 +1240,19 @@ function mediaWorkflow(){
   const rows=items.slice(0,8).map(x=>[x.title||x.name||"미디어",x.type||"MEDIA",x.url||x.path||""]);
   renderWorkflow("미디어 호출","GEN · MEDIA",rows,"자동재생하지 않습니다. 사용자가 선택한 항목만 실행합니다.");
 }
+
+
+
+/* v1.9.1 explicit DISPLAY boot: do not let default TODAY override mobile action */
+window.addEventListener("DOMContentLoaded",()=>{
+  const requested=getRequestedDisplayAction();
+  if(!requested) return;
+  setTimeout(()=>{
+    try{
+      executeOfficeAction(requested,"display");
+    }catch(err){
+      console.error("DISPLAY ACTION ROUTER v1.9.1",err);
+    }
+  },0);
+},{once:true});
 
