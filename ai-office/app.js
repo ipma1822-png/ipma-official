@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.3.0';
+  const VERSION='0.4.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -9,6 +9,8 @@
     today:{eyebrow:'TODAY',title:'오늘',foot:'오늘 화면은 일정 · 업무 · 준비사항을 한곳에 모으는 3차 업무판입니다.',rows:[['가장 중요한 일','서울 전략회의 준비','우선'],['다음 중요 일정','2026년 9월 4일 국제드론순찰대 서울 전략회의','D-DAY'],['오늘의 운영','등록된 일정/TASK 저장 기능 연결 전까지 임의 업무를 생성하지 않습니다.','안전'],['확인할 것','다음 단계에서 기존 일정 기능 존재 여부를 조사한 뒤 연결합니다.','NEXT']]},
     week:{eyebrow:'THIS WEEK',title:'이번 주',foot:'주간 화면은 핵심목표 · 마감 · 프로젝트 진행 흐름을 연결하기 위한 기반입니다.',rows:[['주간 핵심목표','AI 사무국 HOME의 업무운영 기반 확립','핵심'],['개발 흐름','오늘/주간/월간 → 일정/D-Day → TASK → PROJECT','순서'],['첫 실전 적용','서울 전략회의 준비를 PROJECT 테스트 사례로 사용','PROJECT'],['보호영역','인증 · Supabase · RLS · Realtime · GMS · IDP · SPARK','보호']]},
     month:{eyebrow:'THIS MONTH',title:'이번 달',foot:'월간 화면은 주요행사 · 프로젝트 · D-Day · 조직별 핵심업무를 연결하는 상위 보드입니다.',rows:[['월간 중심','중요 일정 · PROJECT · D-Day를 한 화면에서 확인','목표'],['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결 준비','PROJECT · 회의 · 자료 · 아리아 브리핑 구조 준비','연결'],['데이터 원칙','기존 데이터가 있으면 재사용하고 없을 때만 최소 확장','원칙']]},
+    schedule:{eyebrow:'SCHEDULE',title:'일정',foot:'4차 일정 화면은 현재 확인된 일정만 읽기 중심으로 표시합니다. 일정 DB 생성·수정은 하지 않습니다.',rows:[['오늘','2026년 9월 2일 · AI 사무국 일정/D-Day 기반 구축','진행'],['다음 일정','2026년 9월 4일 국제드론순찰대 서울 전략회의','중요'],['연결 원칙','일정 → D-Day → TASK → PROJECT 순으로 연결합니다.','연결'],['데이터 원칙','기존 일정 기능이 없으므로 이번 단계에서는 UI/읽기 구조만 구축합니다.','보호']]},
+    dday:{eyebrow:'D-DAY',title:'D-Day',foot:'D-Day는 Asia/Seoul 날짜 기준으로 자동 계산하며 첫 실전 PROJECT 일정과 연결됩니다.',rows:[['기준 일정','국제드론순찰대 서울 전략회의','PROJECT'],['목표일','2026년 9월 4일','DATE'],['계산 기준','Asia/Seoul 자정 기준 날짜 차이','자동'],['연결 예정','향후 일정 데이터의 중요일정을 D-Day 카드에 자동 반영','NEXT']]},
     task:{eyebrow:'TASK',title:'TASK 업무관리',foot:'TASK는 5차 예정 기능입니다. 먼저 기존 기능 존재 여부를 확인합니다.',rows:[['상태','다음 개발단계 후보','NEXT'],['원칙','일정과 TASK는 구분하되 PROJECT에 연결','설계'],['예정 기능','마감 · 중요도 · 완료/미완료 · 관련 프로젝트','예정'],['주의','기존 TASK 기능 존재 여부를 먼저 확인한 뒤 개발','보호']]},
     project:{eyebrow:'PROJECT',title:'PROJECT',foot:'PROJECT는 6차 예정 기능이며 서울 전략회의를 첫 실전 사례로 사용합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료 · 안건','설계'],['회의 후','결정사항 · 미결사항 · 후속업무를 연결','후속'],['주의','회원·회비·SPARK는 새로 만들지 않고 GMS에서 읽기','보호']]},
     meeting:{eyebrow:'MEETING',title:'회의관리',foot:'회의관리는 PROJECT와 연결하며 독립된 회원·조직 기능을 만들지 않습니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['연결 대상','PROJECT와 연결','연결'],['현재 단계','UI 진입점만 준비','준비']]},
@@ -42,7 +44,10 @@
     document.getElementById('clock').textContent=new Intl.DateTimeFormat('ko-KR',{timeZone:SEOUL_TZ,hour:'2-digit',minute:'2-digit',hour12:false}).format(now);
     const seoulToday=new Date(getSeoulYmd(now)+'T00:00:00+09:00');
     const days=Math.ceil((meetingDate-seoulToday)/86400000);
-    document.getElementById('dday').textContent=days>0?'D-'+days:days===0?'D-DAY':'D+'+Math.abs(days);
+    const dText=days>0?'D-'+days:days===0?'D-DAY':'D+'+Math.abs(days);
+    document.getElementById('dday').textContent=dText;
+    const dl=document.getElementById('ddayLarge'); if(dl) dl.textContent=dText;
+    const ds=document.getElementById('ddayState'); if(ds) ds.textContent=days>0?`${days}일 남음 · Asia/Seoul`:days===0?'오늘 · Asia/Seoul':`${Math.abs(days)}일 지남 · Asia/Seoul`;
     document.getElementById('todayCardTitle').textContent=`${sp.month} ${sp.day}`;
     document.getElementById('weekCardTitle').textContent=getWeekRangeLabel(now);
     document.getElementById('monthCardTitle').textContent=`${sp.year} ${sp.month}`;
@@ -54,6 +59,8 @@
     if(key==='today') return `${sp.year} ${sp.month} ${sp.day} (${sp.weekday}) · Asia/Seoul`;
     if(key==='week') return `${getWeekRangeLabel(now)} · 주간 업무판`;
     if(key==='month') return `${sp.year} ${sp.month} · 월간 업무판`;
+    if(key==='schedule') return `${sp.year} ${sp.month} ${sp.day} (${sp.weekday}) · 일정 보드`;
+    if(key==='dday') return `목표일 2026.09.04 · Asia/Seoul`;
     return `AI OFFICE 2.0 · v${VERSION}`;
   }
 
@@ -71,6 +78,12 @@
   document.querySelectorAll('.work-card').forEach(btn=>btn.addEventListener('click',()=>renderPanel(btn.dataset.panel)));
   document.querySelectorAll('.period-card').forEach(card=>card.addEventListener('click',()=>{
     renderPanel(card.dataset.jump);
+    document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'center'});
+  }));
+
+
+  document.querySelectorAll('[data-panel-target]').forEach(btn=>btn.addEventListener('click',()=>{
+    renderPanel(btn.dataset.panelTarget);
     document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'center'});
   }));
 
