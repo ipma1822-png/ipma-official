@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#081b31">
-  <meta name="ai-office-version" content="0.12.0">
-  <title>AI 사무국 2.0 v0.13.0 | IPMA</title>
+  <meta name="ai-office-version" content="0.14.0">
+  <title>AI 사무국 2.0 v0.14.0 | IPMA</title>
   <link rel="stylesheet" href="./style.css?v=0.13.0">
 </head>
 <body>
@@ -16,8 +16,8 @@
       <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
     </a>
     <div class="top-actions">
-      <span class="version-chip">v0.13.0</span>
-      <span class="status"><i></i> HOME 12차</span>
+      <span class="version-chip">v0.14.0</span>
+      <span class="status"><i></i> HOME 14차</span>
       <a class="ghost" href="../admin-hub/">관리자 허브</a>
     </div>
   </header>
@@ -28,7 +28,7 @@
         <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
         <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
         <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
-        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.13.0</b><em>13차 · 자료·이미지 DISPLAY</em></div>
+        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.14.0</b><em>14차 · GEN 기사 준비</em></div>
       </div>
       <div class="clock-card" aria-label="현재 시각">
         <span id="todayLabel">오늘</span>
@@ -312,7 +312,7 @@
       <article class="panel main-panel" id="detailPanel">
         <div class="panel-title">
           <div><p class="eyebrow" id="panelEyebrow">TODAY</p><h2 id="panelTitle">오늘</h2><p class="panel-date" id="panelDate">현재 날짜 기준</p></div>
-          <span class="safe-badge">DISPLAY READY · v0.13.0</span>
+          <span class="safe-badge">DISPLAY READY · v0.14.0</span>
         </div>
         <div class="brief-list" id="panelBody"></div>
         <div class="panel-foot" id="panelFoot">※ TASK와 PROJECT는 AI OFFICE 전용 localStorage에만 저장됩니다. 기존 Supabase/GMS 데이터는 수정하지 않습니다.</div>
@@ -336,7 +336,7 @@
     <section class="news-briefing-board" id="newsBriefingBoard" aria-label="GEN 뉴스 브리핑">
       <div class="news-briefing-head">
         <div><p class="eyebrow">GEN NEWS BRIEFING · 12차</p><h2>뉴스 브리핑</h2><p>확인한 뉴스 제목·출처·요약을 직접 모아 GEN이 우선순위 브리핑으로 정리합니다. 외부 뉴스 자동수집과 기사 자동발행은 아직 연결하지 않습니다.</p></div>
-        <span>v0.13.0 · SAFE NEWS DESK</span>
+        <span>v0.14.0 · SAFE NEWS DESK</span>
       </div>
 
       <div class="news-briefing-grid">
@@ -367,10 +367,48 @@
     </section>
 
 
+    <section class="article-desk-board" id="articleDeskBoard" aria-label="GEN 기사 준비 데스크">
+      <div class="article-desk-head">
+        <div><p class="eyebrow">GEN ARTICLE DESK · 14차</p><h2>기사 준비</h2><p>확인된 뉴스 브리핑을 기사 작업으로 넘겨 제목·부제·요약·본문 초안·태그·이미지 요청 메모를 정리합니다. AI OFFICE는 초안을 준비할 뿐 자동 발행하지 않습니다.</p></div>
+        <span>v0.14.0 · HUMAN APPROVAL</span>
+      </div>
+
+      <div class="article-desk-grid">
+        <article class="article-editor-card">
+          <div class="article-card-head"><div><h3>기사 초안 작성</h3><small id="articleEditState">새 초안</small></div><button type="button" id="articleReset">새로 작성</button></div>
+          <form id="articleDraftForm" class="article-draft-form">
+            <input type="hidden" id="articleDraftId">
+            <label class="wide"><span>뉴스 브리핑 연결</span><select id="articleSourceNews"><option value="">직접 작성 · 뉴스 연결 없음</option></select></label>
+            <label class="wide"><span>제목</span><input id="articleTitle" maxlength="180" placeholder="기사 제목" required></label>
+            <label class="wide"><span>부제목</span><input id="articleSubtitle" maxlength="220" placeholder="기사 부제목"></label>
+            <label class="wide"><span>요약</span><textarea id="articleSummary" rows="3" maxlength="700" placeholder="기사 핵심 요약" required></textarea></label>
+            <label class="wide"><span>본문 초안</span><textarea id="articleBody" rows="10" maxlength="12000" placeholder="확인된 사실과 자료를 바탕으로 본문 초안을 작성하세요."></textarea></label>
+            <label><span>상태</span><select id="articleStatus"><option value="draft">초안</option><option value="review">검토중</option><option value="approval">승인대기</option></select></label>
+            <label><span>태그</span><input id="articleTags" maxlength="240" placeholder="예: IPMA, 드론, 안전"></label>
+            <label class="wide"><span>이미지 요청 메모</span><textarea id="articleImageBrief" rows="3" maxlength="600" placeholder="기사에 필요한 이미지의 장면·구도·문구 등을 메모"></textarea></label>
+            <button type="submit" class="article-save">기사 초안 저장</button>
+          </form>
+          <p class="article-safe-note">※ 저장은 이 브라우저 localStorage에만 합니다. Global News24 자동 발행·게시 API는 연결하지 않습니다.</p>
+        </article>
+
+        <article class="article-status-card">
+          <h3>기사 준비 현황</h3>
+          <div class="article-metrics"><div><small>전체 초안</small><b id="articleTotal">0</b></div><div><small>검토중</small><b id="articleReview">0</b></div><div><small>승인대기</small><b id="articleApproval">0</b></div></div>
+          <div class="article-policy-box"><b>발행 보호</b><span>기사 초안 작성</span><span>사람 검토</span><span>사람 최종 승인</span><em>자동 발행 없음</em></div>
+          <div class="article-preview" id="articlePreview"><p>저장된 초안을 선택하면 기사 구성을 미리 확인할 수 있습니다.</p></div>
+        </article>
+      </div>
+
+      <article class="article-list-card">
+        <div class="article-list-head"><div><h3>기사 초안함</h3><small>최종 수정시간 순 · 브라우저 localStorage</small></div><span id="articleCount">0개</span></div>
+        <div id="articleDraftList" class="article-draft-list"></div>
+      </article>
+    </section>
+
     <section class="resource-display-board" id="resourceDisplayBoard" aria-label="자료 이미지 DISPLAY 준비">
       <div class="resource-display-head">
         <div><p class="eyebrow">RESOURCE → DISPLAY · 13차</p><h2>자료·이미지 DISPLAY</h2><p>기존 자료나 이미지의 위치(URL/경로)를 등록한 뒤 GEN ACTION으로 호출하고 SAFE BRIDGE에 전달합니다. 실제 CONTROL/DISPLAY transport가 연결되기 전에는 외부 기기로 전송하지 않습니다.</p></div>
-        <span>v0.13.0 · SAFE RESOURCE BRIDGE</span>
+        <span>v0.14.0 · SAFE RESOURCE BRIDGE</span>
       </div>
       <div class="resource-display-grid">
         <article class="resource-form-card">
@@ -402,7 +440,7 @@
     <section class="scheduler-board" aria-label="예약업무 보드">
       <div class="scheduler-head">
         <div><p class="eyebrow">SCHEDULED ACTION · 11차</p><h2>예약업무</h2><p>AI OFFICE가 열려 있는 동안 예약시간을 감지하여 기존 MENU/VOICE와 같은 공통 ACTION을 실행합니다. 브라우저가 닫혀 있으면 실행되지 않습니다.</p></div>
-        <span>v0.13.0 · LOCAL SCHEDULER</span>
+        <span>v0.14.0 · LOCAL SCHEDULER</span>
       </div>
 
       <div class="scheduler-grid">
@@ -441,7 +479,7 @@
     <section class="display-bridge-board" aria-label="CONTROL DISPLAY 연결 준비">
       <div class="bridge-head">
         <div><p class="eyebrow">CONTROL ↔ DISPLAY · 10차</p><h2>기존 송출 시스템 연결 준비</h2><p>현재 IPMA ZIP에는 실제 CONTROL/DISPLAY 원본이 포함되어 있지 않아 송수신 코드를 추측해 연결하지 않습니다. 대신 기존 시스템이 나중에 한 줄의 transport 등록만으로 AI OFFICE ACTION을 받을 수 있는 안전한 BRIDGE를 준비했습니다.</p></div>
-        <span>v0.13.0 · SAFE BRIDGE</span>
+        <span>v0.14.0 · SAFE BRIDGE</span>
       </div>
       <div class="bridge-grid">
         <article><small>BRIDGE 상태</small><b id="bridgeStatus">대기 · transport 미연결</b><em id="bridgeDetail">기존 CONTROL/DISPLAY 원본 확인 후 연결</em></article>
@@ -462,7 +500,7 @@
     </section>
 
     <footer>
-      <span><b>AI OFFICE 2.0 · v0.13.0</b> · HOME 13차 · 자료·이미지 DISPLAY</span>
+      <span><b>AI OFFICE 2.0 · v0.14.0</b> · HOME 14차 · GEN 기사 준비</span>
       <span>REUSE → CONNECT → EXTEND</span>
     </footer>
   </main>
