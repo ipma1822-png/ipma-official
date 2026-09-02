@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.10.0';
+  const VERSION='0.11.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -190,6 +190,97 @@
     const note=document.getElementById('bridgeTestNote');
     if(note)note.textContent=result.sent?'등록된 transport로 테스트 ACTION을 전달했습니다.':'정상: 내부 이벤트 발생 · 실제 DISPLAY 전송 없음 (transport 미연결)';
   });
+
+
+  // ===== HOME 11차 · 예약업무 (브라우저 내 LOCAL SCHEDULER) =====
+  const SCHEDULE_STORAGE_KEY='ipma_ai_office_schedules_v1';
+  const SCHEDULE_LAST_KEY='ipma_ai_office_scheduler_last_v1';
+  const scheduleActions={
+    aria:[
+      ['briefing','출근 브리핑'],['today','오늘'],['schedule','일정'],['dday','D-Day'],
+      ['task','TASK'],['project','PROJECT'],['meeting','회의']
+    ],
+    gen:[
+      ['news','뉴스'],['article','기사'],['content','콘텐츠'],['image','이미지'],['media','미디어'],['library','자료']
+    ]
+  };
+  function loadSchedules(){try{const raw=localStorage.getItem(SCHEDULE_STORAGE_KEY);const v=raw?JSON.parse(raw):[];return Array.isArray(v)?v:[];}catch(e){return [];}}
+  function saveSchedules(v){try{localStorage.setItem(SCHEDULE_STORAGE_KEY,JSON.stringify(v));}catch(e){}}
+  function localSeoulParts(date=new Date()){
+    const fmt=new Intl.DateTimeFormat('en-CA',{timeZone:SEOUL_TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false,weekday:'short'});
+    const p=fmt.formatToParts(date);const g=t=>p.find(x=>x.type===t)?.value||'';
+    return {date:`${g('year')}-${g('month')}-${g('day')}`,time:`${g('hour')}:${g('minute')}`,year:+g('year'),month:+g('month'),day:+g('day'),weekday:g('weekday')};
+  }
+  function repeatLabel(v){return v==='daily'?'매일':v==='weekly'?'매주':v==='monthly'?'매월':'한 번';}
+  function actionLabel(s){const rows=scheduleActions[s.agent]||[];const hit=rows.find(x=>x[0]===s.action);return `${s.agent==='gen'?'GEN · 젠':'ARIA · 아리아'} · ${hit?hit[1]:s.action}`;}
+  function scheduleMatchesToday(s,p){
+    if(!s.enabled)return false;
+    if(s.repeat==='once')return s.date===p.date;
+    if(s.repeat==='daily')return !s.date||p.date>=s.date;
+    if(!s.date)return false;
+    const start=new Date(s.date+'T00:00:00+09:00');
+    const today=new Date(p.date+'T00:00:00+09:00');
+    if(today<start)return false;
+    if(s.repeat==='weekly')return start.getDay()===today.getDay();
+    if(s.repeat==='monthly')return start.getDate()===today.getDate();
+    return false;
+  }
+  function nextOccurrence(s,now=new Date()){
+    if(!s.enabled||!s.time)return null;
+    const p=localSeoulParts(now);const candidates=[];
+    for(let i=0;i<370;i++){
+      const d=new Date(p.date+'T00:00:00+09:00');d.setDate(d.getDate()+i);
+      const dp=localSeoulParts(d);
+      if(scheduleMatchesToday(s,dp)){
+        const when=new Date(dp.date+'T'+s.time+':00+09:00');
+        if(when>=now){candidates.push(when);break;}
+      }
+      if(s.repeat==='once'&&i>1&&s.date<p.date)break;
+    }
+    return candidates[0]||null;
+  }
+  function updateActionOptions(){
+    const agent=document.getElementById('scheduleAgent'),sel=document.getElementById('scheduleAction');if(!agent||!sel)return;
+    sel.innerHTML=(scheduleActions[agent.value]||[]).map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
+  }
+  function formatNext(when){if(!when)return ['없음','실행 가능한 활성 예약 없음'];const p=localSeoulParts(when);return [`${p.month}.${String(p.day).padStart(2,'0')} ${p.time}`,`${p.date} · Asia/Seoul`];}
+  function renderSchedules(){
+    const list=document.getElementById('scheduleList');if(!list)return;const schedules=loadSchedules();
+    const active=schedules.filter(s=>s.enabled).length;const ae=document.getElementById('schedulerActive');if(ae)ae.textContent=active;
+    const cnt=document.getElementById('schedulerCount');if(cnt)cnt.textContent=schedules.length+'개';
+    let next=null;for(const s of schedules){const n=nextOccurrence(s);if(n&&(!next||n.when<next.when))next={s,when:n};}
+    const [nt,nd]=formatNext(next?.when);const ne=document.getElementById('schedulerNext');if(ne)ne.textContent=nt;const ned=document.getElementById('schedulerNextDetail');if(ned)ned.textContent=next?`${next.s.title} · ${nd}`:nd;
+    try{const last=JSON.parse(localStorage.getItem(SCHEDULE_LAST_KEY)||'null');if(last){const le=document.getElementById('schedulerLast');if(le)le.textContent=last.title||last.actionId;const ld=document.getElementById('schedulerLastDetail');if(ld)ld.textContent=`${last.atLabel} · ${last.actionId}`;}}catch(e){}
+    if(!schedules.length){list.innerHTML='<div class="schedule-empty">등록된 예약업무가 없습니다.</div>';return;}
+    list.innerHTML=schedules.map(s=>{const n=nextOccurrence(s);const nextText=n?formatNext(n)[0]:'예정 없음';return `<div class="schedule-item ${s.enabled?'':'disabled'}" data-schedule-id="${esc(s.id)}"><button type="button" class="schedule-toggle" data-schedule-toggle aria-label="활성 전환"><span></span></button><div class="schedule-main"><b>${esc(s.title)}</b><small>${esc(actionLabel(s))} · ${repeatLabel(s.repeat)} · ${esc(s.time)}${s.date?' · 시작 '+esc(s.date):''}</small></div><em>${esc(nextText)}</em><button type="button" class="schedule-delete" data-schedule-delete>삭제</button></div>`;}).join('');
+  }
+  function runScheduleTick(){
+    const schedules=loadSchedules();if(!schedules.length){renderSchedules();return;}const p=localSeoulParts();let changed=false;
+    schedules.forEach(s=>{
+      if(!s.enabled||!scheduleMatchesToday(s,p)||s.time!==p.time)return;
+      const runKey=`${p.date}T${p.time}`;if(s.lastRunKey===runKey)return;
+      const actionId=`${s.agent}:${s.action}`;executeOfficeAction(actionId,'schedule');
+      s.lastRunKey=runKey;s.lastRunAt=new Date().toISOString();if(s.repeat==='once')s.enabled=false;changed=true;
+      try{localStorage.setItem(SCHEDULE_LAST_KEY,JSON.stringify({title:s.title,actionId,at:s.lastRunAt,atLabel:`${p.date} ${p.time}`}));}catch(e){}
+    });
+    if(changed)saveSchedules(schedules);renderSchedules();
+  }
+  const scheduleAgent=document.getElementById('scheduleAgent');if(scheduleAgent)scheduleAgent.addEventListener('change',updateActionOptions);updateActionOptions();
+  const scheduleRepeat=document.getElementById('scheduleRepeat');
+  function syncScheduleDateRequired(){const d=document.getElementById('scheduleDate');if(!d||!scheduleRepeat)return;d.required=scheduleRepeat.value!=='daily';}
+  if(scheduleRepeat)scheduleRepeat.addEventListener('change',syncScheduleDateRequired);syncScheduleDateRequired();
+  const scheduleForm=document.getElementById('scheduleForm');if(scheduleForm)scheduleForm.addEventListener('submit',e=>{
+    e.preventDefault();const title=document.getElementById('scheduleTitle').value.trim();const date=document.getElementById('scheduleDate').value;const time=document.getElementById('scheduleTime').value;const repeat=document.getElementById('scheduleRepeat').value;const agent=document.getElementById('scheduleAgent').value;const action=document.getElementById('scheduleAction').value;if(!title||!time)return;if(repeat!=='daily'&&!date)return;
+    const items=loadSchedules();items.push({id:'sch-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),title,date,time,repeat,agent,action,enabled:true,lastRunKey:'',createdAt:new Date().toISOString()});saveSchedules(items);scheduleForm.reset();updateActionOptions();syncScheduleDateRequired();renderSchedules();
+  });
+  const scheduleList=document.getElementById('scheduleList');if(scheduleList)scheduleList.addEventListener('click',e=>{
+    const row=e.target.closest('[data-schedule-id]');if(!row)return;const id=row.dataset.scheduleId;const items=loadSchedules();const i=items.findIndex(x=>x.id===id);if(i<0)return;
+    if(e.target.closest('[data-schedule-toggle]'))items[i].enabled=!items[i].enabled;
+    else if(e.target.closest('[data-schedule-delete]'))items.splice(i,1);else return;
+    saveSchedules(items);renderSchedules();
+  });
+  renderSchedules();runScheduleTick();setInterval(runScheduleTick,30000);
+
 
   // ===== HOME 9차 · 브라우저 음성인식 → 공통 ACTION =====
   const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;

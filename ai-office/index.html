@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="theme-color" content="#081b31">
   <meta name="ai-office-version" content="0.10.0">
-  <title>AI 사무국 2.0 v0.10.0 | IPMA</title>
+  <title>AI 사무국 2.0 v0.11.0 | IPMA</title>
   <link rel="stylesheet" href="./style.css?v=0.10.0">
 </head>
 <body>
@@ -16,8 +16,8 @@
       <span><b>AI OFFICE 2.0</b><small>IPMA AI 사무국</small></span>
     </a>
     <div class="top-actions">
-      <span class="version-chip">v0.10.0</span>
-      <span class="status"><i></i> HOME 10차</span>
+      <span class="version-chip">v0.11.0</span>
+      <span class="status"><i></i> HOME 11차</span>
       <a class="ghost" href="../admin-hub/">관리자 허브</a>
     </div>
   </header>
@@ -28,7 +28,7 @@
         <p class="eyebrow">AI OFFICE · DAILY COMMAND CENTER</p>
         <h1>좋은 아침입니다.<br><strong>AI 사무국에 출근하셨습니다.</strong></h1>
         <p class="welcome-copy">기존 GMS · IDP · SPARK를 다시 만들지 않고, 필요한 정보를 읽고 연결하는 상위 업무운영 HOME입니다.</p>
-        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.10.0</b><em>10차 · CONTROL ↔ DISPLAY 연결 준비</em></div>
+        <div class="build-line"><span>현재 버전</span><b>AI OFFICE 2.0 · v0.11.0</b><em>11차 · 예약업무</em></div>
       </div>
       <div class="clock-card" aria-label="현재 시각">
         <span id="todayLabel">오늘</span>
@@ -46,7 +46,7 @@
 
     <section class="section-head">
       <div><p class="eyebrow">WORKSPACE</p><h2>오늘의 업무 공간</h2></div>
-      <p>10차에서는 9차 공통 ACTION을 그대로 유지하면서 기존 CONTROL ↔ DISPLAY에 안전하게 접속할 수 있는 독립 BRIDGE를 추가합니다. 기존 송수신 코드는 수정하지 않습니다.</p>
+      <p>11차에서는 기존 공통 ACTION과 SAFE BRIDGE를 그대로 유지하면서 예약업무를 추가합니다. AI OFFICE가 열려 있는 동안 예약시간을 감지해 같은 ACTION을 실행하며, 서버·Supabase·기존 CONTROL/DISPLAY는 수정하지 않습니다.</p>
     </section>
 
     <section class="workspace-grid">
@@ -312,7 +312,7 @@
       <article class="panel main-panel" id="detailPanel">
         <div class="panel-title">
           <div><p class="eyebrow" id="panelEyebrow">TODAY</p><h2 id="panelTitle">오늘</h2><p class="panel-date" id="panelDate">현재 날짜 기준</p></div>
-          <span class="safe-badge">BRIDGE 준비 · v0.10.0</span>
+          <span class="safe-badge">BRIDGE 준비 · v0.11.0</span>
         </div>
         <div class="brief-list" id="panelBody"></div>
         <div class="panel-foot" id="panelFoot">※ TASK와 PROJECT는 AI OFFICE 전용 localStorage에만 저장됩니다. 기존 Supabase/GMS 데이터는 수정하지 않습니다.</div>
@@ -332,10 +332,50 @@
     </section>
 
 
+
+    <section class="scheduler-board" aria-label="예약업무 보드">
+      <div class="scheduler-head">
+        <div><p class="eyebrow">SCHEDULED ACTION · 11차</p><h2>예약업무</h2><p>AI OFFICE가 열려 있는 동안 예약시간을 감지하여 기존 MENU/VOICE와 같은 공통 ACTION을 실행합니다. 브라우저가 닫혀 있으면 실행되지 않습니다.</p></div>
+        <span>v0.11.0 · LOCAL SCHEDULER</span>
+      </div>
+
+      <div class="scheduler-grid">
+        <article class="scheduler-form-card">
+          <h3>예약 등록</h3>
+          <form id="scheduleForm" class="scheduler-form">
+            <label class="wide"><span>업무명</span><input id="scheduleTitle" maxlength="80" placeholder="예: 아침 뉴스 브리핑" required></label>
+            <label><span>실행일</span><input id="scheduleDate" type="date"></label>
+            <label><span>시간</span><input id="scheduleTime" type="time" required></label>
+            <label><span>반복</span><select id="scheduleRepeat"><option value="once">한 번</option><option value="daily">매일</option><option value="weekly">매주</option><option value="monthly">매월</option></select></label>
+            <label><span>담당 AI</span><select id="scheduleAgent"><option value="aria">ARIA · 아리아</option><option value="gen">GEN · 젠</option></select></label>
+            <label class="wide"><span>연결 ACTION</span><select id="scheduleAction"></select></label>
+            <button type="submit" class="schedule-add">+ 예약업무 추가</button>
+          </form>
+          <div class="scheduler-policy"><b>현재 실행조건</b><span>페이지가 열려 있음</span><span>Asia/Seoul 기준</span><span>Supabase 쓰기 없음</span></div>
+        </article>
+
+        <article class="scheduler-status-card">
+          <h3>예약엔진 상태</h3>
+          <div class="scheduler-status-grid">
+            <div><small>엔진</small><b id="schedulerEngine">실행 중</b><em>30초마다 시간 확인</em></div>
+            <div><small>활성 예약</small><b id="schedulerActive">0</b><em>활성 상태만 실행</em></div>
+            <div><small>다음 실행</small><b id="schedulerNext">없음</b><em id="schedulerNextDetail">예약을 등록하세요.</em></div>
+            <div><small>마지막 실행</small><b id="schedulerLast">아직 없음</b><em id="schedulerLastDetail">공통 ACTION으로 실행</em></div>
+          </div>
+          <p class="scheduler-warning">※ 브라우저를 닫아도 실행되는 서버 예약은 아직 구현하지 않았습니다. 현 단계는 안전한 브라우저 내 1단계 예약엔진입니다.</p>
+        </article>
+      </div>
+
+      <article class="scheduler-list-card">
+        <div class="scheduler-list-head"><div><h3>등록된 예약업무</h3><small>활성/비활성 · 수정 대신 삭제 후 재등록 · 실행기록 유지</small></div><span id="schedulerCount">0개</span></div>
+        <div id="scheduleList" class="schedule-list"></div>
+      </article>
+    </section>
+
     <section class="display-bridge-board" aria-label="CONTROL DISPLAY 연결 준비">
       <div class="bridge-head">
         <div><p class="eyebrow">CONTROL ↔ DISPLAY · 10차</p><h2>기존 송출 시스템 연결 준비</h2><p>현재 IPMA ZIP에는 실제 CONTROL/DISPLAY 원본이 포함되어 있지 않아 송수신 코드를 추측해 연결하지 않습니다. 대신 기존 시스템이 나중에 한 줄의 transport 등록만으로 AI OFFICE ACTION을 받을 수 있는 안전한 BRIDGE를 준비했습니다.</p></div>
-        <span>v0.10.0 · SAFE BRIDGE</span>
+        <span>v0.11.0 · SAFE BRIDGE</span>
       </div>
       <div class="bridge-grid">
         <article><small>BRIDGE 상태</small><b id="bridgeStatus">대기 · transport 미연결</b><em id="bridgeDetail">기존 CONTROL/DISPLAY 원본 확인 후 연결</em></article>
@@ -356,11 +396,11 @@
     </section>
 
     <footer>
-      <span><b>AI OFFICE 2.0 · v0.9.0</b> · HOME 9차 · 음성 + 메뉴 ACTION</span>
+      <span><b>AI OFFICE 2.0 · v0.11.0</b> · HOME 11차 · 예약업무</span>
       <span>REUSE → CONNECT → EXTEND</span>
     </footer>
   </main>
 
-  <script src="./app.js?v=0.10.0"></script>
+  <script src="./app.js?v=0.11.0"></script>
 </body>
 </html>
