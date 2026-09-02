@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.5.0';
+  const VERSION='0.6.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -12,7 +12,7 @@
     schedule:{eyebrow:'SCHEDULE',title:'일정',foot:'4차 일정 화면은 현재 확인된 일정만 읽기 중심으로 표시합니다. 일정 DB 생성·수정은 하지 않습니다.',rows:[['오늘','2026년 9월 2일 · AI 사무국 일정/D-Day 기반 구축','진행'],['다음 일정','2026년 9월 4일 국제드론순찰대 서울 전략회의','중요'],['연결 원칙','일정 → D-Day → TASK → PROJECT 순으로 연결합니다.','연결'],['데이터 원칙','기존 일정 기능이 없으므로 이번 단계에서는 UI/읽기 구조만 구축합니다.','보호']]},
     dday:{eyebrow:'D-DAY',title:'D-Day',foot:'D-Day는 Asia/Seoul 날짜 기준으로 자동 계산하며 첫 실전 PROJECT 일정과 연결됩니다.',rows:[['기준 일정','국제드론순찰대 서울 전략회의','PROJECT'],['목표일','2026년 9월 4일','DATE'],['계산 기준','Asia/Seoul 자정 기준 날짜 차이','자동'],['연결 예정','향후 일정 데이터의 중요일정을 D-Day 카드에 자동 반영','NEXT']]},
     task:{eyebrow:'TASK',title:'TASK 업무관리',foot:'5차 TASK는 AI OFFICE 전용 localStorage에 저장하며 기존 Supabase/GMS에는 쓰지 않습니다.',rows:[['구조','해야 할 일 · 마감 · 중요도 · 완료/미완료','운영'],['연결','TASK마다 관련 PROJECT를 지정할 수 있습니다.','PROJECT'],['미완료','완료되지 않은 TASK는 자동 삭제하지 않습니다.','유지'],['저장','현재 브라우저의 AI OFFICE 전용 localStorage만 사용','안전']]},
-    project:{eyebrow:'PROJECT',title:'PROJECT',foot:'PROJECT는 6차 예정 기능이며 서울 전략회의를 첫 실전 사례로 사용합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료 · 안건','설계'],['회의 후','결정사항 · 미결사항 · 후속업무를 연결','후속'],['주의','회원·회비·SPARK는 새로 만들지 않고 GMS에서 읽기','보호']]},
+    project:{eyebrow:'PROJECT',title:'PROJECT 업무관리',foot:'6차 PROJECT는 AI OFFICE 전용 localStorage에서 동작하며 기존 TASK를 프로젝트 단위로 연결합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료','운영'],['프로젝트 기록','결정사항 · 미결사항 · 후속업무를 한 프로젝트에 보존','기록'],['진행률','연결 TASK의 완료율을 기준으로 자동 계산','자동']]},
     meeting:{eyebrow:'MEETING',title:'회의관리',foot:'회의관리는 PROJECT와 연결하며 독립된 회원·조직 기능을 만들지 않습니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['연결 대상','PROJECT와 연결','연결'],['현재 단계','UI 진입점만 준비','준비']]},
     library:{eyebrow:'RESOURCE',title:'자료',foot:'기존 자료 저장 위치와 호출 방식을 먼저 확인한 뒤 AI OFFICE에서 연결합니다.',rows:[['저장 원칙','AI 사무국에 기존 자료를 중복 저장하지 않습니다.','원칙'],['역할','검색 · 분류 · 호출 · DISPLAY 연결','연결'],['이미지','기존 이미지 전송/표시 기능을 우선 재사용','재사용'],['현재 단계','기존 자료 저장 위치 조사 후 연결 예정','NEXT']]}
   };
@@ -165,6 +165,66 @@
     taskFilter=btn.dataset.taskFilter; document.querySelectorAll('[data-task-filter]').forEach(x=>x.classList.toggle('active',x===btn)); renderTasks();
   }));
   renderTasks();
+
+  // ===== HOME 6차 · PROJECT 업무관리 (AI OFFICE 전용 localStorage) =====
+  const PROJECT_STORAGE_KEY='ipma_ai_office_project_seoul_v1';
+  const PROJECT_RECORDS_KEY='ipma_ai_office_project_seoul_records_v1';
+  const projectSeed={purpose:'국제드론순찰대의 정체성 · 조직체계 · 회원제도 · 회비 · AI 사무국 · SPARK · 향후 공동사업을 검토하고 실행 방향을 정리한다.',status:'준비',location:'서울',participants:'확정 후 입력',materials:'조직도 · 회원등급안 · 회비안 · SPARK 비전 · Galaxy Tab 자료'};
+  const recordSeed={decisions:[],unresolved:[],followups:[]};
+
+  function loadProject(){
+    try{const raw=localStorage.getItem(PROJECT_STORAGE_KEY);return raw?{...projectSeed,...JSON.parse(raw)}:{...projectSeed};}catch(e){return {...projectSeed};}
+  }
+  function saveProject(data){try{localStorage.setItem(PROJECT_STORAGE_KEY,JSON.stringify(data));}catch(e){}}
+  function loadProjectRecords(){
+    try{const raw=localStorage.getItem(PROJECT_RECORDS_KEY);const parsed=raw?JSON.parse(raw):{};return {...recordSeed,...parsed};}catch(e){return {...recordSeed};}
+  }
+  function saveProjectRecords(data){try{localStorage.setItem(PROJECT_RECORDS_KEY,JSON.stringify(data));}catch(e){}}
+
+  function renderProjectBasics(){
+    const p=loadProject();
+    const map={projectPurpose:'purpose',projectStatus:'status',projectLocation:'location',projectParticipants:'participants',projectMaterials:'materials'};
+    Object.entries(map).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.value=p[key]||'';});
+    const badge=document.getElementById('projectStatusBadge'); if(badge)badge.textContent=p.status||'준비';
+  }
+  function renderProjectTasks(){
+    const tasks=loadTasks().filter(t=>t.project==='서울 전략회의');
+    const done=tasks.filter(t=>t.done).length;
+    const total=tasks.length;
+    const progress=total?Math.round(done/total*100):0;
+    const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    set('projectTaskTotal',total);set('projectTaskDone',done);set('projectProgressText',progress+'%');
+    const bar=document.getElementById('projectProgressBar'); if(bar)bar.style.width=progress+'%';
+    const list=document.getElementById('projectTaskList'); if(!list)return;
+    list.innerHTML=tasks.length?tasks.map(t=>`<div class="project-task-row ${t.done?'done':''}"><span>${t.done?'✓':'○'}</span><p><b>${esc(t.title)}</b><small>${t.due?'마감 '+esc(t.due):'마감일 없음'} · ${priorityLabel(t.priority)}</small></p><em>${t.done?'완료':'진행'}</em></div>`).join(''):'<div class="task-empty">연결된 TASK가 없습니다.</div>';
+  }
+  function renderProjectRecords(){
+    const records=loadProjectRecords();
+    document.querySelectorAll('[data-record-kind]').forEach(col=>{
+      const kind=col.dataset.recordKind;
+      const list=col.querySelector('.record-list');
+      const items=Array.isArray(records[kind])?records[kind]:[];
+      list.innerHTML=items.length?items.map((item,i)=>`<div class="record-item"><span>${String(i+1).padStart(2,'0')}</span><p>${esc(item.text)}</p><button type="button" data-record-delete="${i}" aria-label="삭제">삭제</button></div>`).join(''):'<div class="record-empty">아직 기록이 없습니다.</div>';
+    });
+  }
+  const projectSave=document.getElementById('projectSave');
+  if(projectSave)projectSave.addEventListener('click',()=>{
+    const data={purpose:document.getElementById('projectPurpose').value.trim(),status:document.getElementById('projectStatus').value,location:document.getElementById('projectLocation').value.trim(),participants:document.getElementById('projectParticipants').value.trim(),materials:document.getElementById('projectMaterials').value.trim()};
+    saveProject(data);renderProjectBasics();
+    const note=document.getElementById('projectSaveNote');if(note){note.textContent='저장 완료 · AI OFFICE 전용 localStorage';setTimeout(()=>note.textContent='AI OFFICE 전용 localStorage 저장 · Supabase 쓰기 없음',1800);}
+  });
+  document.querySelectorAll('.record-form').forEach(form=>form.addEventListener('submit',e=>{
+    e.preventDefault();const col=form.closest('[data-record-kind]');const kind=col.dataset.recordKind;const input=form.querySelector('input');const text=input.value.trim();if(!text)return;
+    const records=loadProjectRecords();records[kind]=Array.isArray(records[kind])?records[kind]:[];records[kind].push({text,createdAt:new Date().toISOString()});saveProjectRecords(records);input.value='';renderProjectRecords();
+  }));
+  document.querySelectorAll('.record-list').forEach(list=>list.addEventListener('click',e=>{
+    const btn=e.target.closest('[data-record-delete]');if(!btn)return;const col=list.closest('[data-record-kind]');const kind=col.dataset.recordKind;const records=loadProjectRecords();const i=Number(btn.dataset.recordDelete);if(Array.isArray(records[kind]))records[kind].splice(i,1);saveProjectRecords(records);renderProjectRecords();
+  }));
+
+  // TASK 변경 시 PROJECT 진행률도 즉시 갱신
+  if(taskList){taskList.addEventListener('change',()=>setTimeout(renderProjectTasks,0));taskList.addEventListener('click',()=>setTimeout(renderProjectTasks,0));}
+  if(taskForm)taskForm.addEventListener('submit',()=>setTimeout(renderProjectTasks,0));
+  renderProjectBasics();renderProjectTasks();renderProjectRecords();
 
   updateClock();
   renderPanel('today');
