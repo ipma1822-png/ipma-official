@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='1.9.4 SAFE';
+  const VERSION='1.9.5 VERIFY';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -751,7 +751,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v1.9.4 SAFE / HOME 17차
+   AI OFFICE 2.0 v1.9.5 VERIFY / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -810,7 +810,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 /* =========================================================
-   v1.9.4 SAFE REAL OFFICE WORKFLOW
+   v1.9.5 VERIFY REAL OFFICE WORKFLOW
    Read-only summaries from existing AI OFFICE localStorage data.
    No GMS/Supabase/Auth/RLS rewrite.
    ========================================================= */
@@ -858,7 +858,7 @@ function renderWorkflow(title,kicker,rows,footer=""){
   el.innerHTML=`
     <div class="section-head">
       <div><span class="eyebrow">${kicker}</span><h2>${title}</h2></div>
-      <span class="version-chip">v1.9.4 SAFE</span>
+      <span class="version-chip">v1.9.5 VERIFY</span>
     </div>
     <div class="workflow-grid">
       ${safeRows.map(([a,b,c])=>`<article class="workflow-row"><strong>${escapeHtml(String(a??""))}</strong><span>${escapeHtml(String(b??""))}</span>${c?`<small>${escapeHtml(String(c))}</small>`:""}</article>`).join("")}
@@ -1082,4 +1082,26 @@ function mediaWorkflow(){
   const rows=items.slice(0,8).map(x=>[x.title||x.name||"미디어",x.type||"MEDIA",x.url||x.path||""]);
   renderWorkflow("미디어 호출","GEN · MEDIA",rows,"자동재생하지 않습니다. 사용자가 선택한 항목만 실행합니다.");
 }
+
+
+
+/* v1.9.5 DEPLOY/ACTION VERIFY — diagnostic only */
+(function(){
+  function showVerify(){
+    try{
+      const p=new URLSearchParams(location.search);
+      const action=p.get('displayAction')||'HOME';
+      let el=document.getElementById('aiOfficeActionVerify195');
+      if(!el){
+        el=document.createElement('div');
+        el.id='aiOfficeActionVerify195';
+        el.style.cssText='position:fixed;left:8px;top:38px;z-index:99999;background:#fff;color:#111;border:2px solid #111;padding:6px 9px;border-radius:8px;font:700 11px/1.2 sans-serif;max-width:88vw;word-break:break-all';
+        document.body.appendChild(el);
+      }
+      el.textContent='ACTION: '+action;
+    }catch(e){}
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',showVerify,{once:true});
+  else showVerify();
+})();
 
