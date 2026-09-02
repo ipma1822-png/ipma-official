@@ -1,5 +1,5 @@
 /*
- AI OFFICE 2.0 v0.17.0
+ AI OFFICE 2.0 v0.17.1
  Existing CONTROL ↔ DISPLAY Realtime connector.
  Reuses v1.0.0 config.js/shared/core.js without changing Supabase schema.
 */
@@ -18,9 +18,10 @@ let displayOnline = false;
 let pending = new Map();
 
 function notify(state, detail = "") {
-  window.dispatchEvent(new CustomEvent(STATUS_EVENT, {
-    detail: { state, detail, code, displayOnline }
-  }));
+  const info={ state, detail, code, displayOnline };
+  window.dispatchEvent(new CustomEvent(STATUS_EVENT, { detail: info }));
+  const el=document.getElementById("realtimeSessionStatus");
+  if(el) el.textContent=`${code ? "SESSION "+code+" · " : ""}${displayOnline ? "DISPLAY 연결됨" : detail || state}`;
 }
 
 function currentSessionCode() {
@@ -77,7 +78,7 @@ async function sendAIAction(detail) {
     source: clean(detail?.source || "menu"),
     payload: detail?.payload || {},
     sentAt: new Date().toISOString(),
-    version: "0.17.0"
+    version: "0.17.1"
   };
   pending.set(commandId, setTimeout(() => {
     clearPending(commandId);
@@ -87,6 +88,21 @@ async function sendAIAction(detail) {
   await sendBroadcast(channel, "command", payload);
   return true;
 }
+
+
+window.AIOfficeRealtime = {
+  join(sessionCode){
+    const next=clean(sessionCode);
+    if(!/^\d{6}$/.test(next)){ notify("error","6자리 숫자를 입력해 주세요."); return false; }
+    localStorage.setItem("aiOfficeSessionCode",next);
+    return connect(next);
+  },
+  status(){ return {code,displayOnline}; }
+};
+
+window.addEventListener("ai-office:join-session",e=>{
+  window.AIOfficeRealtime.join(e.detail?.code||"");
+});
 
 function boot() {
   const savedCode = currentSessionCode();

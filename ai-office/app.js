@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.17.0';
+  const VERSION='0.17.1';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -728,7 +728,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v0.17.0 / HOME 17차
+   AI OFFICE 2.0 v0.17.1 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
@@ -782,5 +782,19 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const summary=document.getElementById("integrationSummary");
     if(box) box.innerHTML="";
     if(summary) summary.textContent="아직 점검하지 않았습니다.";
+  });
+});
+
+
+/* v0.17.1 PINPOINT · PC joins the existing phone CONTROL session */
+document.addEventListener("DOMContentLoaded",()=>{
+  const input=document.getElementById("realtimeSessionCode");
+  const btn=document.getElementById("joinRealtimeSession");
+  const saved=localStorage.getItem("aiOfficeSessionCode")||"";
+  if(input && /^\d{6}$/.test(saved)) input.value=saved;
+  if(btn) btn.addEventListener("click",()=>{
+    const code=(input?.value||"").replace(/\D/g,"").slice(0,6);
+    if(input) input.value=code;
+    window.dispatchEvent(new CustomEvent("ai-office:join-session",{detail:{code}}));
   });
 });
