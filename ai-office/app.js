@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.8.0';
+  const VERSION='0.9.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -15,8 +15,8 @@
     project:{eyebrow:'PROJECT',title:'PROJECT 업무관리',foot:'6차 PROJECT는 AI OFFICE 전용 localStorage에서 동작하며 기존 TASK를 프로젝트 단위로 연결합니다.',rows:[['첫 PROJECT','국제드론순찰대 서울 전략회의','실전'],['연결','목적 · 일정 · 참석자 · TASK · 자료','운영'],['프로젝트 기록','결정사항 · 미결사항 · 후속업무를 한 프로젝트에 보존','기록'],['진행률','연결 TASK의 완료율을 기준으로 자동 계산','자동']]},
     meeting:{eyebrow:'MEETING',title:'회의관리',foot:'7차 회의관리는 AI OFFICE 전용 localStorage에서 동작하며 PROJECT와 연결합니다.',rows:[['회의 전','목적 · 참석자 · 안건 · 자료 · 질문 · 결정 필요사항','준비'],['회의 후','결정사항 · 미결사항 · 담당 · 후속업무 · 다음회의','기록'],['PROJECT 연결','회의 결과를 서울 전략회의 PROJECT 기록으로 반영할 수 있습니다.','연결'],['저장','현재 브라우저의 AI OFFICE 전용 localStorage만 사용','안전']]},
     library:{eyebrow:'RESOURCE',title:'자료',foot:'기존 자료 저장 위치와 호출 방식을 먼저 확인한 뒤 AI OFFICE에서 연결합니다.',rows:[['저장 원칙','AI 사무국에 기존 자료를 중복 저장하지 않습니다.','원칙'],['역할','검색 · 분류 · 호출 · DISPLAY 연결','연결'],['이미지','기존 이미지 전송/표시 기능을 우선 재사용','재사용'],['현재 단계','기존 자료 저장 위치 조사 후 연결 예정','NEXT']]},
-    aria:{eyebrow:'ARIA · AI SECRETARY',title:'아리아 업무분장',foot:'8차에서는 아리아의 전략·운영 업무를 기존 오늘/일정/TASK/PROJECT/회의 ACTION과 연결합니다.',rows:[['전략·기획','조직운영과 의사결정 준비를 지원합니다.','전략'],['일정·업무','오늘 · 주간 · 월간 · D-Day · TASK를 연결합니다.','업무'],['PROJECT·회의','프로젝트 진행과 회의 전후 기록을 브리핑합니다.','연결'],['권한 원칙','최종 판단·승인·결정·집행은 사람이 담당합니다.','보호']]},
-    gen:{eyebrow:'GEN · AI SECRETARY',title:'젠 업무분장',foot:'8차에서는 젠의 뉴스·콘텐츠 업무를 준비 ACTION으로 구분합니다. 자동 발행은 하지 않습니다.',rows:[['뉴스','주요 뉴스 모니터링과 기사 아이디어를 준비합니다.','NEWS'],['기사·콘텐츠','기사 초안 · SNS · 홍보 · 발표자료를 준비합니다.','MEDIA'],['이미지·미디어','이미지 · 영상 · 음악 등 기존 콘텐츠 호출을 준비합니다.','CONTENT'],['발행 원칙','기사 및 공식 콘텐츠 최종 발행은 사람이 승인합니다.','보호']]}
+    aria:{eyebrow:'ARIA · AI SECRETARY',title:'아리아 업무분장',foot:'9차에서는 아리아의 메뉴와 음성 명령을 하나의 공통 ACTION으로 실행합니다.',rows:[['전략·기획','조직운영과 의사결정 준비를 지원합니다.','전략'],['일정·업무','오늘 · 주간 · 월간 · D-Day · TASK를 연결합니다.','업무'],['PROJECT·회의','프로젝트 진행과 회의 전후 기록을 브리핑합니다.','연결'],['권한 원칙','최종 판단·승인·결정·집행은 사람이 담당합니다.','보호']]},
+    gen:{eyebrow:'GEN · AI SECRETARY',title:'젠 업무분장',foot:'9차에서는 젠의 메뉴와 음성 명령을 하나의 공통 ACTION으로 실행합니다. 자동 발행은 하지 않습니다.',rows:[['뉴스','주요 뉴스 모니터링과 기사 아이디어를 준비합니다.','NEWS'],['기사·콘텐츠','기사 초안 · SNS · 홍보 · 발표자료를 준비합니다.','MEDIA'],['이미지·미디어','이미지 · 영상 · 음악 등 기존 콘텐츠 호출을 준비합니다.','CONTENT'],['발행 원칙','기사 및 공식 콘텐츠 최종 발행은 사람이 승인합니다.','보호']]}
   };
 
   function seoulParts(date){
@@ -105,31 +105,111 @@
   }));
 
 
-  // ===== HOME 8차 · 아리아·젠 업무분장 ACTION =====
-  document.querySelectorAll('[data-ai-action]').forEach(btn=>btn.addEventListener('click',()=>{
-    renderPanel(btn.dataset.aiAction);
-    document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'center'});
-  }));
+  // ===== HOME 9차 · 공통 OFFICE ACTION 라우터 =====
+  function scrollDetail(){
+    const panel=document.getElementById('detailPanel');
+    if(panel) panel.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+
+  function renderGenAction(action){
+    const rows=genActionRows[action]||genActionRows.news;
+    const names={news:'뉴스',article:'기사',content:'콘텐츠',image:'이미지',media:'미디어',library:'자료'};
+    document.getElementById('panelEyebrow').textContent='GEN · ACTION';
+    document.getElementById('panelTitle').textContent=names[action]||'뉴스';
+    document.getElementById('panelDate').textContent=`AI OFFICE 2.0 · v${VERSION} · 9차`;
+    document.getElementById('panelBody').innerHTML=rows.map((r,i)=>`<div><span>${String(i+1).padStart(2,'0')}</span><p><b>${r[0]}</b><small>${r[1]}</small></p><em>${r[2]}</em></div>`).join('');
+    document.getElementById('panelFoot').textContent='※ GEN ACTION은 준비·연결 단계이며 기사 자동 발행이나 외부 시스템 쓰기를 실행하지 않습니다.';
+    document.querySelectorAll('.work-card').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.period-card').forEach(c=>c.classList.remove('selected'));
+  }
+
+  function executeOfficeAction(actionId,source='menu'){
+    if(!actionId)return false;
+    const [agent,action]=actionId.includes(':')?actionId.split(':',2):['aria',actionId];
+    if(agent==='gen') renderGenAction(action);
+    else renderPanel(action);
+    const state=document.getElementById('voiceState');
+    if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'메뉴 ACTION 실행')+' · '+actionId;
+    scrollDetail();
+    return true;
+  }
+
+  document.querySelectorAll('[data-ai-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('aria:'+btn.dataset.aiAction,'menu')));
+  document.querySelectorAll('[data-office-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction(btn.dataset.officeAction,'menu')));
 
   const genActionRows={
     news:[['뉴스 모니터링','주요 뉴스와 조직 관련 이슈를 정리하는 준비 영역입니다.','NEWS'],['현재 단계','외부 뉴스 자동수집은 아직 연결하지 않습니다.','안전'],['향후 연결','12차 뉴스 브리핑 단계에서 실제 데이터 연결을 검토합니다.','NEXT']],
     article:[['기사 초안','제목 · 부제 · 요약 · 본문 초안을 준비합니다.','DRAFT'],['자료조사','기사 근거와 관련자료를 정리합니다.','RESEARCH'],['발행','자동 발행하지 않고 사람의 최종 승인을 받습니다.','승인']],
     content:[['SNS','기사·행사·프로젝트 홍보문을 준비합니다.','SNS'],['발표자료','회의 및 대외 발표용 콘텐츠 준비를 지원합니다.','PRESENT'],['원칙','기존 콘텐츠 시스템을 중복 개발하지 않습니다.','REUSE']],
-    image:[['이미지','기존 이미지 저장·전송·표시 구조를 우선 재사용합니다.','IMAGE'],['DISPLAY','향후 CONTROL/DISPLAY ACTION과 연결합니다.','CONNECT'],['현재 단계','8차에서는 역할과 ACTION만 정의합니다.','안전']],
+    image:[['이미지','기존 이미지 저장·전송·표시 구조를 우선 재사용합니다.','IMAGE'],['DISPLAY','향후 CONTROL/DISPLAY ACTION과 연결합니다.','CONNECT'],['현재 단계','9차에서는 메뉴·음성 공통 ACTION으로 호출합니다.','ACTION']],
     media:[['영상','기존 영상 콘텐츠 호출을 우선 검토합니다.','VIDEO'],['음악','브라우저 자동재생 제한을 준수합니다.','AUDIO'],['연결','14차 음악·영상 단계에서 실제 호출 구조를 검토합니다.','NEXT']],
     library:[['자료','기존 자료의 검색 · 분류 · 호출을 담당합니다.','RESOURCE'],['중복저장 금지','AI OFFICE 자체에 기존 자료를 다시 저장하지 않습니다.','REUSE'],['연결','자료 위치 조사 후 DISPLAY와 연결합니다.','CONNECT']]
   };
-  document.querySelectorAll('[data-gen-action]').forEach(btn=>btn.addEventListener('click',()=>{
-    const rows=genActionRows[btn.dataset.genAction]||genActionRows.news;
-    document.getElementById('panelEyebrow').textContent='GEN · ACTION';
-    document.getElementById('panelTitle').textContent=btn.querySelector('b').textContent;
-    document.getElementById('panelDate').textContent=`AI OFFICE 2.0 · v${VERSION} · 8차`;
-    document.getElementById('panelBody').innerHTML=rows.map((r,i)=>`<div><span>${String(i+1).padStart(2,'0')}</span><p><b>${r[0]}</b><small>${r[1]}</small></p><em>${r[2]}</em></div>`).join('');
-    document.getElementById('panelFoot').textContent='※ GEN의 ACTION은 현재 준비·연결 단계이며 기사 자동 발행이나 외부 시스템 쓰기를 실행하지 않습니다.';
-    document.querySelectorAll('.work-card').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.period-card').forEach(c=>c.classList.remove('selected'));
-    document.getElementById('detailPanel').scrollIntoView({behavior:'smooth',block:'center'});
-  }));
+  document.querySelectorAll('[data-gen-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('gen:'+btn.dataset.genAction,'menu')));
+
+
+  // ===== HOME 9차 · 브라우저 음성인식 → 공통 ACTION =====
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const voiceMic=document.getElementById('voiceMic');
+  const voiceSupport=document.getElementById('voiceSupport');
+  const voiceState=document.getElementById('voiceState');
+  const voiceTranscript=document.getElementById('voiceTranscript');
+  const voiceDot=document.getElementById('voiceStateDot');
+  let recognition=null;
+  let voiceListening=false;
+
+  function normalizeVoice(text){return String(text||'').toLowerCase().replace(/\s+/g,' ').trim();}
+  function resolveVoiceAction(text){
+    const q=normalizeVoice(text);
+    const isGen=/젠|gen/.test(q);
+    if(isGen){
+      if(/기사/.test(q))return 'gen:article';
+      if(/이미지|사진/.test(q))return 'gen:image';
+      if(/영상|음악|미디어/.test(q))return 'gen:media';
+      if(/자료/.test(q))return 'gen:library';
+      if(/콘텐츠|홍보|sns|발표/.test(q))return 'gen:content';
+      if(/뉴스|소식/.test(q))return 'gen:news';
+      return 'gen:news';
+    }
+    if(/회의/.test(q))return 'aria:meeting';
+    if(/프로젝트|서울회의|서울 회의/.test(q))return 'aria:project';
+    if(/task|태스크|할 일|할일|미완료/.test(q))return 'aria:task';
+    if(/d-day|디데이/.test(q))return 'aria:dday';
+    if(/일정/.test(q))return 'aria:schedule';
+    if(/이번 주|주간/.test(q))return 'aria:week';
+    if(/이번 달|월간/.test(q))return 'aria:month';
+    if(/브리핑|출근/.test(q))return 'aria:briefing';
+    if(/오늘/.test(q))return 'aria:today';
+    return null;
+  }
+  function setVoiceUi(mode,message){
+    if(voiceMic)voiceMic.classList.toggle('listening',mode==='listening');
+    if(voiceMic)voiceMic.setAttribute('aria-pressed',mode==='listening'?'true':'false');
+    if(voiceDot)voiceDot.classList.toggle('on',mode==='listening');
+    if(voiceState)voiceState.textContent=message;
+  }
+  if(SpeechRecognition&&voiceMic){
+    recognition=new SpeechRecognition();
+    recognition.lang='ko-KR';
+    recognition.interimResults=false;
+    recognition.continuous=false;
+    recognition.maxAlternatives=1;
+    if(voiceSupport)voiceSupport.textContent='음성인식 사용 가능 · 마이크 권한이 필요할 수 있습니다.';
+    recognition.onstart=()=>{voiceListening=true;setVoiceUi('listening','듣고 있습니다…');if(voiceTranscript)voiceTranscript.textContent='명령을 말씀하세요.';};
+    recognition.onresult=e=>{
+      const text=e.results?.[0]?.[0]?.transcript||'';
+      if(voiceTranscript)voiceTranscript.textContent='인식: '+text;
+      const action=resolveVoiceAction(text);
+      if(action){setVoiceUi('ready','명령 인식 · '+action);executeOfficeAction(action,'voice');}
+      else setVoiceUi('ready','명령을 찾지 못했습니다');
+    };
+    recognition.onerror=e=>{setVoiceUi('ready','음성인식 오류');if(voiceTranscript)voiceTranscript.textContent=e.error==='not-allowed'?'마이크 권한을 확인해 주세요.':'다시 눌러 말씀해 주세요. ('+e.error+')';};
+    recognition.onend=()=>{voiceListening=false;if(voiceMic)voiceMic.classList.remove('listening');if(voiceDot)voiceDot.classList.remove('on');};
+    voiceMic.addEventListener('click',()=>{try{if(voiceListening)recognition.stop();else recognition.start();}catch(e){}});
+  }else{
+    if(voiceSupport)voiceSupport.textContent='이 브라우저는 Web Speech 음성인식을 지원하지 않습니다. 메뉴 ACTION은 정상 사용 가능합니다.';
+    if(voiceMic){voiceMic.disabled=true;voiceMic.classList.add('unsupported');}
+  }
 
   // ===== HOME 5차 · TASK 업무관리 (AI OFFICE 전용 localStorage) =====
   const TASK_STORAGE_KEY='ipma_ai_office_tasks_v1';
