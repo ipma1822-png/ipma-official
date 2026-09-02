@@ -1,6 +1,6 @@
 (function(){
   'use strict';
-  const VERSION='0.16.1';
+  const VERSION='0.17.0';
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -165,7 +165,7 @@
     else renderPanel(action);
     const state=document.getElementById('voiceState');
     if(state) state.textContent=(source==='voice'?'음성 ACTION 실행':'메뉴 ACTION 실행')+' · '+actionId;
-    emitDisplayBridge(actionId,source,{agent,action});
+    if(source!=='display') emitDisplayBridge(actionId,source,{agent,action});
     if(agent==='gen'&&action==='news'){const board=document.getElementById('newsBriefingBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else if(agent==='gen'&&action==='article'){const board=document.getElementById('articleDeskBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
     else if(agent==='gen'&&action==='media'){const board=document.getElementById('mediaCallBoard');if(board)board.scrollIntoView({behavior:'smooth',block:'start'});}
@@ -177,6 +177,14 @@
   // v0.16.1 PINPOINT: 기존 공통 ACTION 라우터를 자체점검/향후 연동에서
   // 동일 함수로 참조할 수 있도록 안전하게 공개합니다. 실행 로직은 변경하지 않습니다.
   window.executeOfficeAction = executeOfficeAction;
+
+  // HOME 17차: DISPLAY가 동일 AI OFFICE 화면을 열었을 때 해당 ACTION만 실행하고
+  // Realtime으로 다시 되돌려 보내지 않아 루프를 방지합니다.
+  const displayParams=new URLSearchParams(location.search);
+  const displayAction=displayParams.get('displayAction');
+  if(displayParams.get('display')==='1'&&displayAction){
+    setTimeout(()=>executeOfficeAction(displayAction,'display'),0);
+  }
 
   document.querySelectorAll('[data-ai-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction('aria:'+btn.dataset.aiAction,'menu')));
   document.querySelectorAll('[data-office-action]').forEach(btn=>btn.addEventListener('click',()=>executeOfficeAction(btn.dataset.officeAction,'menu')));
@@ -720,7 +728,7 @@
 })();
 
 /* =========================================================
-   AI OFFICE 2.0 v0.16.1 / HOME 16차
+   AI OFFICE 2.0 v0.17.0 / HOME 17차
    Read-only integration self-check.
    ========================================================= */
 function runIntegrationSelfCheck(){
