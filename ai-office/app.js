@@ -714,3 +714,61 @@
   renderPanel('today');
   setInterval(updateClock,30000);
 })();
+
+/* =========================================================
+   AI OFFICE 2.0 v0.16.0 / HOME 16차
+   Read-only integration self-check.
+   ========================================================= */
+function runIntegrationSelfCheck(){
+  const results = [];
+  const add = (name, ok, detail) => results.push({name, ok:!!ok, detail});
+
+  add("HOME 화면", !!document.querySelector("main"), "메인 DOM");
+  add("공통 ACTION", typeof window.executeOfficeAction === "function" || typeof executeOfficeAction === "function",
+      "VOICE·MENU·예약 공통 실행함수");
+  add("SAFE BRIDGE", typeof window.dispatchDisplayBridge === "function" ||
+      typeof window.sendToDisplayBridge === "function" ||
+      document.body.innerText.includes("SAFE BRIDGE"), "DISPLAY 연결 보호계층");
+  add("TASK", document.body.innerText.includes("TASK"), "TASK UI");
+  add("PROJECT", document.body.innerText.includes("PROJECT"), "PROJECT UI");
+  add("회의", document.body.innerText.includes("회의"), "MEETING UI");
+  add("예약업무", document.body.innerText.includes("예약"), "예약엔진 UI");
+  add("뉴스 브리핑", document.body.innerText.includes("브리핑") || document.body.innerText.includes("뉴스"), "GEN NEWS UI");
+  add("기사 준비", document.body.innerText.includes("기사"), "GEN ARTICLE UI");
+  add("자료·이미지", document.body.innerText.includes("이미지") || document.body.innerText.includes("자료"), "DISPLAY 자료 UI");
+  add("음악·영상", document.body.innerText.includes("음악") || document.body.innerText.includes("영상") || document.body.innerText.includes("미디어"), "MEDIA UI");
+
+  let storageOK = false;
+  try{
+    const k="__ai_office_v016_probe__";
+    localStorage.setItem(k,"1");
+    storageOK = localStorage.getItem(k)==="1";
+    localStorage.removeItem(k);
+  }catch(e){}
+  add("localStorage", storageOK, "기존 업무 데이터 저장소 접근");
+
+  const box = document.getElementById("integrationResults");
+  const summary = document.getElementById("integrationSummary");
+  if(box){
+    box.innerHTML = results.map(r =>
+      `<div class="integration-result"><strong>${r.ok ? "정상" : "확인 필요"} · ${r.name}</strong><span>${r.detail}</span></div>`
+    ).join("");
+  }
+  const pass = results.filter(r=>r.ok).length;
+  if(summary){
+    summary.textContent = `자체점검 ${results.length}항목 중 ${pass}항목 정상 · ${results.length-pass}항목 확인 필요`;
+  }
+  return results;
+}
+
+document.addEventListener("DOMContentLoaded", ()=>{
+  const run = document.getElementById("runIntegrationCheck");
+  const clear = document.getElementById("clearIntegrationCheck");
+  if(run) run.addEventListener("click", runIntegrationSelfCheck);
+  if(clear) clear.addEventListener("click", ()=>{
+    const box=document.getElementById("integrationResults");
+    const summary=document.getElementById("integrationSummary");
+    if(box) box.innerHTML="";
+    if(summary) summary.textContent="아직 점검하지 않았습니다.";
+  });
+});
