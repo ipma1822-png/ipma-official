@@ -2,7 +2,11 @@ function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;'
 
 (function(){
   'use strict';
-  const VERSION='1.9.8';
+  const VERSION='1.10.0';
+  const displayParams=new URLSearchParams(location.search);
+  const DISPLAY_MODE=displayParams.get('display')==='1'&&!!displayParams.get('displayAction');
+  if(DISPLAY_MODE && 'scrollRestoration' in history) history.scrollRestoration='manual';
+  if(DISPLAY_MODE) document.body.classList.add('display-action-mode');
   const SEOUL_TZ='Asia/Seoul';
   const meetingDate=new Date('2026-09-04T00:00:00+09:00');
 
@@ -219,7 +223,6 @@ function escapeHtml(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;'
 
   // HOME 17차: DISPLAY가 동일 AI OFFICE 화면을 열었을 때 해당 ACTION만 실행하고
   // Realtime으로 다시 되돌려 보내지 않아 루프를 방지합니다.
-  const displayParams=new URLSearchParams(location.search);
   const displayAction=displayParams.get('displayAction');
   if(displayParams.get('display')==='1'&&displayAction){
     setTimeout(()=>executeOfficeAction(displayAction,'display'),0);
@@ -866,6 +869,10 @@ function ensureWorkflowPanel(){
   const detail=document.getElementById("detailPanel");
   if(detail && detail.parentNode) detail.parentNode.insertBefore(el,detail);
   else (document.querySelector("main")||document.body).prepend(el);
+  if(document.body.classList.contains("display-action-mode")){
+    const main=document.querySelector("main");
+    if(main) Array.from(main.children).forEach(child=>{ child.hidden=child!==el; });
+  }
   return el;
 }
 function renderWorkflow(title,kicker,rows,footer=""){
@@ -883,6 +890,12 @@ function renderWorkflow(title,kicker,rows,footer=""){
   `;
   el.hidden=false;
   el.scrollIntoView({behavior:"auto",block:"start"});
+  if(document.body.classList.contains("display-action-mode")){
+    requestAnimationFrame(()=>{
+      el.scrollIntoView({behavior:"auto",block:"start"});
+      requestAnimationFrame(()=>el.scrollIntoView({behavior:"auto",block:"start"}));
+    });
+  }
 }
 function todayWorkflow(){
   const tasks=readJsonStore("ipma_ai_office_tasks_v1",[]);
@@ -1139,8 +1152,8 @@ function taskApprovalWorkflow(){
   `).join(""):`<article class="approval-card"><h3>승인 대기 업무 없음</h3><div class="approval-status">현재 검토할 업무 후보가 없습니다.</div></article>`;
   el.innerHTML=`
     <div class="section-head">
-      <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>업무 사람 승인</h2></div>
-      <span class="version-chip">v1.9.8</span>
+      <div><span class="eyebrow">ARIA · HUMAN APPROVAL</span><h2>업무 승인</h2></div>
+      <span class="version-chip">v1.10.0</span>
     </div>
     <div class="approval-list">${cards}</div>
     <p class="safe-note">승인 버튼을 누른 후보만 기존 AI 사무국 TASK 저장소에 등록합니다. 거절한 후보는 TASK가 되지 않습니다.</p>
@@ -1235,7 +1248,7 @@ function mediaWorkflow(){
 
 
 
-/* v1.9.8 ACTION VERIFY */
+/* v1.10.0 ACTION VERIFY */
 (function(){
   function show(){
     try{
@@ -1248,7 +1261,7 @@ function mediaWorkflow(){
         el.style.cssText='position:fixed;left:8px;top:38px;z-index:99999;background:#fff;color:#111;border:2px solid #111;padding:6px 9px;border-radius:8px;font:700 11px/1.2 sans-serif;max-width:88vw;word-break:break-all';
         document.body.appendChild(el);
       }
-      el.textContent='ACTION: '+action;
+      el.textContent='실행 ACTION · '+action;
     }catch(e){}
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',show,{once:true}); else show();
