@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>GMS 공동관리자 로그인</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#07172b;--navy2:#123b63;--gold:#d7ad50;--bg:#f3f6fa;--line:#dce3eb;--muted:#6d7888}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(145deg,#eef3f8,#f8fafc);font-family:Arial,"Noto Sans KR",sans-serif;color:#142033}.card{width:min(560px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 20px 55px #07172b18}.kicker{color:#a77b2a;font-size:11px;font-weight:900;letter-spacing:.16em}h1{margin:9px 0 8px;font-size:30px}p{color:var(--muted);line-height:1.65}.email{margin:20px 0 10px;padding:14px 16px;border:1px solid #d7e0e8;border-radius:12px;background:#f8fafc;font-weight:900;word-break:break-all}.btn{width:100%;border:0;border-radius:12px;padding:14px 16px;background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;font-weight:900;font-size:15px;cursor:pointer}.btn:disabled{opacity:.55;cursor:wait}.msg{min-height:44px;margin-top:13px;padding:11px 12px;border-radius:10px;background:#f7f9fc;color:#526071;font-size:13px;line-height:1.55}.note{margin-top:17px;font-size:12px;color:#7b8796}.back{display:inline-block;margin-top:16px;color:#123b63;font-size:12px;font-weight:800;text-decoration:none}
+</style>
+</head>
+<body>
+<main class="card">
+ <div class="kicker">GMS · DESIGNATED CO-ADMIN</div>
+ <h1>공동관리자 간편 로그인</h1>
+ <p>비밀번호를 외울 필요가 없습니다. 아래 버튼을 누르면 등록된 네이버 메일로 <b>1회용 로그인 링크</b>가 발송됩니다.</p>
+ <div class="email">jhb040715@naver.com</div>
+ <button id="sendBtn" class="btn">네이버 메일로 로그인 링크 받기</button>
+ <div id="msg" class="msg">메일을 받은 뒤 링크를 누르면 GMS 통합 운영본부로 바로 연결됩니다.</div>
+ <div class="note">보안을 위해 이 화면은 사전 지정된 공동관리자 이메일만 사용합니다.</div>
+ <a class="back" href="/gms-admin/">← 일반 GMS 관리자 로그인</a>
+</main>
+<script>
+const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
+const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
+const COADMIN='jhb040715@naver.com';
+const THIS_URL='https://ipma.kr/gms-admin/coadmin.html';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
+const btn=document.getElementById('sendBtn'),msg=document.getElementById('msg');
+
+async function launchGms(session){
+ const email=String(session?.user?.email||'').toLowerCase();
+ if(email!==COADMIN){
+   if(session) await db.auth.signOut();
+   msg.textContent='이 주소는 지정 공동관리자 전용입니다.';
+   return;
+ }
+ msg.textContent='인증 완료. GMS 통합 운영본부를 여는 중입니다…';
+ try{
+   const res=await fetch('/gms-admin/index.html',{cache:'no-store'});
+   if(!res.ok) throw new Error('GMS 화면을 불러오지 못했습니다.');
+   let html=await res.text();
+   html=html.replace("const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];",
+     "const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com','jhb040715@naver.com'];");
+   html=html.replace('<title>GMS v2.5.12.0 | Global Membership System</title>','<title>GMS | 공동관리자 · Global Membership System</title>');
+   document.open();document.write(html);document.close();
+ }catch(e){msg.textContent='GMS 진입 실패: '+(e?.message||e);}
+}
+
+async function boot(){
+ try{
+   const code=new URL(location.href).searchParams.get('code');
+   if(code){
+     msg.textContent='로그인 링크를 확인하는 중입니다…';
+     const r=await db.auth.exchangeCodeForSession(code);
+     if(r.error) throw r.error;
+     history.replaceState({},document.title,location.pathname);
+   }
+   const {data,error}=await db.auth.getSession();
+   if(error) throw error;
+   if(data.session){ await launchGms(data.session); }
+ }catch(e){msg.textContent='로그인 확인 실패: '+(e?.message||e);}
+}
+
+btn.onclick=async()=>{
+ btn.disabled=true;msg.textContent='네이버 메일로 안전한 로그인 링크를 보내는 중입니다…';
+ try{
+   const {error}=await db.auth.signInWithOtp({email:COADMIN,options:{emailRedirectTo:THIS_URL,shouldCreateUser:true}});
+   if(error) throw error;
+   msg.innerHTML='<b>메일 발송 요청 완료!</b><br>jhb040715@naver.com 받은메일함에서 Supabase 로그인 메일을 열고 링크를 눌러주세요. 메일이 안 보이면 스팸함도 확인해 주세요.';
+ }catch(e){msg.textContent='메일 발송 실패: '+(e?.message||e);}
+ finally{btn.disabled=false;}
+};
+boot();
+</script>
+</body>
+</html>
