@@ -1708,7 +1708,7 @@ for(let i=1;i<=9;i++){
   const code=LEVELS.find(x=>Number(x[0])===i)[1];
   const o=document.createElement('option');
   o.value=String(i); o.textContent=`LV.${i} ${code.replace('_',' ')}`;
-  $('policyMinLevel').appendChild(o);
+  if($('policyMinLevel'))$('policyMinLevel').appendChild(o);
 }
 
 async function loadContentPolicies(){
