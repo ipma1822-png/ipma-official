@@ -37,15 +37,16 @@ async function launchGms(session){
    msg.textContent='이 주소는 지정 공동관리자 전용입니다.';
    return;
  }
- msg.textContent='인증 완료. GMS 통합 운영본부를 여는 중입니다…';
+ msg.textContent='서버 공동관리자 권한을 확인하는 중입니다…';
  try{
-   const res=await fetch('/gms-admin/index.html',{cache:'no-store'});
-   if(!res.ok) throw new Error('GMS 화면을 불러오지 못했습니다.');
-   let html=await res.text();
-   html=html.replace("const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];",
-     "const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com','jhb040715@naver.com'];");
-   html=html.replace('<title>GMS v2.5.12.0 | Global Membership System</title>','<title>GMS | 공동관리자 · Global Membership System</title>');
-   document.open();document.write(html);document.close();
+   const {data:admin,error}=await db.rpc('gms_get_my_admin_context');
+   if(error) throw error;
+   if(!admin?.is_admin || !['coadmin','master'].includes(admin.role)){
+     await db.auth.signOut();
+     throw new Error('서버에 활성 공동관리자 권한이 연결되지 않았습니다.');
+   }
+   msg.textContent='인증과 공동관리자 권한 확인 완료. GMS 통합 운영본부로 이동합니다…';
+   location.replace('/gms-admin/');
  }catch(e){msg.textContent='GMS 진입 실패: '+(e?.message||e);}
 }
 

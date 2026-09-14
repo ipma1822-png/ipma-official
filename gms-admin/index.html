@@ -869,7 +869,6 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 14p
 const SUPABASE_URL='https://ojxarsfaewehwjidwgac.supabase.co';
 const SUPABASE_KEY='sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0';
 const REDIRECT_URL='https://ipma.kr/gms-admin/callback.html';
-const ADMINS=['jeonseongkweon@gmail.com','ipma1822@gmail.com'];
 
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
   auth:{
@@ -894,7 +893,11 @@ LEVELS.forEach(([n,c])=>{
  const b=document.createElement('option');b.value=n;b.textContent=`LV.${n} ${c.replace('_',' ')}`;if($('bulkNewLevel'))$('bulkNewLevel').appendChild(b);
 });
 
-function isAdmin(email){return ADMINS.includes(String(email||'').toLowerCase())}
+async function getAdminContext(){
+ const {data,error}=await db.rpc('gms_get_my_admin_context');
+ if(error)throw error;
+ return data||{};
+}
 function cleanOAuthUrl(){
   const routeHash=(location.hash||'').match(/^#(dashboard|idp-control|spark-admin|members|levels|org-levels|membership-plan|payments|content-access|learning|points|certificates|organization|global-members|statistics|member-card|settings|roadmap)$/)?.[0] || '';
   if(location.search || (location.hash && !routeHash)){
@@ -905,9 +908,10 @@ async function showLogin(message=''){
  $('login').classList.remove('hidden');$('app').classList.add('hidden');$('logout').classList.add('hidden');
  if(message)$('msg').textContent=message;
 }
-async function showApp(session){
+async function showApp(session,adminContext={}){
  $('login').classList.add('hidden');$('app').classList.remove('hidden');$('logout').classList.remove('hidden');
- $('adminInfo').textContent=`관리자 ${session.user.email} 로그인`;
+ const roleLabel={master:'MASTER ADMIN',coadmin:'CO-ADMIN',admin:'ADMIN',founder:'FOUNDER'}[adminContext.role]||'ADMIN';
+ $('adminInfo').textContent=`${roleLabel} · ${session.user.email} 로그인`;
  $('adminEmailTop').textContent=session.user.email;
  await load();
  const requested=(location.hash||'').replace('#','').trim();
@@ -935,13 +939,14 @@ async function verifySession(source='verify'){
    }
    const email=String(session.user?.email||'').toLowerCase();
    $('authstate').textContent=`Google 인증됨: ${email}`;
-   if(!isAdmin(email)){
+   const adminContext=await getAdminContext();
+   if(!adminContext.is_admin || String(adminContext.email||'').toLowerCase()!==email){
      await db.auth.signOut();
-     await showLogin(`Google 인증은 성공했지만 GMS 관리자 권한이 없는 계정입니다.\n인증 계정: ${email}`);
+     await showLogin(`인증은 성공했지만 GMS 서버 관리자 권한이 없는 계정입니다.\n인증 계정: ${email}`);
      return false;
    }
    cleanOAuthUrl();
-   await showApp(session);
+   await showApp(session,adminContext);
    return true;
  }catch(e){
    $('authstate').textContent='세션 확인 오류';
