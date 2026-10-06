@@ -35,7 +35,8 @@
   document.addEventListener('click',e=>{if(!dock.contains(e.target))dock.classList.remove('open')});
 
   const pageI18n = /^\/contact\/?$/.test(path) ? {global:'IPMA_CONTACT_I18N',file:'contact.js'} :
-                   /^\/programs\/?$/.test(path) ? {global:'IPMA_PROGRAMS_I18N',file:'programs.js'} : null;
+                   /^\/programs\/?$/.test(path) ? {global:'IPMA_PROGRAMS_I18N',file:'programs.js'} :
+                   /^\/partners\/?$/.test(path) ? {global:'IPMA_PARTNERS_I18N',file:'partners.js'} : null;
   if(pageI18n){
     const originals=new Map(), placeholders=new Map();
     const capture=()=>{
