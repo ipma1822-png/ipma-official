@@ -15,9 +15,10 @@
 .qr-card{background:linear-gradient(150deg,var(--sp-panel2),var(--sp-panel));border:1px solid var(--sp-line);border-radius:22px;padding:22px;margin-top:13px}.qr-card h2{margin:10px 0 7px;font-size:clamp(25px,6vw,36px)}.qr-card p{color:var(--sp-muted);line-height:1.65}.qr-topline{display:flex;justify-content:space-between;gap:12px;align-items:start}.qr-reward{color:var(--sp-yellow);font-size:22px;font-weight:950;white-space:nowrap}.qr-info{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.qr-info div{background:#09131f;border:1px solid var(--sp-line);border-radius:12px;padding:12px}.qr-info small{display:block;color:var(--sp-muted);font-size:10px;margin-bottom:5px}.qr-info b{font-size:13px;line-height:1.45}.qr-rule{background:#07121d;border:1px solid #34485e;border-radius:13px;padding:14px;color:#c9d6e3;line-height:1.65;white-space:pre-line}.qr-action{width:100%;margin-top:15px;padding:14px}.qr-success{text-align:center;border-color:rgba(255,213,72,.45);box-shadow:0 0 45px rgba(255,213,72,.08)}.qr-success .bolt{font-size:70px}.qr-success strong{display:block;color:var(--sp-yellow);font-size:38px;margin:8px 0}.qr-login{margin:13px 0 0}.qr-security{margin-top:13px;text-align:center;color:#72869a;font-size:11px;line-height:1.55}
 @media(max-width:580px){.sp-version{margin-left:5px;padding:2px 5px;font-size:9px}.qr-shell{margin-top:8px}.qr-card{padding:18px}.qr-info{grid-template-columns:1fr}.qr-state{padding:22px 17px}}
 </style>
+<link rel="stylesheet" href="../assets/css/ipma-20lang.css?v=2.3.0"/>
 </head>
 <body class="spark-body">
-<header class="sp-top"><div class="sp-wrap"><a class="sp-brand" href="index.html"><b>SPARK ⚡</b> SYSTEM <span class="sp-version" title="QR MISSION 배포 버전 2026.08.29">v1.1.0</span><small>QR MISSION</small></a><nav class="sp-nav"><a class="sp-btn ghost hide-mobile" href="app.html">MY SPARK</a><button id="logout" class="sp-btn hidden">로그아웃</button></nav></div></header>
+<header class="sp-top"><div class="sp-wrap"><a class="sp-brand" href="index.html"><b>SPARK ⚡</b> SYSTEM <span class="sp-version" title="QR MISSION 배포 버전 2026.08.29">v1.1.0</span><small>QR MISSION</small></a><nav class="sp-nav"><a class="sp-btn ghost hide-mobile" href="app.html">MY SPARK</a><button id="logout" class="sp-btn hidden">로그아웃</button></nav><button class="ipma20-top-open" type="button" aria-label="20개 언어 선택">🌐 <span>20 Languages</span></button></div></header>
 <main class="sp-app"><div class="sp-wrap"><div class="qr-shell">
  <section id="stateView" class="qr-card qr-state"><div id="stateIcon" class="qr-icon">⚡</div><div class="sp-kicker">IDP SPARK QR MISSION</div><h1 id="stateTitle">QR을 확인하고 있습니다</h1><p id="stateText">안전한 서버에서 캠페인과 참여조건을 확인합니다.</p></section>
  <section id="loginView" class="sp-login qr-login hidden"><div class="sp-kicker">IDP ONE ACCOUNT</div><h2>로그인 후 참여합니다</h2><p>기존 IDP 카카오 인증으로 로그인하면 현재 QR 미션으로 다시 돌아옵니다.</p><button id="kakaoLogin" class="sp-btn sp-kakao" style="width:100%">카카오로 계속하기</button><div id="loginMsg" class="sp-message">회원 본인의 성장기록에 SPARK가 적립됩니다.</div></section>
@@ -77,5 +78,6 @@ $('claimMission').onclick=async()=>{
 db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session)init();});
 init();
 </script>
+<script src="../assets/js/ipma-20lang.js?v=2.3.0"></script>
 </body>
 </html>

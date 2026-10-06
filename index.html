@@ -8,6 +8,7 @@
   <title>IPMA GATEWAY</title>
   <link rel="preload" as="image" href="assets/images/00-gateway.png" />
   <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="assets/css/ipma-20lang.css?v=2.3.0"/>
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -27,7 +28,7 @@
     <a class="gms-admin-btn" href="https://ipma.kr/gms-admin/" aria-label="GMS 통합회원 관리자 열기">⚙ GMS 관리자</a>
     <button class="lang-btn" id="langBtn" type="button" aria-haspopup="dialog">🌐 <span id="langBtnText">한국어</span></button>
     <button class="sound-btn" id="soundBtn" type="button" aria-pressed="false" title="배경 사운드 켜기">SOUND ○</button>
-  </header>
+  <button class="ipma20-top-open" type="button" aria-label="20개 언어 선택">🌐 <span>20 Languages</span></button></header>
   <main>
     <section class="hero" aria-label="시네마틱 갤러리">
       <div class="slides" id="slides"></div>
@@ -193,5 +194,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="script.js"></script>
+<script src="assets/js/ipma-20lang.js?v=2.3.0"></script>
 </body>
 </html>

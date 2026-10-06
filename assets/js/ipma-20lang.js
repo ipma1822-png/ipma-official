@@ -1,4 +1,5 @@
 (() => {
+  const flagsBase=new URL('../flags/', document.currentScript.src).href;
   const LANGS=[
     ['ko','kr','한국어'],['en','us','English'],['zh-CN','cn','中文'],['ja','jp','日本語'],
     ['es','es','Español'],['fr','fr','Français'],['de','de','Deutsch'],['pt','br','Português'],
@@ -41,7 +42,7 @@
   LANGS.forEach(([code,flag,name])=>{
     const b=document.createElement('button');
     b.type='button'; b.className='ipma20-lang';
-    b.innerHTML=`<img src="../assets/flags/${flag}.svg" alt=""><span>${name}</span>`;
+    b.innerHTML=`<img src="${flagsBase}${flag}.svg" alt=""><span>${name}</span>`;
     b.onclick=()=>go(code);
     grid.appendChild(b);
   });
