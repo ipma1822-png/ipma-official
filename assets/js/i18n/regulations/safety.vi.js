@@ -59,7 +59,7 @@ Quy định này nhằm thiết lập các tiêu chuẩn cơ bản về an toàn
 
 ② Thiết bị hư hỏng, biến dạng hoặc không bảo đảm an toàn phải ngừng sử dụng.
 
-③ Khi tính chất huấn luyện đòi hỏi bảo hộ, phải hướng dẫn người tham gia sử dụng đúng cách.
+③ Trong đối luyện, phá vật hoặc các bài tập có tiếp xúc thân thể, khi cần thiết để giảm nguy cơ chấn thương, phải sử dụng trang bị bảo hộ phù hợp với hoạt động đó.
 
 ④ Người hướng dẫn có thể xác định bảo hộ và biện pháp cần thiết theo tuổi, trình độ, nội dung và mức rủi ro.
 
