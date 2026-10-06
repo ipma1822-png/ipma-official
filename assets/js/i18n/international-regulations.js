@@ -30,5 +30,5 @@
   function paintHero(code){const a=code==='ko'?ko:hero[code];if(!a)return;const h=document.querySelector('.hero');if(!h)return;const k=h.querySelector('.kicker b'),p=h.querySelectorAll('p'),h1=h.querySelector('h1');if(k)k.textContent=a[0];if(p[0])p[0].textContent=a[1];if(h1)h1.textContent=a[2];if(p[1])p[1].textContent=a[3];if(p[2])p[2].textContent=a[4];}
   function apply(code){code=norm(code);wanted=code;paintHero(code);document.documentElement.dir=code==='ar'?'rtl':'ltr';if(code==='ko'){body.textContent=original;return;}if(loaded[code]&&window.IPMA_REGULATION_TRANSLATIONS?.[code]){body.textContent=window.IPMA_REGULATION_TRANSLATIONS[code];return;}const s=document.createElement('script');s.src=new URL('regulations/international.'+code+'.js',document.currentScript.src).href+'?v=1';s.onload=()=>{loaded[code]=true;if(wanted===code&&window.IPMA_REGULATION_TRANSLATIONS?.[code])body.textContent=window.IPMA_REGULATION_TRANSLATIONS[code];};document.head.appendChild(s);}
   apply(norm(new URLSearchParams(location.search).get('lang')||localStorage.getItem('ipma_language')||'ko'));
-  document.addEventListener('ipma-language-change',e=>apply(e.detail?.code||'ko'));
+  document.addEventListener('ipma-language-change',e=>apply(e.detail?.code||e.detail?.language||e.detail?.lang||'ko'));
 })();
