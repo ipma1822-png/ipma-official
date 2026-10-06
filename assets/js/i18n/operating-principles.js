@@ -29,5 +29,5 @@ ne:['हाल लागू सञ्चालन सिद्धान्त','
 const norm=x=>{x=(x||'ko').toLowerCase();if(x==='zh-cn'||x.startsWith('zh'))return'zh';if(x==='tl')return'fil';return x.split('-')[0]};
 let loaded={};function setLabels(l){const a=l==='ko'?K:T[l];if(!a)return;if(kicker)kicker.textContent=a[0];if(org)org.textContent=a[1];if(title)title.textContent=a[2];if(desc)desc.textContent=a[3];if(notice)notice.textContent=a[4];if(tail)tail.textContent=a[5];}
 function apply(l){l=norm(l);document.documentElement.dir=l==='ar'?'rtl':'ltr';setLabels(l);if(l==='ko'){body.textContent=original;return}if(!T[l])return;const done=()=>{const x=window.IPMA_REGULATION_TEXT?.[l];if(x)body.textContent=x};if(window.IPMA_REGULATION_TEXT?.[l])return done();if(loaded[l])return;loaded[l]=1;const s=document.createElement('script');s.src=new URL(`regulations/operating.${l}.js?v=2`,document.currentScript.src).href;s.onload=done;document.head.appendChild(s)}
-window.addEventListener('ipma-language-change',e=>apply(e.detail?.code||e.detail?.language||e.detail?.lang));const q=new URLSearchParams(location.search).get('lang');apply(q||localStorage.getItem('ipma_language')||'ko');
+document.addEventListener('ipma-language-change',e=>apply(e.detail?.code||e.detail?.language||e.detail?.lang));const q=new URLSearchParams(location.search).get('lang');apply(q||localStorage.getItem('ipma_language')||'ko');
 })();
