@@ -34,19 +34,23 @@
   dock.querySelector('.mn-toggle').onclick=()=>dock.classList.toggle('open');
   document.addEventListener('click',e=>{if(!dock.contains(e.target))dock.classList.remove('open')});
 
-  if(/^\/contact\/?$/.test(path)){
-    const originals=new Map();
+  const pageI18n = /^\/contact\/?$/.test(path) ? {global:'IPMA_CONTACT_I18N',file:'contact.js'} :
+                   /^\/programs\/?$/.test(path) ? {global:'IPMA_PROGRAMS_I18N',file:'programs.js'} : null;
+  if(pageI18n){
+    const originals=new Map(), placeholders=new Map();
     const capture=()=>{
-      const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement&&n.parentElement.closest('script,style,textarea,input,select,.ipma20-root')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}});
+      const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement&&n.parentElement.closest('script,style,textarea,.ipma20-root')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}});
       while(w.nextNode()){const n=w.currentNode,t=n.nodeValue.trim();if(t)originals.set(n,t);}
+      document.querySelectorAll('input[placeholder]').forEach(el=>placeholders.set(el,el.getAttribute('placeholder')));
     };
     const apply=code=>{
-      const dict=window.IPMA_CONTACT_I18N?.[code]||window.IPMA_CONTACT_I18N?.ko;if(!dict)return;
+      const table=window[pageI18n.global],dict=table?.[code]||table?.ko;if(!dict)return;
       originals.forEach((ko,n)=>{if(n.isConnected&&Object.prototype.hasOwnProperty.call(dict,ko))n.nodeValue=n.nodeValue.replace(n.nodeValue.trim(),dict[ko]);});
+      placeholders.forEach((ko,el)=>{if(el.isConnected&&Object.prototype.hasOwnProperty.call(dict,ko))el.setAttribute('placeholder',dict[ko]);});
     };
     capture();
     const s=document.createElement('script');
-    s.src=new URL('i18n/contact.js',document.currentScript.src).href+'?v=1.0';
+    s.src=new URL('i18n/'+pageI18n.file,document.currentScript.src).href+'?v=1.0';
     s.onload=()=>apply((new URLSearchParams(location.search).get('lang')||localStorage.getItem('ipma_language')||'ko').replace('zh-CN','zh').replace('tl','fil'));
     document.head.appendChild(s);
     document.addEventListener('ipma-language-change',e=>apply(e.detail?.code||'ko'));
