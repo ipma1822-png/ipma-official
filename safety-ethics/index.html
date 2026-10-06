@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>IPMA | 안전 규정 및 윤리 규정</title>
+<meta content="본 규정은 IPMA 및 산하기관·국내외 공식 조직의 교육·훈련·심사·대회·세미나·시범 및 관련 활동에서 참가자의 안전과 인격을 보호하고 지도자와 관계자가 준수하여야 할 공통적인 안전·윤리기준을 정한 공식 현행 규정입니다." name="description"/>
+<style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1a30;
+      --ink:#eaf0ff;
+      --muted:#a9b6d3;
+      --line:rgba(255,255,255,.10);
+      --gold:#d8b15a;
+      --blue:#5aa7ff;
+      --shadow: 0 14px 40px rgba(0,0,0,.45);
+      --radius:18px;
+      --radius2:26px;
+      --max: 1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 20% 0%, rgba(90,167,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 85% 10%, rgba(216,177,90,.14), transparent 55%),
+        var(--bg);
+      color:var(--ink);
+      line-height:1.6;
+    }
+    a{color:inherit;text-decoration:none}
+
+    .wrap{max-width:var(--max);margin:0 auto;padding:22px 16px 70px}
+
+    /* Top */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px;
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      position:sticky; top:10px; z-index:20;
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .mark{
+      width:40px;height:40px;border-radius:12px;
+      display:grid;place-items:center;
+      background:linear-gradient(135deg,rgba(216,177,90,.30),rgba(90,167,255,.20));
+      border:1px solid var(--line);
+      font-weight:900;color:var(--gold);
+      flex:0 0 auto;
+    }
+    .brand strong{display:block; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .brand span{display:block; font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+
+    .homeBtn{
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-size:13px;
+      transition:.2s;
+      flex:0 0 auto;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .homeBtn:hover{background:rgba(255,255,255,.07); transform:translateY(-2px);}
+    .dot{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 0 0 4px rgba(90,167,255,.12);
+    }
+
+    /* Hero */
+    .hero{
+      margin-top:20px;
+      padding:26px 20px;
+      border-radius:var(--radius2);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+    .kicker{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:7px 11px;border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .kicker b{color:var(--gold)}
+    .hero h1{margin:12px 0 8px; font-size:26px;}
+    .hero p{margin:0; color:var(--muted);}
+
+    /* Layout */
+    .row{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      margin-top:16px;
+    }
+    @media(max-width:920px){
+      .topbar{position:relative; top:auto}
+      .row{grid-template-columns:1fr}
+    }
+
+    /* Cards */
+    .card{
+      padding:20px;
+      border-radius:var(--radius2);
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+    .card h2{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:16px;
+    }
+
+    .muted{color:var(--muted); font-size:13px}
+
+    /* Document list */
+    .docList{
+      list-style:none;
+      padding:0; margin:0;
+      display:grid; gap:10px;
+    }
+    .docItem{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(255,255,255,.02);
+      padding:12px 12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .dLeft{min-width:0}
+    .dTitle{font-size:14px; margin:0 0 4px}
+    .dDesc{margin:0; color:var(--muted); font-size:12px; line-height:1.55}
+    .dMeta{
+      margin-top:8px;
+      display:flex; gap:8px; flex-wrap:wrap;
+      color:var(--muted); font-size:12px;
+    }
+    .chip{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      border-radius:999px;
+      padding:4px 8px;
+    }
+    .dBtns{display:flex; gap:8px; flex-wrap:wrap; flex:0 0 auto}
+    .miniBtn{
+      padding:8px 10px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-size:12px;
+      transition:.2s;
+      cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .miniBtn:hover{background:rgba(255,255,255,.07); transform:translateY(-1px);}
+    .miniBtn .ico{
+      width:8px;height:8px;border-radius:50%;
+      background:var(--blue);
+      box-shadow:0 0 0 4px rgba(90,167,255,.12);
+    }
+
+    /* Buttons */
+    .actions{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+    .btn{
+      padding:11px 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-size:14px;
+      transition:.2s;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .btn:hover{transform:translateY(-2px); background:rgba(255,255,255,.08);}
+    .primary{
+      background:linear-gradient(135deg,var(--gold),#a88936);
+      color:#111;
+      font-weight:700;
+      border:none;
+    }
+
+    .toast{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      min-height:18px;
+    }
+
+    footer{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.95;
+    }
+    footer .hr{margin:12px auto 0; max-width:560px; height:1px; background: var(--line);}
+  </style>
+<link href="../assets/css/ipma-upgrade.css?v=2.0" rel="stylesheet"/><link rel="stylesheet" href="../assets/css/ipma-20lang.css?v=2.3.0"/>
+</head>
+<body class="ipma-upgraded"><header class="ipma-mega-header"><div class="ipma-mega-inner"><a class="ipma-mega-brand" href="../about/"><img alt="IPMA 로고" src="https://static.wixstatic.com/media/abf917_77f3c11d34c64c9eb18c4da00cfad109~mv2.jpg"/><div><strong>국제경찰무도연합회</strong><span>INTERNATIONAL POLICE MARTIAL ARTS ALLIANCE</span></div></a><button aria-label="메뉴" class="ipma-menu-toggle">☰</button><nav class="ipma-mega-nav"><div class="ipma-nav-item"><a class="ipma-nav-main" href="../about/">연합회</a><div class="ipma-dropdown"><b>연합회 안내</b><a href="../about/">연합회 소개</a><a href="../leadership/">임원소개</a><a href="../branches/">국내·해외 지부</a><a href="../partners/">산하·협력기관</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../programs/">교육·프로그램</a><div class="ipma-dropdown"><b>교육 및 활동</b><a href="../programs/">교육 프로그램</a><a href="../events/">행사·세미나</a><a href="../certification/">인증 안내</a><a href="../verification/">공식 조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../branches/">조직·네트워크</a><div class="ipma-dropdown"><b>조직과 협력</b><a href="../leadership/">임원·지도자</a><a href="../branches/">지부 네트워크</a><a href="../partners/">협력기관</a><a href="../contact/">신청·문의</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../resources/">자료실</a><div class="ipma-dropdown"><b>공식 자료</b><a href="../resources/">자료실</a><a href="../documents/">공식 문서</a><a href="../media/">영상자료</a><a href="../verification/">인증·조회</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../media/">미디어</a><div class="ipma-dropdown"><b>활동과 영상</b><a href="../media/">영상교육관</a><a href="../media/">활동 미디어</a><a href="../events/">행사 안내</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../verification/">조회·인증</a><div class="ipma-dropdown"><b>공식 확인</b><a href="../verification/">자격·인증 조회</a><a href="../certification/">인증 안내</a><a href="../programs/">프로그램</a><a href="../contact/">문의하기</a></div></div><div class="ipma-nav-item"><a class="ipma-nav-main" href="../contact/">참여·문의</a><div class="ipma-dropdown"><b>참여 안내</b><a href="../contact/">가입·제휴 문의</a><a href="../branches/">지부 안내</a><a href="../partners/">협력기관</a><a href="../events/">행사·세미나</a></div></div></nav></div></header>
+<div class="wrap">
+<!-- Top -->
+<div class="topbar">
+<div class="brand">
+<div class="mark">IPMA</div>
+<div style="min-width:0">
+<strong>International Police Martial Arts Alliance</strong>
+<span>문서 · Documents</span>
+</div>
+</div>
+<a class="homeBtn" href="../index.html"><span class="dot"></span>홈으로</a>
+</div>
+<section class="hero">
+<div class="kicker"><b>현행 운영규정</b></div>
+<p>사단법인 국제경찰무도연합회(IPMA)</p>
+<h1>안전 규정 및 윤리 규정</h1>
+<p>본 규정은 IPMA 및 산하기관·국내외 공식 조직의 교육·훈련·심사·대회·세미나·시범 및 관련 활동에서 참가자의 안전과 인격을 보호하고 지도자와 관계자가 준수하여야 할 공통적인 안전·윤리기준을 정한 공식 현행 규정입니다.</p>
+</section>
+<section class="card" style="margin-top:16px">
+<div style="white-space:pre-wrap;overflow-wrap:anywhere">제1조【목적】
+
+본 규정은 사단법인 국제경찰무도연합회(IPMA, 이하 “본회”)의 교육·훈련·심사·대회·세미나·시범 및 기타 공식 활동에서 참가자의 생명과 신체를 보호하고, 지도자와 관계자가 준수하여야 할 기본적인 안전 및 윤리기준을 정함을 목적으로 한다.
+
+
+제2조【적용범위】
+
+① 본 규정은 본회와 본회가 승인·등록한 산하기관, 국내외 지부 및 공식 조직이 본회의 명칭 또는 공식 지위로 실시하는 교육·훈련·심사·대회·세미나·시범 및 기타 관련 활동에 적용한다.
+
+② 본회의 지도자·심사위원·임원·강사·운영자 및 기타 관계자는 각자의 역할과 책임범위에서 본 규정을 준수하여야 한다.
+
+③ 세계태권검도연맹(WTKF)을 비롯하여 본회가 설치·승인한 산하기관의 교육·훈련 및 관련 활동에도 별도의 특별규정이 없는 한 본 규정을 적용 또는 준용한다.
+
+
+제3조【안전 최우선의 원칙】
+
+① 본회의 모든 교육·훈련 및 관련 활동에서는 참가자의 생명과 신체의 안전을 우선하여야 한다.
+
+② 지도자는 교육성과, 승급·승단, 경기결과, 시범 또는 기술의 완성도 등을 이유로 참가자에게 불필요하거나 과도한 위험을 부담하게 하여서는 안 된다.
+
+③ 참가자의 연령, 숙련도, 건강상태, 신체조건 및 훈련경험 등을 고려하여 훈련의 종류와 강도를 합리적으로 조정하여야 한다.
+
+④ 지도자 또는 운영책임자가 안전상 중대한 위험이 있다고 판단한 경우에는 해당 훈련이나 활동을 즉시 중단하거나 필요한 안전조치를 할 수 있다.
+
+
+제4조【지도자의 안전관리 책임】
+
+① 지도자는 자신이 지도하거나 감독하는 교육·훈련 및 관련 활동에 대하여 합리적인 범위에서 안전관리를 실시하여야 한다.
+
+② 지도자는 훈련을 시작하기 전에 필요한 범위에서 훈련장소, 시설, 장비 및 훈련환경의 안전상태를 확인하여야 한다.
+
+③ 대련, 격파, 호신술, 삼단봉, 검 또는 기타 장비·도구를 사용하는 훈련 등 일반적인 기본훈련보다 위험도가 높은 활동은 해당 기술을 적절하게 지도할 수 있는 지도자의 통제 아래 실시하는 것을 원칙으로 한다.
+
+④ 지도자는 참가자의 능력을 현저하게 초과하거나 안전하게 통제하기 어려운 기술을 강제로 실시하게 하여서는 안 된다.
+
+⑤ 안전상 필요한 경우 지도자는 훈련방법의 변경, 보호장비의 사용, 참가 제한 또는 훈련 중단 등의 조치를 할 수 있다.
+
+
+제5조【참가자의 건강상태와 자기보호】
+
+① 참가자는 자신의 건강상태와 신체적 이상을 고려하여 안전하게 훈련에 참여하여야 한다.
+
+② 부상, 질병 또는 기타 건강상의 사유로 정상적인 훈련이 어렵다고 판단되는 경우 참가자는 이를 지도자에게 알리고 훈련의 제한·변경 또는 중단을 요청할 수 있다.
+
+③ 지도자는 참가자에게 명백한 이상징후가 있거나 계속적인 훈련이 위험하다고 합리적으로 판단되는 경우 해당 참가자의 훈련을 제한하거나 중단시킬 수 있다.
+
+④ 참가자가 자신의 의사로 훈련에 참여하였다는 사실만으로 지도자 또는 운영자의 기본적인 안전관리 의무가 면제되는 것은 아니다.
+
+
+제6조【시설 및 훈련환경의 안전】
+
+① 교육·훈련 및 관련 활동을 실시하는 장소는 활동의 종류와 참가인원을 고려하여 안전하게 사용할 수 있는 상태를 유지하도록 노력하여야 한다.
+
+② 지도자 또는 운영책임자는 필요한 범위에서 바닥상태, 훈련공간, 조명, 출입구, 장애물 및 기타 위험요소를 확인하여야 한다.
+
+③ 안전사고의 위험이 있다고 판단되는 시설이나 장소에서는 필요한 안전조치를 한 후 활동을 실시하여야 한다.
+
+④ 행사장·학교·공공시설·민간시설 등 외부 장소를 이용하는 경우 해당 시설의 안전수칙과 관리기준을 함께 준수하여야 한다.
+
+
+제7조【장비 및 보호장비】
+
+① 교육·훈련에 사용하는 장비와 도구는 그 용도에 적합하고 안전하게 사용할 수 있는 상태이어야 한다.
+
+② 파손·변형 또는 기타 이상으로 안전한 사용이 어렵다고 판단되는 장비는 사용을 중단하여야 한다.
+
+③ 대련, 격파 또는 신체접촉이 수반되는 훈련 등에서 부상의 위험을 줄이기 위하여 필요한 경우 해당 활동에 적합한 보호장비를 사용하여야 한다.
+
+④ 지도자는 참가자의 연령, 숙련도, 훈련내용 및 위험도를 고려하여 필요한 보호장비와 안전조치를 정할 수 있다.
+
+⑤ 보호장비를 착용하였다는 이유만으로 위험한 기술이나 과도한 접촉이 허용되는 것은 아니다.
+
+
+제8조【대련 및 접촉훈련】
+
+① 대련·호신술·제압술 및 기타 신체접촉이 수반되는 훈련은 참가자의 숙련도와 신체조건 등을 고려하여 통제된 방법으로 실시하여야 한다.
+
+② 지도자는 참가자 사이에 현저한 숙련도 또는 신체조건의 차이가 있는 경우 훈련방법, 상대방 또는 접촉강도를 조정할 수 있다.
+
+③ 상대방의 안전을 현저하게 위협하는 과도한 공격, 고의적인 부상행위 또는 지도자의 중단지시에 따르지 않는 행위를 금지한다.
+
+④ 참가자가 통증·부상 또는 신체적 이상을 표시하거나 훈련중단 의사를 명확히 표시한 경우 상대방과 지도자는 이를 존중하여야 한다.
+
+⑤ 지도자는 안전한 통제가 어렵다고 판단되는 대련 또는 접촉훈련을 즉시 중단시킬 수 있다.
+
+
+제9조【무기·도구 및 고위험 훈련】
+
+① 검, 삼단봉 및 기타 무기 또는 훈련도구를 사용하는 교육·훈련은 해당 도구의 특성과 위험성을 이해하고 적절하게 지도할 수 있는 지도자의 통제 아래 실시하여야 한다.
+
+② 실제 무기 또는 부상위험이 높은 도구를 사용하는 경우에는 교육목적과 참가자의 숙련도를 고려하여 사용 여부와 방법을 신중하게 결정하여야 한다.
+
+③ 초보자 또는 미성년자에게 위험도가 높은 기술을 지도하는 경우에는 연령·숙련도 및 안전성을 고려하여 훈련용 장비, 단계별 교육 또는 기타 필요한 안전조치를 적용하여야 한다.
+
+④ 무기·도구를 장난, 위협, 과시 또는 교육목적과 관계없는 방법으로 사용하여서는 안 된다.
+
+⑤ 무기·도구의 소지·운반·사용 등에 관하여 해당 국가 또는 지역의 법령이나 시설규정이 있는 경우 이를 준수하여야 한다.
+
+
+제10조【사고 발생 및 응급조치】
+
+① 교육·훈련 또는 행사 중 부상이나 안전사고가 발생한 경우 지도자 또는 운영책임자는 필요한 훈련을 즉시 중단하고 참가자의 상태와 현장의 안전을 우선적으로 확인하여야 한다.
+
+② 응급상황이라고 판단되는 경우에는 가능한 범위에서 적절한 응급조치를 실시하고 필요한 경우 해당 지역의 응급의료기관 또는 긴급구조기관에 도움을 요청하여야 한다.
+
+③ 부상자가 계속하여 훈련하는 것이 위험하다고 판단되는 경우 본인의 의사와 관계없이 해당 활동의 참여를 제한할 수 있다.
+
+④ 중대한 사고가 발생한 경우 해당 조직 또는 책임자는 가능한 범위에서 사고경위와 조치내용을 확인·기록하고, 본부가 요청하는 경우 관련 사실을 보고하여야 한다.
+
+⑤ 사고의 원인이 시설·장비·훈련방법 또는 운영상 문제와 관련된 것으로 판단되는 경우 동일하거나 유사한 사고의 재발을 방지하기 위하여 필요한 조치를 검토하여야 한다.
+
+
+제11조【미성년자 및 보호가 필요한 참가자】
+
+① 지도자와 운영책임자는 미성년자 및 연령·신체상태·장애 기타 사유로 특별한 보호가 필요한 참가자의 안전과 인격을 충분히 고려하여야 한다.
+
+② 미성년자에 대한 교육·훈련은 연령, 신체발달 정도, 숙련도 및 이해능력을 고려하여 적절한 방법과 강도로 실시하여야 한다.
+
+③ 지도자는 교육·훈련을 이유로 미성년자에게 불필요한 신체적·정신적 고통이나 모욕감을 주어서는 안 된다.
+
+④ 미성년자의 사진·영상·개인정보 등을 공개하거나 홍보에 사용하는 경우에는 해당 국가의 법령과 본회의 관련 기준을 준수하고 필요한 동의절차를 거쳐야 한다.
+
+⑤ 지도자와 운영자는 미성년자 또는 보호가 필요한 참가자를 대상으로 자신의 지위나 영향력을 이용한 부적절한 행위를 하여서는 안 된다.
+
+
+제12조【폭력·가혹행위 및 강제행위의 금지】
+
+① 지도자·임원 및 관계자는 교육·훈련·기강확립·징계 또는 전통이라는 이유로 참가자에게 폭행, 가혹행위 또는 불필요한 신체적 고통을 가하여서는 안 된다.
+
+② 체력훈련이나 반복훈련을 실시하는 경우에도 참가자의 안전과 교육목적을 고려하여야 하며, 보복·굴욕 또는 처벌을 목적으로 이를 실시하여서는 안 된다.
+
+③ 지도자는 참가자에게 위험한 기술이나 훈련을 강제로 실시하도록 하여서는 안 된다.
+
+④ 참가자가 특정 훈련에 참여하지 않거나 안전상의 이유로 중단을 요청하였다는 이유만으로 부당한 불이익이나 모욕을 주어서는 안 된다.
+
+
+제13조【성희롱·성폭력 및 부적절한 신체접촉의 금지】
+
+① 지도자·임원·회원 및 관계자는 교육·훈련 또는 조직활동 과정에서 성희롱, 성폭력, 성적 괴롭힘 또는 상대방에게 성적 불쾌감이나 수치심을 줄 수 있는 행위를 하여서는 안 된다.
+
+② 기술지도 또는 안전확보를 위하여 신체접촉이 필요한 경우에는 교육상 필요한 범위에서 적절한 방법으로 실시하여야 한다.
+
+③ 지도자는 자신의 지위·권한·연령·경력 또는 영향력을 이용하여 참가자에게 부적절한 사적 관계나 성적 행위를 요구·강요 또는 유도하여서는 안 된다.
+
+④ 관련 행위가 의심되거나 신고된 경우에는 당사자의 안전과 개인정보를 고려하여 적절하게 사실관계를 확인하고 필요한 조치를 할 수 있다.
+
+
+제14조【차별·모욕 및 괴롭힘의 금지】
+
+① 본회의 교육·훈련 및 조직활동에서는 국적, 인종, 성별, 연령, 장애, 사회적 신분 또는 기타 개인적 특성을 이유로 부당하게 차별하여서는 안 된다.
+
+② 지도자·임원·회원 및 관계자는 상대방의 인격을 훼손하는 지속적인 욕설·모욕·위협·따돌림 또는 괴롭힘을 하여서는 안 된다.
+
+③ 기술수준, 단·급, 직책 또는 경력의 차이는 상대방의 인격을 낮추거나 부당하게 대우할 근거가 되지 않는다.
+
+④ 정당한 교육적 지도·평가·안전통제 및 조직운영상 필요한 합리적인 조치는 본 조에서 말하는 부당한 차별이나 괴롭힘으로 보지 않는다.
+
+
+제15조【지도자의 권한과 윤리적 책임】
+
+① 지도자는 참가자의 안전과 성장에 영향을 미치는 위치에 있음을 인식하고 그 권한을 책임 있게 행사하여야 한다.
+
+② 지도자는 자신의 직위·단·급·자격·경력 또는 본회와의 관계를 이용하여 참가자에게 사적 이익을 요구하거나 부당한 의무를 부담하게 하여서는 안 된다.
+
+③ 지도자는 참가자의 단증·자격·승급·승단·대회출전·직책 또는 기타 평가에 관한 권한을 개인적인 보복·압박·회유 또는 사적 관계의 수단으로 이용하여서는 안 된다.
+
+④ 지도자는 자신이 보유하지 않은 자격·직위·권한을 보유한 것처럼 표시하거나 본회가 승인하지 않은 권한을 행사하여서는 안 된다.
+
+⑤ 지도자는 본회의 명예와 신뢰를 존중하고 지도자로서 사회적으로 요구되는 기본적인 품위와 책임을 유지하도록 노력하여야 한다.
+
+
+제16조【금전·단증·자격 관련 윤리】
+
+① 지도자·임원 및 관계자는 본회의 단증·자격증·인증·교육·심사·등록 또는 공식 직책과 관련하여 본부가 승인하지 않은 권한을 행사하거나 허위·과장된 내용을 안내하여서는 안 된다.
+
+② 본회의 명칭으로 회비·심사비·등록비·교육비·증서발급비 기타 금전을 수납하는 경우에는 본부가 승인하거나 별도로 정한 기준과 절차를 따라야 한다.
+
+③ 지도자 또는 관계자는 금전이나 개인적인 이익을 대가로 정상적인 기준이나 절차를 벗어난 단증·자격·인증·직책 등의 발급·추천 또는 취득을 약속하여서는 안 된다.
+
+④ 본회의 단증·자격·인증 또는 직책을 개인적인 영업, 투자, 금전대여, 물품구매 또는 기타 사적 거래를 강요하거나 부당하게 유도하는 수단으로 이용하여서는 안 된다.
+
+⑤ 현지 조직이 자체적인 교육·시설운영 또는 기타 활동에 필요한 비용을 수납하는 경우에도 이를 본부가 공식적으로 부과하거나 승인한 금액인 것처럼 허위로 표시하여서는 안 된다.
+
+
+제17조【개인정보·사진 및 영상의 보호】
+
+① 지도자·임원 및 관계자는 교육·훈련·심사·대회·행사 등의 과정에서 알게 된 회원과 참가자의 개인정보를 정당한 목적과 필요한 범위에서 취급하여야 한다.
+
+② 회원명부, 연락처, 생년월일, 신분정보, 자격정보 및 기타 개인정보를 본래의 목적과 관계없이 제3자에게 제공하거나 사적으로 이용하여서는 안 된다.
+
+③ 참가자의 사진·영상 등을 홈페이지, SNS, 언론, 홍보자료 등에 사용하는 경우에는 해당 국가의 법령과 본회의 관련 기준에 따라 필요한 동의와 보호조치를 적용하여야 한다.
+
+④ 특히 미성년자의 개인정보·사진·영상은 더욱 신중하게 취급하여야 한다.
+
+⑤ 안전사고, 분쟁 또는 윤리위반 등의 신고·조사 과정에서 취득한 개인정보와 민감한 내용은 필요한 범위를 넘어 공개하지 않는 것을 원칙으로 한다.
+
+
+제18조【음주·약물 및 정상적인 지도능력】
+
+① 지도자는 음주 또는 약물 등의 영향으로 정상적인 판단이나 안전한 지도가 어렵다고 판단되는 상태에서 교육·훈련·심사·대회 또는 기타 안전관리 업무를 수행하여서는 안 된다.
+
+② 참가자 역시 음주 또는 기타 사유로 안전한 훈련이 어렵다고 판단되는 상태에서는 위험도가 있는 교육·훈련에 참여하여서는 안 된다.
+
+③ 지도자 또는 운영책임자는 참가자의 상태로 인하여 본인이나 다른 참가자의 안전에 위험이 있다고 합리적으로 판단되는 경우 해당 참가자의 활동을 제한하거나 중단시킬 수 있다.
+
+④ 질병 치료 등을 위하여 적법하게 사용되는 의약품 자체를 제한하는 것은 아니며, 안전한 활동이 가능한지 여부를 중심으로 판단한다.
+
+
+제19조【온라인 활동 및 대외행위】
+
+① 지도자·임원 및 공식 조직의 관계자는 홈페이지, SNS, 온라인 커뮤니티 및 기타 공개매체에서 본회의 명칭·로고·직함 또는 공식 지위를 사용할 경우 사실에 부합하도록 표시하여야 한다.
+
+② 본회 또는 산하기관의 공식 입장으로 오인될 수 있는 허위정보, 과장된 직책·권한 또는 사실과 다른 조직관계를 표시하여서는 안 된다.
+
+③ 교육·훈련 중 촬영된 사진·영상 또는 회원과 관련된 자료를 공개할 경우 개인정보 및 초상과 관련된 권리를 존중하여야 한다.
+
+④ 지도자·임원 및 관계자는 온라인 공간에서도 회원 또는 다른 관계자를 지속적으로 모욕·위협·괴롭히거나 본회의 공식 지위를 이용하여 부당한 압력을 행사하여서는 안 된다.
+
+⑤ 개인적인 의견을 표시하는 경우에도 그것이 본회의 공식 입장인 것으로 오인되지 않도록 필요한 주의를 기울여야 한다.
+
+
+제20조【신고 및 신고자·피해자 보호】
+
+① 회원·참가자·지도자 및 관계자는 중대한 안전위반, 폭력·가혹행위, 성희롱·성폭력, 금전 또는 자격 관련 부정행위 및 기타 중대한 윤리위반 사실을 알게 된 경우 해당 조직의 책임자 또는 본부에 이를 알릴 수 있다.
+
+② 신고를 접수한 관계자는 사안의 성격과 중대성을 고려하여 필요한 범위에서 사실관계를 확인하고 적절한 조치를 검토하여야 한다.
+
+③ 신고 또는 피해사실을 알렸다는 이유만으로 신고자·피해자 또는 협조자에게 보복, 협박, 부당한 직책변경, 수련·심사상의 불이익 또는 기타 부당한 대우를 하여서는 안 된다.
+
+④ 신고자·피해자 및 관계자의 신원과 개인정보는 사실확인 및 필요한 조치에 필요한 범위를 넘어 공개하지 않는 것을 원칙으로 한다.
+
+⑤ 신고가 있었다는 사실만으로 피신고자의 위반행위가 확정된 것으로 보아서는 아니 되며, 가능한 범위에서 객관적인 사실관계와 당사자의 의견을 함께 확인하여야 한다.
+
+⑥ 고의로 허위사실을 조작하여 타인을 해할 목적으로 신고한 것이 명백하게 확인된 경우에는 별도의 윤리위반으로 판단할 수 있다. 다만 신고내용이 최종적으로 확인되지 않았다는 이유만으로 선의의 신고자에게 책임을 물어서는 안 된다.
+
+
+제21조【현지 법령 및 시설규정의 준수】
+
+① 본회 및 국내외 산하기관·지부·공식 조직은 교육·훈련·심사·대회·행사 등을 실시하는 국가 또는 지역의 관련 법령과 시설의 안전기준을 준수하여야 한다.
+
+② 본 규정과 현지의 강행 법령 또는 공공기관의 의무적인 안전기준이 서로 다른 경우에는 해당 법령과 의무기준을 우선하여 준수하여야 한다.
+
+③ 현지 법령이나 시설기준이 본 규정보다 강화된 안전기준을 요구하는 경우에는 그 강화된 기준을 적용하여야 한다.
+
+④ 현지 법령에서 특별히 정하지 않은 사항이라 하더라도 본 규정에서 정한 기본적인 안전·윤리기준을 준수하는 것을 원칙으로 한다.
+
+
+제22조【안전·윤리 위반에 대한 조치】
+
+① 본부는 본 규정의 중대한 위반이 확인되거나 참가자의 안전 또는 본회의 신뢰를 현저하게 해칠 우려가 있는 경우 필요한 조치를 할 수 있다.
+
+② 조치는 위반행위의 성격, 중대성, 반복 여부, 고의성, 피해 정도, 시정 여부 및 기타 관련 사정을 종합적으로 고려하여 합리적인 범위에서 결정한다.
+
+③ 필요한 조치에는 주의·경고, 시정요구, 교육 또는 활동의 제한, 공식 활동 참여 제한, 지도·심사 권한의 정지, 직책 또는 자격에 대한 재검토 및 기타 관련 규정에서 정한 조치가 포함될 수 있다.
+
+④ 중대한 안전위험이 계속되거나 즉각적인 피해를 방지할 필요가 있는 경우에는 최종적인 사실확인 또는 결정 전이라도 해당 교육·훈련·활동이나 관련 권한을 임시로 제한할 수 있다.
+
+⑤ 직책의 정지·해임·임명취소, 자격의 정지·취소 또는 조직의 공식 지위에 관한 최종적인 조치는 본회의 정관·내부규약 및 해당 분야의 관련 운영규정에 따른다.
+
+
+제23조【사실확인 및 소명】
+
+① 본부 또는 권한 있는 책임자는 안전·윤리 위반이 신고되거나 합리적인 의심이 있는 경우 필요한 범위에서 사실관계를 확인할 수 있다.
+
+② 사실확인을 위하여 필요한 경우 당사자 또는 관계자에게 설명, 의견 또는 관련 자료의 제출을 요청할 수 있다.
+
+③ 중대한 불이익을 수반하는 최종조치를 결정하기 전에는 긴급하거나 특별한 사정이 있는 경우를 제외하고 당사자에게 위반내용을 알리고 합리적인 기간 동안 의견 또는 소명자료를 제출할 기회를 부여하는 것을 원칙으로 한다.
+
+④ 사실확인 과정에서는 신고자·피해자 및 피신고자의 인격과 개인정보를 존중하고 불필요한 공개 또는 명예훼손이 발생하지 않도록 주의하여야 한다.
+
+⑤ 사실확인의 목적은 개인에 대한 비난이나 공개적인 망신이 아니라 참가자의 안전보호, 사실관계 확인, 재발방지 및 조직의 건전한 운영에 둔다.
+
+
+제24조【산하기관 및 국내외 조직의 책임】
+
+① 본회의 산하기관·지부 및 국내외 공식 조직은 본 규정의 기본적인 안전·윤리기준을 해당 조직의 교육·훈련 및 운영에 반영하도록 노력하여야 한다.
+
+② 각 조직은 해당 국가·지역, 종목, 시설 및 활동의 특성을 고려하여 본 규정에 위배되지 않는 범위에서 보다 구체적이거나 강화된 자체 안전기준을 운영할 수 있다.
+
+③ 자체 기준이 있다는 이유로 본 규정에서 정한 기본적인 안전·윤리책임이 면제되는 것은 아니다.
+
+④ 세계태권검도연맹(WTKF)을 비롯한 본회 산하기관과 국내외 조직은 별도의 특별규정이 없는 한 본 규정을 공통적인 안전·윤리기준으로 적용 또는 준용한다.
+
+
+제25조【공식 공개 및 현행 규정의 관리】
+
+① 본회는 국내외 회원·지도자 및 관계자가 현재 적용되는 안전·윤리기준을 확인할 수 있도록 본 규정의 현행 내용을 공식 홈페이지에 공개할 수 있다.
+
+② 본회의 공식 절차에 따라 확정되고 공식 홈페이지에 게시된 현행 규정을 현재 적용되는 공식 공개본으로 관리한다.
+
+③ 본 규정의 내용 변경이 필요한 경우 본회의 정관·내부규약 및 내부 의사결정 절차에 따라 확정한 후 공식 홈페이지의 현행 규정에 반영한다.
+
+④ 홈페이지의 단순한 기술적 수정, 오탈자의 정정 또는 관리자의 편집행위만으로 규정의 실질적인 내용이 변경된 것으로 보지 않는다.
+
+⑤ 이전 자료 또는 내부 관련 문서의 보존이 필요한 경우 본부가 별도로 관리할 수 있다.
+
+
+부칙
+
+제1조【적용】
+
+본 현행 안전 규정 및 윤리 규정은 본회와 본회가 승인·등록한 산하기관, 국내외 지부 및 공식 조직의 교육·훈련과 관련 활동에 적용되는 공통적인 안전·윤리기준으로 한다.
+
+
+제2조【기존 조직 및 활동】
+
+기존에 운영되고 있는 산하기관·지부 및 국내외 공식 조직은 본 규정의 기본적인 안전·윤리기준을 현재의 교육·훈련 및 관련 활동에 반영하도록 한다.
+
+
+제3조【세부기준】
+
+종목·교육과정·심사·대회·시설 또는 특정 활동의 특성상 별도의 세부 안전기준이 필요한 경우 본부 또는 권한 있는 산하기관은 본 규정에 위배되지 않는 범위에서 별도의 세부지침을 정할 수 있다.
+
+
+제4조【다른 규정과의 관계】
+
+본 규정에서 정하지 않은 조직의 지위, 임원·직책, 국제조직, 단증·자격·인증·심사 및 기타 사항은 본회의 정관·내부규약과 해당 분야의 관련 운영규정에 따른다.</div>
+</section>
+<footer>
+<div class="hr"></div>
+<p>© <span id="year"></span> IPMA · International Police Martial Arts Alliance</p>
+</footer>
+</div>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<div aria-modal="true" class="ipma-modal" role="dialog"><div class="ipma-modal-box"><button aria-label="닫기" class="ipma-modal-close">×</button><div class="ipma-modal-frame"></div></div></div><script src="../assets/js/ipma-upgrade.js?v=2.0"></script><script src="../assets/js/cross-site-network.js"></script>
+<script src="../assets/js/ipma-20lang.js?v=2.3.0"></script>
+</body>
+</html>
