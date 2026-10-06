@@ -59,7 +59,7 @@ Pasal 7【Peralatan dan Alat Pelindung】
 
 ② Peralatan yang rusak, berubah bentuk, atau tidak aman harus dihentikan penggunaannya.
 
-③ Bila sifat latihan memerlukan perlindungan, peserta harus diarahkan untuk memakai dan menggunakannya dengan benar.
+③ Dalam sparring, pemecahan benda, atau latihan yang melibatkan kontak fisik, apabila diperlukan untuk mengurangi risiko cedera, wajib digunakan alat pelindung yang sesuai dengan kegiatan tersebut.
 
 ④ Instruktur dapat menentukan perlindungan dan tindakan yang diperlukan berdasarkan usia, kemahiran, isi latihan, dan tingkat risiko.
 
