@@ -38,7 +38,8 @@
                    /^\/programs\/?$/.test(path) ? {global:'IPMA_PROGRAMS_I18N',file:'programs.js'} :
                    /^\/partners\/?$/.test(path) ? {global:'IPMA_PARTNERS_I18N',file:'partners.js'} :
                    /^\/events\/?$/.test(path) ? {global:'IPMA_EVENTS_I18N',file:'events.js'} :
-                   /^\/certification\/?$/.test(path) ? {global:'IPMA_CERTIFICATION_I18N',file:'certification.js'} : null;
+                   /^\/certification\/?$/.test(path) ? {global:'IPMA_CERTIFICATION_I18N',file:'certification.js'} :
+                   /^\/leadership\/?$/.test(path) ? {global:'IPMA_LEADERSHIP_I18N',file:'leadership.js'} : null;
   if(pageI18n){
     const originals=new Map(), placeholders=new Map();
     const capture=()=>{
