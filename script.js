@@ -268,6 +268,8 @@
   LANGUAGES.forEach(x=>{const b=document.createElement('button');b.className='language-option';b.dataset.lang=x.code;b.innerHTML=`<img src="assets/flags/${x.flag}.svg" alt=""><span><strong>${x.name}</strong><small>${x.flag.toUpperCase()}</small></span>`;b.onclick=()=>{applyLanguage(x.code);langDialog.close()};langGrid.appendChild(b)});
   langBtn.onclick=()=>langDialog.showModal(); document.getElementById('languageClose').onclick=()=>langDialog.close(); applyLanguage(currentLang);
 
+  document.addEventListener('ipma-language-change',e=>{if(LANGUAGES.some(x=>x.code===e.detail.code))applyLanguage(e.detail.code)});
+
   // User-initiated, copyright-free procedural ambient sound. Muted by default.
   let audioCtx, master, nodes=[],soundOn=false;
   const soundBtn=document.getElementById('soundBtn');
