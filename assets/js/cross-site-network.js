@@ -33,4 +33,22 @@
   document.body.appendChild(dock);
   dock.querySelector('.mn-toggle').onclick=()=>dock.classList.toggle('open');
   document.addEventListener('click',e=>{if(!dock.contains(e.target))dock.classList.remove('open')});
+
+  if(/^\/contact\/?$/.test(path)){
+    const originals=new Map();
+    const capture=()=>{
+      const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){return n.parentElement&&n.parentElement.closest('script,style,textarea,input,select,.ipma20-root')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT;}});
+      while(w.nextNode()){const n=w.currentNode,t=n.nodeValue.trim();if(t)originals.set(n,t);}
+    };
+    const apply=code=>{
+      const dict=window.IPMA_CONTACT_I18N?.[code]||window.IPMA_CONTACT_I18N?.ko;if(!dict)return;
+      originals.forEach((ko,n)=>{if(n.isConnected&&Object.prototype.hasOwnProperty.call(dict,ko))n.nodeValue=n.nodeValue.replace(n.nodeValue.trim(),dict[ko]);});
+    };
+    capture();
+    const s=document.createElement('script');
+    s.src=new URL('i18n/contact.js',document.currentScript.src).href+'?v=1.0';
+    s.onload=()=>apply((new URLSearchParams(location.search).get('lang')||localStorage.getItem('ipma_language')||'ko').replace('zh-CN','zh').replace('tl','fil'));
+    document.head.appendChild(s);
+    document.addEventListener('ipma-language-change',e=>apply(e.detail?.code||'ko'));
+  }
 })();
