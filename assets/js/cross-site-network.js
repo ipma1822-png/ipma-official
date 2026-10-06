@@ -36,7 +36,8 @@
 
   const pageI18n = /^\/contact\/?$/.test(path) ? {global:'IPMA_CONTACT_I18N',file:'contact.js'} :
                    /^\/programs\/?$/.test(path) ? {global:'IPMA_PROGRAMS_I18N',file:'programs.js'} :
-                   /^\/partners\/?$/.test(path) ? {global:'IPMA_PARTNERS_I18N',file:'partners.js'} : null;
+                   /^\/partners\/?$/.test(path) ? {global:'IPMA_PARTNERS_I18N',file:'partners.js'} :
+                   /^\/events\/?$/.test(path) ? {global:'IPMA_EVENTS_I18N',file:'events.js'} : null;
   if(pageI18n){
     const originals=new Map(), placeholders=new Map();
     const capture=()=>{
