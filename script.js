@@ -28,10 +28,35 @@
     progress.style.transition = 'none'; progress.style.width = '0%';
     requestAnimationFrame(()=>requestAnimationFrame(()=>{progress.style.transition=`width ${intervalMs}ms linear`;progress.style.width='100%';}));
   }
+  // Public hero translations. Keep English as the readable fallback until
+  // individually reviewed translations are supplied for other languages.
+  const HERO_EN = [
+    ['ONE NETWORK. THREE MISSIONS.','Police Martial Arts · Taekwon-Kumdo · Drone Patrol'],
+    ['Martial Arts for Real-World Situations','Technique · Fitness · Mental Strength'],
+    ['Control in Motion','Training · Self-Defense · Response'],
+    ['A World Connected Through Education','International Seminars · Instructor Exchange'],
+    ['Honoring Tradition, Shaping the Future','Taekwondo and Swordsmanship Combined'],
+    ['The Path of the Sword, the Focus of Training','Precision · Discipline · Harmony'],
+    ['Martial Arts for the Next Generation','Confidence · Focus · Growth'],
+    ['See Further, Protect Closer','Patrol · Safety · Technology'],
+    ['Connecting Operations from the Sky','Urban Areas · Mountains · Disasters'],
+    ['Finding People, Protecting Lives','Search · Rescue · Disaster Response'],
+    ['One Connected Global Network','Connection · Cooperation · Education'],
+    ['ONE MISSION. ONE NETWORK. ONE FUTURE.','Police Martial Arts · Taekwon-Kumdo · Drone Patrol']
+  ];
+  function refreshHeroCopy(){
+    const s=slides[index];
+    if(!s) return;
+    const code=localStorage.getItem('ipma_language') || 'ko';
+    const copy=code==='ko' ? null : HERO_EN[index];
+    eyebrow.textContent=s.eyebrow||'';
+    title.textContent=copy ? copy[0] : (s.title||'');
+    note.textContent=copy ? copy[1] : (s.note||'');
+  }
   function show(next){
     index = (next + slides.length) % slides.length;
     slideNodes.forEach((el,i)=>el.classList.toggle('active',i===index));
-    const s=slides[index]; eyebrow.textContent=s.eyebrow||''; title.textContent=s.title||''; note.textContent=s.note||'';
+    refreshHeroCopy();
     now.textContent=String(index+1).padStart(2,'0');
     animateProgress();
   }
@@ -263,6 +288,7 @@
     const N=LIVE_I18N[code]||LIVE_I18N.en;
     const keys=['allDesc','ipmaDesc','wtkfDesc','idpDesc','globalDesc','countriesDesc','note','activityKicker','activityTitle','recentMembers','branches','appointments','loadingMembers','loadingBranches','loadingAppointments'];
     document.querySelectorAll('[data-ipma-live-i18n]').forEach(el=>{const k=el.dataset.ipmaLiveI18n;const idx=keys.indexOf(k);if(idx>=0&&N[idx])el.textContent=N[idx]});
+    refreshHeroCopy();
 
   }
   LANGUAGES.forEach(x=>{const b=document.createElement('button');b.className='language-option';b.dataset.lang=x.code;b.innerHTML=`<img src="assets/flags/${x.flag}.svg" alt=""><span><strong>${x.name}</strong><small>${x.flag.toUpperCase()}</small></span>`;b.onclick=()=>{applyLanguage(x.code);langDialog.close()};langGrid.appendChild(b)});
