@@ -6,7 +6,7 @@
   const count=document.getElementById('networkNoticeCount');
   if(!list) return;
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const language=()=>{const q=new URLSearchParams(location.search).get('lang');return (q||localStorage.getItem('ipma_language')||document.documentElement.lang||'ko').toLowerCase().split('-')[0]};
+  const language=()=>{const q=new URLSearchParams(location.search).get('lang');let saved='';try{saved=localStorage.getItem('ipma_language')||'';}catch(e){}return (q||saved||document.documentElement.lang||'ko').toLowerCase().split('-')[0]};
   const labels={
     ko:['통합공지','건','불러오는 중','공지를 불러오는 중입니다.','현재 표시할 글로벌 네트워크 공지가 없습니다.','중요','총재 메시지','전성권 총재','공지사항을 불러오지 못했습니다. 잠시 후 다시 시도해주세요.','공지 조회 오류'],
     en:['Integrated notices','items','Loading','Loading notices...','There are no global network notices to display.','Important','President’s Message','President Jeon Seong Kweon','Unable to load notices. Please try again later.','Notice loading error'],
@@ -44,11 +44,13 @@
       const q='select=id,title,content,author,category,targets,is_pinned,published_at,expires_at&is_published=eq.true&order=is_pinned.desc,published_at.desc';
       const r=await fetch(SUPABASE_URL+'/rest/v1/network_notices?'+q,{headers:{apikey:SUPABASE_KEY}});
       if(!r.ok)throw new Error('HTTP '+r.status);
-      const rows=(await r.json()).filter(x=>active(x)&&Array.isArray(x.targets)&&(x.targets.includes('ALL')||x.targets.includes(org)));
+      const data=await r.json();
+      if(!Array.isArray(data))throw new Error('Invalid notice response');
+      const rows=data.filter(x=>x&&active(x)&&Array.isArray(x.targets)&&(x.targets.includes('ALL')||x.targets.includes(org)));
       cachedRows=rows;render(rows);
     }catch(e){console.error('Network notice load error',e);const t=L();list.innerHTML='<div class="network-notice-empty">'+esc(t[8])+'</div>';if(count)count.textContent=t[9];}
   }
-  window.addEventListener('ipma-language-change',()=>{if(cachedRows)render(cachedRows);else if(count){const t=L();count.textContent=t[9];list.innerHTML='<div class="network-notice-empty">'+esc(t[8])+'</div>';}});
+  window.addEventListener('ipma-language-change',()=>{if(cachedRows!==null)render(cachedRows);else if(count){const t=L();count.textContent=t[2];list.innerHTML='<div class="network-notice-empty">'+esc(t[3])+'</div>';}});
   load();
   setInterval(load,60000);
 })();
