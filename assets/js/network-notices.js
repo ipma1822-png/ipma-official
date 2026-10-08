@@ -33,15 +33,21 @@
   const fmt=d=>d?new Date(d).toLocaleDateString(language()==='ko'?'ko-KR':language()==='en'?'en-US':language()):'';
   const active=x=>!x.expires_at || new Date(x.expires_at).getTime()>=Date.now();
   let cachedRows=null;
+  function noticeText(x,field){
+    const lang=language(),translations=x.translations;
+    const entry=translations&&typeof translations==='object'&&!Array.isArray(translations)?translations[lang]|| (lang==='zh'?translations['zh-CN']:null):null;
+    const value=entry&&typeof entry==='object'&&!Array.isArray(entry)?entry[field]:null;
+    return typeof value==='string'&&value.trim()?value:x[field];
+  }
   function render(rows){
     const t=L();
     if(count)count.textContent=t[0]+' '+rows.length+' '+t[1];
     if(!rows.length){list.innerHTML='<div class="network-notice-empty">'+esc(t[4])+'</div>';return;}
-    list.innerHTML=rows.map(x=>`<article class="network-notice-card ${x.is_pinned?'is-pinned':''}"><div class="network-notice-meta"><b>${x.is_pinned?'📌 '+esc(t[5]):'🌐 NETWORK'}</b><span>${esc(x.category||t[6])}</span><time>${fmt(x.published_at)}</time></div><h3>${esc(x.title)}</h3><p>${esc(x.content).replace(/\\n/g,'<br>')}</p><footer>${esc(x.author||t[7])}</footer></article>`).join('');
+    list.innerHTML=rows.map(x=>`<article class="network-notice-card ${x.is_pinned?'is-pinned':''}"><div class="network-notice-meta"><b>${x.is_pinned?'📌 '+esc(t[5]):'🌐 NETWORK'}</b><span>${esc(noticeText(x,'category')||t[6])}</span><time>${fmt(x.published_at)}</time></div><h3>${esc(noticeText(x,'title'))}</h3><p>${esc(noticeText(x,'content')).replace(/\\n/g,'<br>')}</p><footer>${esc(x.author||t[7])}</footer></article>`).join('');
   }
   async function load(){
     try{
-      const q='select=id,title,content,author,category,targets,is_pinned,published_at,expires_at&is_published=eq.true&order=is_pinned.desc,published_at.desc';
+      const q='select=id,title,content,author,category,translations,targets,is_pinned,published_at,expires_at&is_published=eq.true&order=is_pinned.desc,published_at.desc';
       const r=await fetch(SUPABASE_URL+'/rest/v1/network_notices?'+q,{headers:{apikey:SUPABASE_KEY}});
       if(!r.ok)throw new Error('HTTP '+r.status);
       const data=await r.json();
