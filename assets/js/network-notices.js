@@ -42,7 +42,7 @@
   async function load(){
     try{
       const q='select=id,title,content,author,category,targets,is_pinned,published_at,expires_at&is_published=eq.true&order=is_pinned.desc,published_at.desc';
-      const r=await fetch(SUPABASE_URL+'/rest/v1/network_notices?'+q,{headers:{apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY}});
+      const r=await fetch(SUPABASE_URL+'/rest/v1/network_notices?'+q,{headers:{apikey:SUPABASE_KEY}});
       if(!r.ok)throw new Error('HTTP '+r.status);
       const rows=(await r.json()).filter(x=>active(x)&&Array.isArray(x.targets)&&(x.targets.includes('ALL')||x.targets.includes(org)));
       cachedRows=rows;render(rows);
