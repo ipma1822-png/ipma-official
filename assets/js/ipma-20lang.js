@@ -10,7 +10,7 @@
   }});
   while(walker.nextNode())originalText.set(walker.currentNode,walker.currentNode.nodeValue);
   const queryLang=new URLSearchParams(location.search).get('lang');
-  let currentLang=normalize(queryLang||localStorage.getItem('ipma_language')||'ko');
+  let currentLang=normalize(queryLang||'ko');
   if(!LANGUAGES.some(x=>x.code===currentLang))currentLang='ko';
 
   const root=document.createElement('div');
