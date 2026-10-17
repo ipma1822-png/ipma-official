@@ -120,11 +120,21 @@ async function deleteCredential(id){
  }catch(err){$('registryActionMsg').textContent='삭제 실패: '+err.message;}finally{deletingCredentials.delete(id);}
 }
 const infoFields=[['person_name','성명'],['person_name_en','영문명'],['birth_date','생년월일'],['qualification_name','자격명'],['discipline','종목'],['detail_type_id','세부종류'],['detail_label','세부종류 직접입력'],['rank_grade','단·등급'],['position_title','직책'],['issued_on','발급일'],['valid_until','유효기간 종료일'],['phone','연락처'],['email','이메일'],['postal_code','우편번호'],['address','주소'],['address_detail','상세주소'],['admin_note','관리자 비고']];
-let editingInfo=null,infoBusy=false,infoVersion=0;
+let editingInfo=null,infoBusy=false,infoVersion=0,infoPhotoObjectUrl=null;
+function resetInfoPhoto(url=''){
+ if(infoPhotoObjectUrl){URL.revokeObjectURL(infoPhotoObjectUrl);infoPhotoObjectUrl=null;}
+ $('infoPhotoFile').value='';const preview=$('infoPhotoPreview');preview.removeAttribute('src');if(url)preview.src=url;preview.hidden=!url;preview.style.display=url?'block':'none';
+}
+function validateInfoPhoto(file){if(file&&(!/^image\/(jpeg|png|webp)$/.test(file.type)||file.size>5*1024*1024))throw new Error('사진은 JPG, PNG, WEBP 형식의 5MB 이하 파일을 선택하세요.');}
+$('infoPhotoFile').addEventListener('change',()=>{
+ const file=$('infoPhotoFile').files[0];try{validateInfoPhoto(file);}catch(err){resetInfoPhoto(editingInfo?.photo_url||'');$('registryActionMsg').textContent=err.message;return;}
+ if(!file){resetInfoPhoto(editingInfo?.photo_url||'');return;}
+ if(infoPhotoObjectUrl)URL.revokeObjectURL(infoPhotoObjectUrl);infoPhotoObjectUrl=URL.createObjectURL(file);$('infoPhotoPreview').src=infoPhotoObjectUrl;$('infoPhotoPreview').hidden=false;$('infoPhotoPreview').style.display='block';$('registryActionMsg').textContent='사진을 선택했습니다. 변경 확인·저장을 눌러 저장하세요.';
+});
 async function openInfoEdit(id){
- if(infoBusy||!allowCredentialAction(id))return;const version=++infoVersion;editingInfo=null;show('infoEditForm',false);$('registryActionMsg').textContent='발급정보를 불러오는 중…';
+ if(infoBusy||!allowCredentialAction(id))return;const version=++infoVersion;editingInfo=null;resetInfoPhoto();show('infoEditForm',false);$('registryActionMsg').textContent='발급정보를 불러오는 중…';
  const {data:r,error}=await db.from('ica_credentials').select('*').eq('id',id).single();if(version!==infoVersion)return;if(error||!r){$('registryActionMsg').textContent='불러오기 실패: '+(error?.message||'기록 없음');return;}
- editingInfo=r;const listed=credentials.find(x=>x.id===id);$('infoEditIdentity').textContent=`발급번호: ${r.credential_no} · 발급기관: ${listed?.ica_issuers?.name_ko||r.issuer_id} · 종류: ${listed?.ica_credential_types?.name_ko||r.credential_type_id} (변경 불가)`;
+ editingInfo=r;resetInfoPhoto(r.photo_url||'');const listed=credentials.find(x=>x.id===id);$('infoEditIdentity').textContent=`발급번호: ${r.credential_no} · 발급기관: ${listed?.ica_issuers?.name_ko||r.issuer_id} · 종류: ${listed?.ica_credential_types?.name_ko||r.credential_type_id} (변경 불가)`;
  $('infoEditFields').innerHTML=infoFields.map(([key,label])=>{const date=['birth_date','issued_on','valid_until'].includes(key),value=date?(r[key]||'').replace(/-/g,''):(r[key]||'');
  if(key==='detail_type_id'){const rows=details.filter(x=>x.credential_type_id===r.credential_type_id&&(!x.issuer_id||x.issuer_id===r.issuer_id));return `<label>${label}<select id="info_${key}"><option value="">직접입력 / 선택 없음</option>${rows.map(x=>`<option value="${esc(x.id)}" ${x.id===r[key]?'selected':''}>${esc(x.name_ko)}</option>`).join('')}</select></label>`;}
  if(key==='admin_note')return `<label class="wide">${label}<textarea id="info_${key}">${esc(value)}</textarea></label>`;
@@ -136,7 +146,7 @@ async function openInfoEdit(id){
  for(const [source,target] of [['info_issued_on','info_valid_from'],['info_valid_from','info_issued_on']])$(source).addEventListener('input',()=>$(target).value=$(source).value);
  $('registryActionMsg').textContent='';show('infoEditForm',true);$('infoEditForm').scrollIntoView({behavior:'smooth'});
 }
-$('cancelInfoEditBtn').onclick=()=>{if(infoBusy)return;infoVersion++;editingInfo=null;show('infoEditForm',false);};
+$('cancelInfoEditBtn').onclick=()=>{if(infoBusy)return;infoVersion++;editingInfo=null;resetInfoPhoto();show('infoEditForm',false);};
 $('infoEditForm').addEventListener('submit',async e=>{
  e.preventDefault();if(!editingInfo||infoBusy)return;const original=editingInfo;if(!allowCredentialAction(original.id))return;
  const next={};for(const [key] of infoFields)next[key]=val('info_'+key)||null;
@@ -144,11 +154,12 @@ $('infoEditForm').addEventListener('submit',async e=>{
  if(!next.person_name||next.birth_date===undefined||!next.issued_on||(val('info_valid_until')&&!next.valid_until)||normalizeIssueDate(val('info_valid_from'))!==next.issued_on||(next.valid_until&&next.valid_until<next.issued_on)){$('registryActionMsg').textContent='성명과 날짜를 확인하세요. 날짜는 숫자 8자리이며 종료일은 시작일 이후여야 합니다.';return;}
  if(original.issuer_id===issuers.find(x=>x.code==='KUKKIWON')?.id&&(!/^[1-9]단$/.test(next.rank_grade||'')||next.discipline!=='태권도')){$('registryActionMsg').textContent='국기원 단증은 태권도 1~9단으로 입력하세요.';return;}
  const payload={},changes=[];for(const [key,label] of infoFields)if((original[key]||null)!==next[key]){payload[key]=next[key];changes.push(`${label}: ${original[key]||'(없음)'} → ${next[key]||'(없음)'}`);}
+ const photoFile=$('infoPhotoFile').files[0];try{validateInfoPhoto(photoFile);}catch(err){$('registryActionMsg').textContent=err.message;return;}if(photoFile)changes.push('사진: 선택한 사진으로 변경');
  if(!changes.length){$('registryActionMsg').textContent='변경된 정보가 없습니다.';return;}
  if(!confirm(`${original.credential_no} · ${original.person_name} 정보를 수정할까요?\n${changes.join('\n')}`))return;
- infoBusy=true;$('saveInfoEditBtn').disabled=true;$('cancelInfoEditBtn').disabled=true;
- try{const actor=await requireCredentialAdmin();addEditAudit(payload,original,actor);const {data,error}=await db.from('ica_credentials').update(payload).eq('id',original.id).eq('updated_at',original.updated_at).eq('status',original.status).select('id,credential_no,issuer_id,credential_type_id').single();if(error)throw error;if(!data||data.id!==original.id||data.credential_no!==original.credential_no||data.issuer_id!==original.issuer_id||data.credential_type_id!==original.credential_type_id)throw new Error('저장 결과를 확인할 수 없습니다.');editingInfo=null;show('infoEditForm',false);await loadRegistry();$('registryActionMsg').textContent='정보 수정 완료. 관리자 비고에 변경 이력을 보존했습니다.';}
+ infoBusy=true;$('infoPhotoFile').disabled=true;$('saveInfoEditBtn').disabled=true;$('cancelInfoEditBtn').disabled=true;
+ try{const actor=await requireCredentialAdmin();if(photoFile){const ext=photoFile.type==='image/jpeg'?'jpg':photoFile.type.split('/')[1];const path=`profiles/${original.id}/${crypto.randomUUID()}.${ext}`;const up=await db.storage.from('ica-public').upload(path,photoFile,{cacheControl:'3600',upsert:false,contentType:photoFile.type});if(up.error)throw new Error('사진 업로드 실패: '+up.error.message);payload.photo_url=db.storage.from('ica-public').getPublicUrl(path).data.publicUrl;}addEditAudit(payload,original,actor);const {data,error}=await db.from('ica_credentials').update(payload).eq('id',original.id).eq('updated_at',original.updated_at).eq('status',original.status).select('id,credential_no,issuer_id,credential_type_id').single();if(error)throw error;if(!data||data.id!==original.id||data.credential_no!==original.credential_no||data.issuer_id!==original.issuer_id||data.credential_type_id!==original.credential_type_id)throw new Error('저장 결과를 확인할 수 없습니다.');editingInfo=null;resetInfoPhoto();show('infoEditForm',false);await loadRegistry();$('registryActionMsg').textContent='정보 수정 완료. 관리자 비고에 변경 이력을 보존했습니다.';}
  catch(err){$('registryActionMsg').textContent='수정 실패: '+err.message+' (권한 또는 동시 변경을 확인하고 다시 불러오세요.)';}
- finally{infoBusy=false;$('saveInfoEditBtn').disabled=false;$('cancelInfoEditBtn').disabled=false;}
+ finally{infoBusy=false;$('infoPhotoFile').disabled=false;$('saveInfoEditBtn').disabled=false;$('cancelInfoEditBtn').disabled=false;}
 });
 window.openInfoEdit=openInfoEdit;window.deleteCredential=deleteCredential;
