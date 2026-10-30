@@ -61,3 +61,5 @@ begin
  if not found then raise exception 'CREDENTIAL_CHANGED_RELOAD'; end if;
  return jsonb_build_object('id',r.id,'credential_no',r.credential_no,'updated_at',r.updated_at);
 end $$;
+revoke all on public.ica_number_history from anon,authenticated;
+grant select on public.ica_number_history to authenticated;
