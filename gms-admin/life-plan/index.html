@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.min.js"></script>
+<title>2032 인생 2막 종합상황실</title>
+<style>
+:root{font-family:system-ui,"Malgun Gothic",sans-serif;color:#e9f1ff;background:#091629}*{box-sizing:border-box}body{margin:0} [hidden]{display:none!important}.task{flex-wrap:wrap}.task span{min-width:120px;overflow-wrap:anywhere}.task button{min-height:40px}header{padding:28px 20px;background:linear-gradient(120deg,#142c51,#164f65)}main,.head{max-width:1080px;margin:auto}.head p{color:#c2d7e8}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:20px 0}.card{background:#14253d;border:1px solid #30465f;border-radius:16px;padding:19px}.metric{font-size:30px;font-weight:800;margin:8px 0}.muted,small{color:#a7bdd3}.bar{background:#354a61;height:10px;border-radius:20px;overflow:hidden}.fill{height:100%;background:#4fd1a1;width:0}main{padding:18px 20px 70px}h2{margin-top:32px}button,input,select,textarea{font:inherit;border-radius:9px;padding:10px;background:#203550;color:white;border:1px solid #526985}button{cursor:pointer}button.primary{background:#167f74;border-color:#1d9d8d}button.danger{background:#59313a}.tools{display:flex;gap:8px;flex-wrap:wrap}.task{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #34465c}.task span{flex:1}.task.done span{text-decoration:line-through;color:#9eb0c4}.task input{width:19px;height:19px}.task button{padding:5px 9px}form{display:grid;grid-template-columns:1fr 1fr;gap:10px}form input,form select{width:100%}form textarea{grid-column:1/-1;min-height:65px}form button{grid-column:1/-1}footer{color:#a7bdd3;margin-top:32px;font-size:13px} @media(max-width:550px){form{grid-template-columns:1fr}form textarea,form button{grid-column:1}}
+</style></head><body>
+<div id="access" style="padding:24px" role="status">GMS 최고관리자 권한 확인 중…</div><div id="protected" hidden><header><div class="head"><small>MY LIFE PLAN · GMS 최고관리자</small><h1>2032 인생 2막 종합상황실</h1><p id="targetLabel"></p></div></header>
+<main><p><a href="/gms-admin/#dashboard" style="color:#c2d7e8">GMS 운영본부</a> · <a href="/admin-hub/" style="color:#c2d7e8">전체 페이지 관리자</a></p><p id="status" role="status"></p>
+<div class="grid"><div class="card"><small>목표일까지</small><div id="remaining" class="metric">—</div><small>매일 자동 계산</small></div><div class="card"><small>전체 진행률</small><div id="percent" class="metric">0%</div><div class="bar"><div id="fill" class="fill"></div></div></div><div class="card"><small>완료 과제</small><div id="counts" class="metric">0 / 0</div><small>직접 체크한 작업 기준</small></div></div>
+<h2>연도별 방향</h2><div class="grid" id="years"></div>
+<h2>사업별 진행률</h2><div id="business" class="grid"></div><h2>나의 실행 과제</h2><div class="card"><div class="tools"><select id="filter"><option value="all">전체 분야</option></select><button id="backup">백업 다운로드</button><button id="sync">새로 동기화</button><button id="importLocal">기존 브라우저 계획 가져오기</button><button id="restore">백업 불러오기</button><input type="file" id="file" accept="application/json" hidden></div><div id="tasks"></div></div>
+<h2>계획 추가 및 수정</h2><div class="card"><form id="form"><input id="name" required placeholder="할 일 제목"><select id="category"></select><select id="year"></select><input id="date" type="date" aria-label="목표 날짜"><textarea id="memo" placeholder="세부 메모 (선택)"></textarea><button class="primary" type="submit" id="submit">계획 저장</button></form></div>
+<footer>GMS 최고관리자 인증 후 서버에 저장됩니다. 기존 시제품의 다른 주소에 저장된 계획은 해당 화면에서 백업을 내려받아 여기에서 불러오세요.</footer>
+</main></div>
+<script>
+const KEY="my2032-v1";let TARGET,plan=[];
+const cats=["GLOBAL NEWS24","태권검도","경찰무도","IPMA 출판","은퇴·생활","공통"];
+let tasks=[],revision=null,userId=null,busy=false;
+const db=supabase.createClient('https://ojxarsfaewehwjidwgac.supabase.co','sb_publishable_ZoAZrV5rDmYDLxhXlnEXCw_lPqJfin0',{auth:{persistSession:true,autoRefreshToken:true,flowType:'pkce'}});
+let editing=null;
+const $=id=>document.getElementById(id);
+function lock(message){tasks=[];userId=null;document.getElementById('protected').hidden=true;const a=document.getElementById('access');a.hidden=false;a.replaceChildren(document.createTextNode(message+' '));const link=document.createElement('a');link.href='/gms-admin/#dashboard';link.textContent='GMS로 이동';a.append(link);}
+async function authorize(){const {data,error}=await db.auth.getUser();if(error||!data.user)throw Error('GMS 로그인이 필요합니다.');const c=await db.rpc('gms_get_my_admin_context');if(c.error||!c.data?.is_admin||c.data.role!=='master')throw Error('GMS 최고관리자만 접근할 수 있습니다.');return data.user.id;}
+async function load(){if(busy)return;busy=true;try{userId=await authorize();const {data,error}=await db.from('gms_life_plans').select('tasks,revision,settings').eq('user_id',userId).maybeSingle();if(error)throw error;if(!data?.settings?.target||!Array.isArray(data.settings.years))throw Error('계획 설정을 확인할 수 없습니다.');tasks=data.tasks;revision=data.revision;TARGET=new Date(data.settings.target);plan=data.settings.years;option($('year'),plan.map(p=>p[0]));$('targetLabel').textContent='운영 마무리 목표일: '+TARGET.toLocaleDateString('ko-KR');$('years').replaceChildren();plan.forEach(p=>{const card=document.createElement('div');card.className='card';const title=document.createElement('strong');title.textContent=p[0]+' · '+p[1];const detail=document.createElement('p');detail.className='muted';detail.textContent=p[2];card.append(title,detail);$('years').append(card)});render();$('access').hidden=true;$('protected').hidden=false;$('status').textContent='서버 동기화 완료';}catch(e){lock(e.message)}finally{busy=false}}
+async function save(){if(busy)return;busy=true;$('protected').inert=true;$('status').textContent='서버 저장 중…';try{const uid=await authorize();if(uid!==userId)throw Error('로그인 계정이 변경되었습니다.');const q=revision===null?db.from('gms_life_plans').insert({user_id:userId,tasks}):db.from('gms_life_plans').update({tasks}).eq('user_id',userId).eq('revision',revision);const {data,error}=await q.select('tasks,revision').single();if(error)throw Error('저장 실패 또는 다른 기기에서 수정되었습니다. 백업 후 새로 동기화하세요. '+error.message);tasks=data.tasks;revision=data.revision;render();$('status').textContent='서버 저장 완료 · '+new Date().toLocaleTimeString('ko-KR');}catch(e){$('status').textContent=e.message;alert(e.message)}finally{busy=false;$('protected').inert=false}}
+function valid(list){return Array.isArray(list)&&list.every(t=>t&&['string','number'].includes(typeof t.id)&&typeof t.title==='string'&&cats.includes(t.category)&&Number.isInteger(t.year)&&typeof t.done==='boolean'&&(!t.date||typeof t.date==='string')&&(!t.memo||typeof t.memo==='string'))&&new Set(list.map(t=>t.id)).size===list.length;}
+function option(sel,values){sel.innerHTML="";values.forEach(v=>{let o=document.createElement("option");o.value=v;o.textContent=v;sel.append(o)})}
+option($("category"),cats);option($("filter"),["all",...cats]);
+
+function render(){
+$('business').replaceChildren();cats.forEach(c=>{const items=tasks.filter(t=>t.category===c);const card=document.createElement('div');card.className='card';card.textContent=c+' · '+(items.length?Math.round(items.filter(t=>t.done).length/items.length*100):0)+'% ('+items.filter(t=>t.done).length+'/'+items.length+')';$('business').append(card)});
+Array.from($('years').children).forEach((card,i)=>{let m=card.querySelector('small');if(!m){m=document.createElement('small');card.append(m)}const items=tasks.filter(t=>t.year===Number(plan[i][0]));m.textContent='진행률 '+(items.length?Math.round(items.filter(t=>t.done).length/items.length*100):0)+'% · '+items.filter(t=>t.done).length+'/'+items.length;});
+const days=Math.max(0,Math.ceil((TARGET-new Date())/86400000));$("remaining").textContent=days.toLocaleString("ko-KR")+"일";
+const completed=tasks.filter(t=>t.done).length,pct=tasks.length?Math.round(completed/tasks.length*100):0;
+$("percent").textContent=pct+"%";$("fill").style.width=pct+"%";$("counts").textContent=completed+" / "+tasks.length;
+$("tasks").replaceChildren();
+tasks.filter(t=>$("filter").value==="all"||t.category===$("filter").value).sort((a,b)=>a.year-b.year).forEach(t=>{
+const row=document.createElement("div");row.className="task"+(t.done?" done":"");
+const check=document.createElement("input");check.type="checkbox";check.setAttribute("aria-label",t.title+" 완료");check.checked=t.done;check.onchange=()=>{t.done=check.checked;save()};
+const label=document.createElement("span");label.textContent=t.year+" · "+t.category+" | "+t.title+(t.date?" · "+t.date:"")+(t.memo?" — "+t.memo:"");
+const edit=document.createElement("button");edit.textContent="수정";edit.onclick=()=>{editing=t.id;$("name").value=t.title;$("category").value=t.category;$("year").value=t.year;$("date").value=t.date||"";$("memo").value=t.memo||"";$("submit").textContent="수정 저장";$("name").focus()};
+const del=document.createElement("button");del.className="danger";del.textContent="삭제";del.onclick=()=>{if(confirm("이 과제를 삭제할까요?")){tasks=tasks.filter(x=>x.id!==t.id);save()}};
+row.append(check,label,edit,del);$("tasks").append(row)
+});
+}
+$("filter").onchange=render;
+$("form").onsubmit=e=>{e.preventDefault();const v={title:$("name").value.trim(),category:$("category").value,year:Number($("year").value),date:$("date").value,memo:$("memo").value.trim()};if(!v.title)return;if(editing!==null){Object.assign(tasks.find(t=>t.id===editing),v)}else tasks.push({id:crypto.randomUUID(),...v,done:false});editing=null;$("form").reset();$("submit").textContent="계획 저장";save()};
+$("backup").onclick=()=>{const b=new Blob([JSON.stringify({version:1,tasks},null,2)],{type:"application/json"});const u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download="my-2032-plan-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};
+$("restore").onclick=()=>$("file").click();
+$("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!valid(obj.tasks))throw Error("형식 오류");if(confirm("현재 계획을 백업 내용으로 교체할까요?")){tasks=obj.tasks;save()}}catch(err){alert("올바른 백업 파일이 아닙니다.")}e.target.value=""};
+$('sync').onclick=load;
+$('importLocal').onclick=async()=>{try{const old=JSON.parse(localStorage.getItem(KEY));if(!valid(old))throw Error('이 주소에 기존 계획이 없습니다. 기존 화면에서 백업을 내려받아 불러오세요.');if(confirm('현재 계획을 기존 브라우저 계획으로 교체할까요? 먼저 백업을 권장합니다.')){tasks=old;await save()}}catch(e){alert(e.message)}};
+db.auth.onAuthStateChange(event=>{if(event==='SIGNED_OUT')lock('GMS 로그인이 필요합니다.');});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)authorize().then(uid=>{if(uid!==userId)lock('계정이 변경되었습니다.')}).catch(e=>lock(e.message));});
+load();
+</script></body></html>
